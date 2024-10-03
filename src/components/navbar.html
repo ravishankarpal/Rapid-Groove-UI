@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Navbar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    <style>
+        /* Dropdown visibility on hover */
+        .group:hover .dropdown {
+            display: block;
+        }
+        .dropdown:hover {
+            display: block;
+        }
+
+        /* Show dropdown on hover */
+    #accountButton:hover + #dropdownMenu, #dropdownMenu:hover {
+        display: block;
+    }
+    </style>
+</head>
+<body class="font-[Poppins] bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee] h-screen">
+    <header class="bg-white">
+        <nav class="flex justify-between items-center w-[92%] mx-auto">
+            <div>
+                <!-- <img class="w-16 cursor-pointer" src="https://cdn-icons-png.flaticon.com/512/5968/5968204.png" alt="..."> -->
+            </div>
+            
+            <div class="nav-links duration-500 md:static absolute bg-white md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5"></div>
+                <ul class="flex md:flex-row flex-col md:items-center md:gap-[4vw] gap-8">
+                    <li><a class="hover:text-gray-500" href="#">Home</a></li>
+                    <!-- <li class="relative group">
+                        <a class="hover:text-gray-500 cursor-pointer" href="#">Shop</a>
+                       
+                        <ul class="absolute left-0 mt-2 bg-white shadow-lg hidden group-hover:block dropdown py-2 w-48  z-10">
+                            <li><a class="block px-4 py-2 hover:bg-gray-100" href="skin_care.html">Skin Care</a></li>
+                            <li><a class="block px-4 py-2 hover:bg-gray-100" href="#">Makeup</a></li>
+                            <li><a class="block px-4 py-2 hover:bg-gray-100" href="#">Hair Care</a></li>
+                            <li><a class="block px-4 py-2 hover:bg-gray-100" href="#">Fragrances</a></li>
+                            <li><a class="block px-4 py-2 hover:bg-gray-100" href="#">Bath & Body</a></li>
+                        </ul>
+                    </li> -->
+
+
+                    <div class="relative flex items-center gap-6">
+                        <button class="text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="accountButton">
+                            Shop
+                        </button>
+                    
+                        <!-- Dropdown Menu -->
+                        <div class="hidden absolute top-10 right-0 w-32 bg-white border border-gray-300 rounded-md shadow-lg" id="dropdownMenu">
+                            <a href="skinCare.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Skin Care</a>                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Makeup</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Hair Care</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Fragrances</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Bath & Body</a>
+                        </div>
+                    
+                        <!-- Mobile Menu Icon -->
+                        <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
+                    </div>
+
+
+
+
+                    <li><a class="hover:text-gray-500" href="#">New Arrivals</a></li>
+                    <li><a class="hover:text-gray-500" href="#">Best Sellers</a></li>
+                    <li><a class="hover:text-gray-500" href="#">Offers</a></li>
+                    <li><a class="hover:text-gray-500" href="#">Brands</a></li>
+                    <li><a class="hover:text-gray-500" href="#">Blog</a></li>
+                    <li><a class="hover:text-gray-500" href="#">About Us</a></li>
+                    <li><a class="hover:text-gray-500" href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <!-- <div class="flex items-center gap-6">
+                <button class="bg-[#a6c1ee] text-white px-5 py-2 rounded-full hover:bg-[#87acec]">Sign in</button>
+                <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
+            </div> -->
+
+            <div class="relative flex items-center gap-6">
+                <!-- Account Button -->
+                <button class="text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="accountButton">
+                    Account
+                </button>
+            
+                <!-- Dropdown Menu -->
+                <div class="hidden absolute top-10 right-0 w-32 bg-white border border-gray-300 rounded-md shadow-lg" id="dropdownMenu">
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Login</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign Up</a>
+                </div>
+            
+                <!-- Mobile Menu Icon -->
+                <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
+            </div>
+            
+            
+        </nav>
+    </header>
+
+    <!-- Div to include common.html -->
+    <div id="common-content"></div>
+
+    <script>
+        const navLinks = document.querySelector('.nav-links');
+        function onToggleMenu(e) {
+            e.name = e.name === 'menu' ? 'close' : 'menu';
+            navLinks.classList.toggle('top-[9%]');
+        }
+
+        // Function to include common.html
+        fetch('common.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('common-content').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading common.html:', error));
+    </script>
+</body>
+</html>

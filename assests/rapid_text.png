@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300">
+  <defs>
+    <!-- Gradient for main text -->
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF4E50"/>
+      <stop offset="100%" style="stop-color:#F9D423"/>
+    </linearGradient>
+    
+    <!-- Gradient for effect lines -->
+    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF4E50" stop-opacity="0.8"/>
+      <stop offset="100%" style="stop-color:#F9D423" stop-opacity="0"/>
+    </linearGradient>
+    
+    <!-- Motion blur filter -->
+    <filter id="motion" filterUnits="userSpaceOnUse">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3,0"/>
+    </filter>
+  </defs>
+  
+  <!-- Background effect lines -->
+  <g filter="url(#motion)">
+    <path d="M 0,100 C 200,80 400,120 800,100" stroke="url(#lineGradient)" stroke-width="20" fill="none" opacity="0.3"/>
+    <path d="M 0,150 C 200,170 400,130 800,150" stroke="url(#lineGradient)" stroke-width="15" fill="none" opacity="0.3"/>
+    <path d="M 0,200 C 200,180 400,220 800,200" stroke="url(#lineGradient)" stroke-width="10" fill="none" opacity="0.3"/>
+  </g>
+  
+  <!-- Main text with 3D effect -->
+  <g transform="translate(400,150)" text-anchor="middle">
+    <!-- Text shadows for 3D effect -->
+    <text y="0" font-family="Arial Black, sans-serif" font-size="80" fill="#333333" opacity="0.1" transform="translate(8,8)">RAPID GROOVE</text>
+    <text y="0" font-family="Arial Black, sans-serif" font-size="80" fill="#444444" opacity="0.2" transform="translate(6,6)">RAPID GROOVE</text>
+    <text y="0" font-family="Arial Black, sans-serif" font-size="80" fill="#555555" opacity="0.3" transform="translate(4,4)">RAPID GROOVE</text>
+    <text y="0" font-family="Arial Black, sans-serif" font-size="80" fill="#666666" opacity="0.4" transform="translate(2,2)">RAPID GROOVE</text>
+    
+    <!-- Main text with gradient -->
+    <text y="0" font-family="Arial Black, sans-serif" font-size="80" fill="url(#textGradient)">RAPID GROOVE</text>
+    
+    <!-- Text outline -->
+    <text y="0" font-family="Arial Black, sans-serif" font-size="80" fill="none" stroke="white" stroke-width="2">RAPID GROOVE</text>
+  </g>
+  
+  <!-- Speed lines -->
+  <g stroke-linecap="round" filter="url(#motion)">
+    <line x1="50" y1="50" x2="150" y2="50" stroke="#FF4E50" stroke-width="3"/>
+    <line x1="650" y1="250" x2="750" y2="250" stroke="#F9D423" stroke-width="3"/>
+    <line x1="100" y1="270" x2="200" y2="270" stroke="#FF4E50" stroke-width="3"/>
+    <line x1="600" y1="30" x2="700" y2="30" stroke="#F9D423" stroke-width="3"/>
+  </g>
+</svg>
