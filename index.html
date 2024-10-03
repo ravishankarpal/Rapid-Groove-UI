@@ -10,7 +10,8 @@
 <body>
     <div id="navbar"></div>
     <div id="home"></div>
-    
+    <div id="footer"></div> <!-- Placeholder for footer -->
+
     <script>
     // Function to load and execute scripts
     function loadScripts(url) {
@@ -34,6 +35,11 @@
             const homeResponse = await fetch('./src/components/home.html');
             const homeData = await homeResponse.text();
             document.getElementById('home').innerHTML = homeData;
+
+            // Load footer
+            const footerResponse = await fetch('./src/components/footer.html');
+            const footerData = await footerResponse.text();
+            document.getElementById('footer').innerHTML = footerData;
 
             // Execute scripts in the navbar for dropdowns
             const scripts = document.getElementById('navbar').getElementsByTagName('script');
