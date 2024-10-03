@@ -5,28 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your E-commerce Project</title>
     <link href="dist/output.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>   
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-
     <div id="navbar"></div>
     <div id="home"></div>
-
-    <script>
     
-        fetch('./src/components/navbar.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar').innerHTML = data;
-            })
-            .catch(error => console.error('Error loading navbar:', error));
+    <script>
+    // Function to load and execute scripts
+    function loadScripts(url) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.onload = resolve;
+            script.onerror = reject;
+            script.src = url;
+            document.body.appendChild(script);
+        });
+    }
 
-            fetch('./src/components/home.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('home').innerHTML = data;
-            })
-            .catch(error => console.error('Error loading home:', error));
+    async function loadContent() {
+        try {
+            // Load navbar
+            const navResponse = await fetch('./src/components/navbar.html');
+            const navData = await navResponse.text();
+            document.getElementById('navbar').innerHTML = navData;
+
+            // Load home
+            const homeResponse = await fetch('./src/components/home.html');
+            const homeData = await homeResponse.text();
+            document.getElementById('home').innerHTML = homeData;
+
+            // Execute scripts in the navbar for dropdowns
+            const scripts = document.getElementById('navbar').getElementsByTagName('script');
+            for (let script of scripts) {
+                if (script.src) {
+                    await loadScripts(script.src);
+                } else {
+                    eval(script.innerHTML);
+                }
+            }
+
+            // Execute scripts in the home content
+            const homeScripts = document.getElementById('home').getElementsByTagName('script');
+            for (let script of homeScripts) {
+                if (script.src) {
+                    await loadScripts(script.src);
+                } else {
+                    eval(script.innerHTML);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading content:', error);
+        }
+    }
+
+    loadContent();
     </script>
 </body>
 </html>

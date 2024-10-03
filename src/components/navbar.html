@@ -22,6 +22,9 @@
     #accountButton:hover + #dropdownMenu, #dropdownMenu:hover {
         display: block;
     }
+    #dropdownMenu {
+            z-index: 50; /* Adjust the value as needed */
+        }
     </style>
 </head>
 <body class="font-[Poppins] bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee] h-screen">
@@ -34,18 +37,6 @@
             <div class="nav-links duration-500 md:static absolute bg-white md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5"></div>
                 <ul class="flex md:flex-row flex-col md:items-center md:gap-[4vw] gap-8">
                     <li><a class="hover:text-gray-500" href="#">Home</a></li>
-                    <!-- <li class="relative group">
-                        <a class="hover:text-gray-500 cursor-pointer" href="#">Shop</a>
-                       
-                        <ul class="absolute left-0 mt-2 bg-white shadow-lg hidden group-hover:block dropdown py-2 w-48  z-10">
-                            <li><a class="block px-4 py-2 hover:bg-gray-100" href="skin_care.html">Skin Care</a></li>
-                            <li><a class="block px-4 py-2 hover:bg-gray-100" href="#">Makeup</a></li>
-                            <li><a class="block px-4 py-2 hover:bg-gray-100" href="#">Hair Care</a></li>
-                            <li><a class="block px-4 py-2 hover:bg-gray-100" href="#">Fragrances</a></li>
-                            <li><a class="block px-4 py-2 hover:bg-gray-100" href="#">Bath & Body</a></li>
-                        </ul>
-                    </li> -->
-
 
                     <div class="relative flex items-center gap-6">
                         <button class="text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="accountButton">
@@ -77,10 +68,7 @@
                 </ul>
             </div>
             
-            <!-- <div class="flex items-center gap-6">
-                <button class="bg-[#a6c1ee] text-white px-5 py-2 rounded-full hover:bg-[#87acec]">Sign in</button>
-                <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
-            </div> -->
+        
 
             <div class="relative flex items-center gap-6">
                 <!-- Account Button -->
@@ -112,13 +100,6 @@
             navLinks.classList.toggle('top-[9%]');
         }
 
-        // Function to include common.html
-        fetch('common.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('common-content').innerHTML = data;
-            })
-            .catch(error => console.error('Error loading common.html:', error));
     </script>
 </body>
 </html>
