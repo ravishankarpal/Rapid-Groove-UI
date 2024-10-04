@@ -3,58 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skin Care Products</title>
+    <title>Luxury Skin Care Collection</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .hero {
+            background-image: url('http://localhost:8081/admin/product/images/bg4');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            position: relative;
+        }
+
+        .hero-overlay {
+            background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 10%;
+            color: white;
+        }
+
+        .category-heading {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .category-heading::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, #3498db, #e74c3c);
+            margin: 0.5rem auto 0;
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee] font-[Poppins]">
-    <div class="container mx-auto py-10">
-        <h1 class="text-3xl font-semibold text-center mb-8">Skin Care Products</h1>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Product Card 1 -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <img src="https://via.placeholder.com/300" alt="Product 1" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h2 class="text-lg font-bold">Moisturizing Cream</h2>
-                    <p class="text-gray-700 mb-2">A rich moisturizer that hydrates and nourishes the skin.</p>
-                    <span class="block text-lg font-semibold text-gray-900">$24.99</span>
-                    <div class="mt-4 flex justify-between">
-                        <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Add to Cart</button>
-                        <button class="bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300">View Details</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Product Card 2 -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <img src="https://via.placeholder.com/300" alt="Product 2" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h2 class="text-lg font-bold">Sunscreen SPF 30</h2>
-                    <p class="text-gray-700 mb-2">Protect your skin from harmful UV rays with this lightweight sunscreen.</p>
-                    <span class="block text-lg font-semibold text-gray-900">$19.99</span>
-                    <div class="mt-4 flex justify-between">
-                        <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Add to Cart</button>
-                        <button class="bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300">View Details</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Product Card 3 -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <img src="https://via.placeholder.com/300" alt="Product 3" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h2 class="text-lg font-bold">Anti-Aging Serum</h2>
-                    <p class="text-gray-700 mb-2">This serum helps to reduce fine lines and improve skin elasticity.</p>
-                    <span class="block text-lg font-semibold text-gray-900">$34.99</span>
-                    <div class="mt-4 flex justify-between">
-                        <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Add to Cart</button>
-                        <button class="bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300">View Details</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Add more product cards as needed -->
+
+<body class="bg-gray-50">
+    <div id="navbar-placeholder"></div>
+
+    <div class="hero">
+        <div class="hero-overlay">
+            <h1 class="text-5xl font-bold mb-4 font-[Playfair Display]">Discover Your Perfect<br>Skincare Routine</h1>
+            <p class="text-xl mb-8 max-w-lg">Luxury skincare products crafted with science-backed ingredients for radiant, healthy skin.</p>
+            <button class="bg-white text-gray-900 px-8 py-3 rounded-full hover:bg-gray-100 transition duration-300 font-semibold">
+                Shop Now
+            </button>
         </div>
     </div>
 
-    <footer class="bg-white text-center py-4 mt-10">
-        <p class="text-gray-600">&copy; 2024 Your Brand. All rights reserved.</p>
-    </footer>
+    <div class="container mx-auto px-4 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <div class="text-center p-6">
+                <i class="fas fa-leaf text-4xl text-green-500 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Natural Ingredients</h3>
+                <p class="text-gray-600">Carefully selected botanical extracts for gentle yet effective care</p>
+            </div>
+            <div class="text-center p-6">
+                <i class="fas fa-flask text-4xl text-blue-500 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Science-Backed</h3>
+                <p class="text-gray-600">Formulated by dermatologists for proven results</p>
+            </div>
+            <div class="text-center p-6">
+                <i class="fas fa-heart text-4xl text-red-500 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Cruelty-Free</h3>
+                <p class="text-gray-600">Never tested on animals, always kind to your skin</p>
+            </div>
+        </div>
+
+        <div id="categories-container"></div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const CATEGORIES = [
+            { id: 'serums', name: 'Serums', icon: 'tint' },
+            { id: 'eye-care', name: 'Eye Care', icon: 'eye' },
+            { id: 'oily-skin', name: 'Oily Skin', icon: 'oil-can' },
+            { id: 'cleansers', name: 'Cleansers', icon: 'pump-soap' },
+            { id: 'gel-cream', name: 'Gel Cream', icon: 'jar' },
+            { id: 'sunscreen', name: 'Sunscreen', icon: 'sun' },
+            { id: 'lotion', name: 'Lotion', icon: 'bottle-droplet' }
+        ];
+
+        function createLoadingCard() {
+            return `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="h-48 shimmer"></div>
+                    <div class="p-4">
+                        <div class="h-6 w-3/4 shimmer mb-2"></div>
+                        <div class="h-4 shimmer mb-2"></div>
+                        <div class="h-4 w-1/2 shimmer mb-4"></div>
+                        <div class="flex justify-between">
+                            <div class="h-10 w-24 shimmer"></div>
+                            <div class="h-10 w-24 shimmer"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createProductCard(product) {
+            return `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
+                    <img src="data:${product.productImages[0].type};base64,${product.productImages[0].picByte}" 
+                         alt="${product.productName}" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-lg font-bold mb-2">${product.productName}</h2>
+                        <p class="text-gray-600 text-sm mb-3">${product.productDescription}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-semibold text-gray-900">
+                                INR ${product.productDiscountPrice.toFixed(2)} 
+                                <span class="text-sm text-gray-500 line-through">INR ${product.productActualPrice.toFixed(2)}</span>
+                            </span>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function fetchAndDisplayCategory(category) {
+            const section = document.createElement('section');
+            section.innerHTML = `
+                <h2 class="category-heading">
+                    <i class="fas fa-${category.icon} mr-2"></i>${category.name}
+                </h2>
+                <div id="${category.id}-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    ${createLoadingCard()}${createLoadingCard()}${createLoadingCard()}
+                </div>
+            `;
+            document.getElementById('categories-container').appendChild(section);
+
+            try {
+                const response = await fetch(`http://localhost:8081/product/details/categories?searchKey=${category.name}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                const container = document.getElementById(`${category.id}-container`);
+                
+                if (data.content && data.content.length > 0) {
+                    container.innerHTML = data.content.map(createProductCard).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="col-span-3 text-center py-8">
+                            <i class="fas fa-box-open text-4xl text-gray-400 mb-4"></i>
+                            <p class="text-gray-500">No products found in this category</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error(`Error fetching ${category.name} products:`, error);
+                document.getElementById(`${category.id}-container`).innerHTML = `
+                    <div class="col-span-3 text-center py-8">
+                        <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                        <p class="text-gray-700">Sorry, we couldn't load the products. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const [navbarResponse, footerResponse] = await Promise.all([
+                    fetch('navbar.html'),
+                    fetch('footer.html')
+                ]);
+                
+                const [navbarHtml, footerHtml] = await Promise.all([
+                    navbarResponse.text(),
+                    footerResponse.text()
+                ]);
+
+                document.getElementById('navbar-placeholder').innerHTML = navbarHtml;
+                document.getElementById('footer-placeholder').innerHTML = footerHtml;
+            } catch (error) {
+                console.error('Error loading page components:', error);
+            }
+
+            CATEGORIES.forEach(fetchAndDisplayCategory);
+        });
+    </script>
 </body>
 </html>
