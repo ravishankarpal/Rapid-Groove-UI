@@ -8,6 +8,7 @@
 </head>
 <body>
     <div class="font-[sans-serif]">
+        <div id="navbar-placeholder"></div>
         <div class="min-h-screen flex fle-col items-center justify-center py-6 px-4">
             <div class="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
                 <div>
@@ -48,9 +49,34 @@
                 </form>
             </div>
         </div>
+
+        <div id="footer-placeholder"></div>
     </div>
 
     <script>
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const [navbarResponse, footerResponse] = await Promise.all([
+                    fetch('navbar.html'),
+                    fetch('footer.html')
+                ]);
+                
+                const [navbarHtml, footerHtml] = await Promise.all([
+                    navbarResponse.text(),
+                    footerResponse.text()
+                ]);
+
+                document.getElementById('navbar-placeholder').innerHTML = navbarHtml;
+                document.getElementById('footer-placeholder').innerHTML = footerHtml;
+            } catch (error) {
+                console.error('Error loading page components:', error);
+            }
+
+            CATEGORIES.forEach(fetchAndDisplayCategory);
+        });
+
         document.getElementById('loginForm').addEventListener('submit', async (event) => {
             event.preventDefault(); // Prevent the default form submission
             const email = document.getElementById('email').value;
