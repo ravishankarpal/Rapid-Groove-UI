@@ -31,7 +31,6 @@
     <header class="bg-white">
         <nav class="flex justify-between items-center w-[92%] mx-auto">
             <div>
-                <!-- <img class="w-16 cursor-pointer" src="https://cdn-icons-png.flaticon.com/512/5968/5968204.png" alt="..."> -->
             </div>
             
             <div class="nav-links duration-500 md:static absolute bg-white md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5"></div>
@@ -64,41 +63,29 @@
                     <li><a class="hover:text-gray-500" href="#">Contact Us</a></li>
                 </ul>
             </div>
+
+           
             
-        
-
-            <!-- <div class="relative flex items-center gap-6">
-    
-                <button class="text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="accountButton">
-                    Account
-                </button>
-            
-                
-                <div class="hidden absolute top-10 right-0 w-32 bg-white border border-gray-300 rounded-md shadow-lg" id="dropdownMenu">
-                    <a href="./src/components/login.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Login</a>                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign Up</a>
-                </div>
-            
-              
-                <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
-            </div> -->
-
-
-
             <div class="relative flex items-center gap-6">
-                <button class="text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="accountButton" style="padding: 0;">
-                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300">
+                <button class="flex items-center text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="accountButton">
+                    <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300 mr-2">
                         <img src="../../assests/image/user_icon.png" alt="User" class="w-full h-full object-cover">
                     </div>
+                    Account
                 </button>
                 
-                <div class="hidden absolute top-12 right-0 w-32 bg-white border border-gray-300 rounded-md shadow-lg" id="dropdownMenu">
-                    <a href="./src/components/login.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Login</a>
+            
+                <!-- Dropdown Menu -->
+                <div class="hidden absolute top-10 right-0 w-32 bg-white border border-gray-300 rounded-md shadow-lg" id="dropdownMenu">
+                    <a href="/src/components/login.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Login</a>
                     <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign Up</a>
                 </div>
             
                 <!-- Mobile Menu Icon -->
                 <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
             </div>
+                
+            
             
         </nav>
     </header>
@@ -107,25 +94,8 @@
     <div id="common-content"></div>
 
     <script>
-        const navLinks = document.querySelector('.nav-links');
-        function onToggleMenu(e) {
-            e.name = e.name === 'menu' ? 'close' : 'menu';
-            navLinks.classList.toggle('top-[9%]');
-        }
 
-        const accountButton = document.getElementById('accountButton');
-    const dropdownMenu = document.getElementById('dropdownMenu');
-
-    accountButton.addEventListener('click', () => {
-        dropdownMenu.classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', (event) => {
-        if (!accountButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-            dropdownMenu.classList.add('hidden');
-        }
-    });
-
+  
     </script>
 </body>
 </html>

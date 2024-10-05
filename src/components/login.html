@@ -78,37 +78,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         document.getElementById('loginForm').addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent the default form submission
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+    event.preventDefault(); 
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-            try {
-                const response = await fetch('http://localhost:8081/authenticate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userName: email,
-                        userPassword: password
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Invalid email or password');
-                }
-
-                const data = await response.json();
-                // Save JWT and user details as needed
-                console.log('Login successful:', data);
-
-                // Redirect to index page or handle post-login actions
-                window.location.href = '../../index.html'; 
-
-            } catch (error) {
-                alert(error.message); // Show error message
-            }
+    try {
+        const response = await fetch('http://localhost:8081/authenticate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userName: email,
+                userPassword: password
+            }),
         });
+
+        if (!response.ok) {
+            throw new Error('Invalid email or password');
+        }
+        const data = await response.json();
+        
+        // Assuming the response contains user details like name and email
+        const { userName, userEmail } = data; 
+        
+        // Store user details in localStorage
+        localStorage.setItem('userName', userName);
+        localStorage.setItem('userEmail', userEmail);
+
+        console.log('Login successful:', data);  
+        window.location.href = '../../index.html'; 
+
+    } catch (error) {
+        alert(error.message); 
+    }
+});
+
+
+
     </script>
 </body>
 </html>
