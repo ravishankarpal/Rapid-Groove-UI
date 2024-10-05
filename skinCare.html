@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +23,7 @@
         }
 
         .hero-overlay {
-            background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
             position: absolute;
             top: 0;
             left: 0;
@@ -61,8 +62,13 @@
         }
 
         @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
         }
     </style>
 </head>
@@ -73,8 +79,10 @@
     <div class="hero">
         <div class="hero-overlay">
             <h1 class="text-5xl font-bold mb-4 font-[Playfair Display]">Discover Your Perfect<br>Skincare Routine</h1>
-            <p class="text-xl mb-8 max-w-lg">Luxury skincare products crafted with science-backed ingredients for radiant, healthy skin.</p>
-            <button class="bg-white text-gray-900 px-8 py-3 rounded-full hover:bg-gray-100 transition duration-300 font-semibold">
+            <p class="text-xl mb-8 max-w-lg">Luxury skincare products crafted with science-backed ingredients for
+                radiant, healthy skin.</p>
+            <button
+                class="bg-white text-gray-900 px-8 py-3 rounded-full hover:bg-gray-100 transition duration-300 font-semibold">
                 Shop Now
             </button>
         </div>
@@ -172,7 +180,7 @@
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 const container = document.getElementById(`${category.id}-container`);
-                
+
                 if (data.content && data.content.length > 0) {
                     container.innerHTML = data.content.map(createProductCard).join('');
                 } else {
@@ -197,10 +205,10 @@
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const [navbarResponse, footerResponse] = await Promise.all([
-                fetch('src/components/navbar.html'),  
-                fetch('src/components/footer.html')  
+                    fetch('src/components/navbar.html'),
+                    fetch('src/components/footer.html')
                 ]);
-                
+
                 const [navbarHtml, footerHtml] = await Promise.all([
                     navbarResponse.text(),
                     footerResponse.text()
@@ -216,4 +224,5 @@
         });
     </script>
 </body>
+
 </html>
