@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 console.error('Error loading page components:', error);
             }
 
-            CATEGORIES.forEach(fetchAndDisplayCategory);
+            // CATEGORIES.forEach(fetchAndDisplayCategory);
         });
 
         document.getElementById('loginForm').addEventListener('submit', async (event) => {
@@ -99,24 +99,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error('Invalid email or password');
         }
         const data = await response.json();
-        
-        // Assuming the response contains user details like name and email
-        const { userName, userEmail } = data; 
-        
-        // Store user details in localStorage
+
+        const userEmail = data.user.email;
+        const userName = data.user.name;
+
         localStorage.setItem('userName', userName);
         localStorage.setItem('userEmail', userEmail);
 
-        console.log('Login successful:', data);  
-        window.location.href = '../../index.html'; 
+        const userRole = data.user.role[0].roleName;
+
+        if (userRole.toLowerCase() === 'admin') {
+             window.location.href = '../../admin.html'; // Adjust the path as needed
+             console.log('Login successful:', data);   
+        }else{
+            console.log('Login successful:', data);   
+            window.location.href = '../../index.html';
+            console.log(localStorage.getItem('userName'));
+            console.log(localStorage.getItem('userEmail'));
+        }
 
     } catch (error) {
         alert(error.message); 
     }
 });
-
-
-
     </script>
 </body>
 </html>
