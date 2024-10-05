@@ -11,29 +11,27 @@
     <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
     <script src="../../js/navbar.js"></script>
     <style>
-        /* Dropdown visibility on hover */
-        .group:hover .dropdown {
+        /* Show dropdown on hover */
+        #accountButton:hover + #accountMenu,
+        #accountMenu:hover {
             display: block;
         }
-        .dropdown:hover {
+        #shopButton:hover + #dropdownMenu,
+        #dropdownMenu:hover {
             display: block;
         }
 
-        /* Show dropdown on hover */
-    #accountButton:hover + #dropdownMenu, #dropdownMenu:hover {
-        display: block;
-    }
-    #dropdownMenu {
+        /* Ensure dropdowns are initially hidden */
+        #accountMenu,
+        #dropdownMenu {
+            display: none; /* Hide dropdowns by default */
             z-index: 100; 
             position: absolute; 
+            background-color: white; 
+            border: 1px solid #d1d5db; /* Tailwind's border-gray-300 */
+            border-radius: 0.375rem; /* Tailwind's rounded-md */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Tailwind's shadow-lg */
         }
-
-        #accountMenu {
-        z-index: 100;
-        position: absolute; 
-    }
-
-  
     </style>
 </head>
 <body class="font-[Poppins] bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee] h-screen">
@@ -53,7 +51,7 @@
                         </button>
                     
                         <!-- Dropdown Menu -->
-                        <div class="hidden absolute top-10 right-0 w-32 bg-white border border-gray-300 rounded-md shadow-lg" id="dropdownMenu">
+                        <div class="hidden absolute top-10 right-0 w-32" id="dropdownMenu">
                             <a href="./src/components/skinCare.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Skin Care</a>
                             <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Makeup</a>
                             <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Hair Care</a>
@@ -83,7 +81,7 @@
                     <span id="userGreeting">Account</span> <!-- Placeholder for username -->
                 </button>
             
-                <div class="hidden absolute top-10 right-0 w-32 bg-white border border-gray-300 rounded-md shadow-lg" id="accountMenu">
+                <div class="hidden absolute top-10 right-0 w-32" id="accountMenu">
                     <div id="userInfo" class="hidden px-4 py-2 text-gray-700">
                         <span id="userName"></span><br>
                         <span id="userEmail"></span><br>
