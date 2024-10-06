@@ -1,3 +1,5 @@
+
+
 // Initialize selected size and quantity variables
 let selectedSize = null;
 let selectedQuantity = 1; // Default quantity is 1
@@ -107,6 +109,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('total-price').textContent = totalPrice.toFixed(2);
     }
 });
+
+
+
+
+async function checkPincode() {
+    const pincode = document.getElementById('pincode-input').value;
+    const deliveryMessage = document.getElementById('delivery-message');
+
+    try {
+         const response = await fetch(`http://localhost:8081/rapid/user/check/delivery/${pincode}`);
+        // const response = await fetch(API_URLS.CHECK_DELIVERY(pincode));
+        const result = await response.json();
+
+        if (response.ok) {
+            // Delivery available
+            deliveryMessage.innerHTML = `<span class="text-green-600">Delivery is available in ${result.city}, ${result.state}. Estimated delivery in ${result.estimatedDays} days.</span>`;
+        } else {
+            // Delivery not available
+            deliveryMessage.innerHTML = `<span class="text-red-600">${result.message}</span>`;
+        }
+    } catch (error) {
+        deliveryMessage.innerHTML = `<span class="text-red-600">Error checking delivery: ${error.message}</span>`;
+    }
+}
+
+
 
 // Loading navbar and footer components
 document.addEventListener('DOMContentLoaded', async () => {
