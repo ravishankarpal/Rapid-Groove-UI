@@ -25,30 +25,6 @@ function createLoadingCard() {
     `;
 }
 
-// function createProductCard(product) {
-//     return `
-//         <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
-//             <img src="data:${product.productImages[0].type};base64,${product.productImages[0].picByte}" 
-//                  alt="${product.productName}" 
-//                  class="w-full h-48 object-cover">
-//             <div class="p-4">
-//                 <h2 class="text-lg font-bold mb-2">${product.productName}</h2>
-//                 <p class="text-gray-600 text-sm mb-3">${product.productDescription}</p>
-//                 <div class="flex justify-between items-center">
-//                     <span class="text-lg font-semibold text-gray-900">
-//                         ₹ ${product.productDiscountPrice.toFixed(2)} 
-//                         <span class="text-sm text-gray-500 line-through">₹ ${product.productActualPrice.toFixed(2)}</span>
-//                     </span>
-//                     <button class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300">
-//                         Add to Cart
-//                     </button>
-//                 </div>
-//             </div>
-//         </div>
-//     `;
-// }
-
-
 function createProductCard(product) {
     return `
         <a href="product-detail.html?id=${product.productId}" class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
@@ -71,12 +47,6 @@ function createProductCard(product) {
         </a>
     `;
 }
-
-
-
-
-
-
 
 async function fetchAndDisplayCategory(category) {
     const section = document.createElement('section');

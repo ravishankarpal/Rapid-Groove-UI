@@ -1,5 +1,7 @@
-// Initialize selected size variable
+// Initialize selected size and quantity variables
 let selectedSize = null;
+let selectedQuantity = 1; // Default quantity is 1
+let productDiscountPrice = 0; // Placeholder for the discount price
 
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -33,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 document.getElementById('product-price').textContent = product.productDiscountPrice.toFixed(2);
                 document.getElementById('product-original-price').textContent = product.productActualPrice.toFixed(2);
-
 
                 if (product.discountPercentage === null) {
                     document.getElementById('product-discount').textContent = "";
@@ -71,8 +72,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     sizeOptionsContainer.querySelector('.flex').appendChild(button); // Append the button to the container
                 });
 
-
-
+                // Set the discount price
+                productDiscountPrice = product.productDiscountPrice;
+                
+                // Set the default total price
+                updateTotalPrice(selectedQuantity, productDiscountPrice);
 
             } else {
                 console.error('No product found for the given ID.');
@@ -81,9 +85,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Error fetching product details:', error);
         }
     }
+
+    // Event listeners for quantity buttons
+    document.getElementById('increase-quantity').addEventListener('click', () => {
+        selectedQuantity++;
+        document.getElementById('quantity').textContent = selectedQuantity;
+        updateTotalPrice(selectedQuantity, productDiscountPrice);
+    });
+
+    document.getElementById('decrease-quantity').addEventListener('click', () => {
+        if (selectedQuantity > 1) {
+            selectedQuantity--;
+            document.getElementById('quantity').textContent = selectedQuantity;
+            updateTotalPrice(selectedQuantity, productDiscountPrice);
+        }
+    });
+
+    // Function to update total price
+    function updateTotalPrice(quantity, pricePerUnit) {
+        const totalPrice = quantity * pricePerUnit;
+        document.getElementById('total-price').textContent = totalPrice.toFixed(2);
+    }
 });
 
-
+// Loading navbar and footer components
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const [navbarResponse, footerResponse] = await Promise.all([
@@ -101,5 +126,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('Error loading page components:', error);
     }
-
 });
