@@ -1,0 +1,28 @@
+/* Tailwind CSS styles */
+.cart-icon {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+}
+
+#cart-details-modal {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.cart-product {
+    display: flex;
+    gap: 16px;
+}
+
+.cart-product-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}

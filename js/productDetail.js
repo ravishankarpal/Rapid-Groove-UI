@@ -136,6 +136,89 @@ async function checkPincode() {
 
 
 
+// Initialize cart as an empty array
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+updateCartCount();
+
+// Function to update the cart count in the navbar
+function updateCartCount() {
+    const cartCount = document.getElementById('cartCount');
+    cartCount.textContent = cart.length; // Update count
+}
+
+// Function to add items to the cart
+function addToCart(product) {
+    cart.push(product);
+    localStorage.setItem('cart', JSON.stringify(cart)); // Save cart to localStorage
+    updateCartCount(); // Update cart count
+}
+
+// Function to show cart items
+function displayCartItems() {
+    const cartItemsContainer = document.getElementById('cartItems');
+    cartItemsContainer.innerHTML = ''; // Clear previous items
+
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<div class="px-4 py-2 text-gray-600">Your cart is empty</div>';
+        return;
+    }
+
+    cart.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'px-4 py-2 flex justify-between items-center';
+        itemElement.innerHTML = `
+            <span>${item.productName} - ₹${item.price}</span>
+            <button class="text-red-600" onclick="removeFromCart('${item.id}')">Remove</button>
+        `;
+        cartItemsContainer.appendChild(itemElement);
+    });
+}
+
+// Function to remove an item from the cart
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    localStorage.setItem('cart', JSON.stringify(cart)); // Save updated cart to localStorage
+    updateCartCount(); // Update cart count
+    displayCartItems(); // Refresh cart display
+}
+
+// Toggle cart menu visibility on click
+document.getElementById('cartButton').addEventListener('click', function() {
+    const cartMenu = document.getElementById('cartMenu');
+    cartMenu.classList.toggle('hidden');
+    displayCartItems(); // Show cart items when menu is opened
+});
+
+// Add an example product to the cart for demonstration
+// Call this function when adding a product from product-detail.html
+function exampleAddToCart() {
+    const exampleProduct = { id: '1', productName: 'Sample Product', price: 500 }; // Example product
+    addToCart(exampleProduct);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Loading navbar and footer components
 document.addEventListener('DOMContentLoaded', async () => {
     try {
