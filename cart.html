@@ -6,13 +6,39 @@
     <title>Cart</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="js/cart.js"></script>
+    <style>
+        
+
+/* Ensure the modal has max height and doesn't overflow the screen */
+#addressPopup {
+    max-height: 100vh;
+    overflow: hidden; /* Prevent the content from overflowing outside the modal */
+}
+
+#addressPopup .max-h-full {
+    max-height: calc(100vh - 20px); /* Add padding to avoid overflow at the screen edges */
+    overflow-y: auto; /* Ensure the modal content can scroll within itself */
+}
+
+/* Ensure the dropdown stays within the modal and doesn't overflow */
+#state {
+    z-index: 10; /* Make sure the dropdown has a higher stacking context than the other elements */
+}
+
+/* Disable body scroll when the popup is active */
+body.no-scroll {
+    overflow: hidden;
+}
+
+
+    </style>
+    <script src="js/cart.js" defer></script>
+   
 </head>
 <body class="bg-gray-50">
-     <!-- Navbar Placeholder -->
+    <!-- Navbar Placeholder -->
     <div id="navbar-placeholder"></div>
 
-    
     <div class="container mx-auto p-4 max-w-6xl">
         <!-- Progress Steps -->
         <div class="flex justify-between mb-8">
@@ -69,9 +95,12 @@
         </div>
     </div>
 
+    <div id="address-popup-placeholder"></div>
+
+
     <!-- Footer placeholder -->
     <div id="footer-placeholder"></div>
 
-  
+    <script src="js/address.js" ></script>
 </body>
 </html>
