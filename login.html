@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="js/login.js"></script>
+</head>
+
+<body>
+    <div class="font-[sans-serif]">
+        <div id="navbar-placeholder"></div>
+        <div class="min-h-screen flex fle-col items-center justify-center py-6 px-4">
+            <div class="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
+                <div>
+                    <h2 class="lg:text-5xl text-4xl font-extrabold lg:leading-[55px] text-gray-800">
+                        Seamless Login for Exclusive Access
+                    </h2>
+                    <p class="text-sm mt-6 text-gray-800">Immerse yourself in a hassle-free login journey with our
+                        intuitively designed login form. Effortlessly access your account.</p>
+                    <p class="text-sm mt-12 text-gray-800">Don't have an account? <a href="javascript:void(0);"
+                            class="text-blue-600 font-semibold hover:underline ml-1">Register here</a></p>
+                </div>
+                <form id="loginForm" class="max-w-md md:ml-auto w-full">
+                    <h3 class="text-gray-800 text-3xl font-extrabold mb-8">Sign in</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <input id="email" type="email" autocomplete="email" required
+                                class="bg-gray-100 w-full text-sm text-gray-800 px-4 py-3.5 rounded-md outline-blue-600 focus:bg-transparent"
+                                placeholder="Email address" />
+                        </div>
+                        <div>
+                            <input id="password" type="password" autocomplete="current-password" required
+                                class="bg-gray-100 w-full text-sm text-gray-800 px-4 py-3.5 rounded-md outline-blue-600 focus:bg-transparent"
+                                placeholder="Password" />
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between gap-4">
+                            <div class="flex items-center">
+                                <input id="remember-me" name="remember-me" type="checkbox"
+                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+                                <label for="remember-me" class="ml-3 block text-sm text-gray-800">Remember me</label>
+                            </div>
+                            <div class="text-sm">
+                                <a href="javascript:void(0);"
+                                    class="text-blue-600 hover:text-blue-500 font-semibold">Forgot your password?</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="!mt-8">
+                        <button type="submit"
+                            class="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">Log
+                            in</button>
+                    </div>
+                    <div class="space-x-6 flex justify-center mt-8">
+                        <button type="button" class="border-none outline-none">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png"
+                                alt="Google Logo" class="w-6 h-6 inline-block" />
+                            Login with Google
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="footer-placeholder"></div>
+    </div>
+
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const [navbarResponse, footerResponse] = await Promise.all([
+                    fetch('src/components/navbar.html'),
+                    fetch('src/components/footer.html')
+                ]);
+
+                const [navbarHtml, footerHtml] = await Promise.all([
+                    navbarResponse.text(),
+                    footerResponse.text()
+                ]);
+
+                document.getElementById('navbar-placeholder').innerHTML = navbarHtml;
+                document.getElementById('footer-placeholder').innerHTML = footerHtml;
+            } catch (error) {
+                console.error('Error loading page components:', error);
+            }
+
+            // CATEGORIES.forEach(fetchAndDisplayCategory);
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:8081/authenticate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userName: email,
+                        userPassword: password
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Invalid email or password');
+                }
+                const data = await response.json();
+
+                const userEmail = data.user.email;
+                const userName = data.user.name;
+
+                const userJwtToken = data.jwtToken;
+
+                localStorage.setItem('userName', userName);
+                localStorage.setItem('userEmail', userEmail);
+                localStorage.setItem('userJwtToken',userJwtToken);
+
+                const userRole = data.user.role[0].roleName;
+
+                if (userRole.toLowerCase() === 'admin') {
+                    window.location.href = '../../admin.html'; // Adjust the path as needed
+                    console.log('Login successful:', data);
+                } else {
+                    console.log('Login successful:', data);
+                    window.location.href = '../../index.html';
+                    console.log(localStorage.getItem('userName'));
+                    console.log(localStorage.getItem('userEmail'));
+                }
+
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

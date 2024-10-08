@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +8,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../css/cart.css">
     <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
     <script src="../../js/navbar.js"></script>
+    <script src="../../js/cart.js"></script>
     <style>
         /* Show dropdown on hover */
-        #accountButton:hover + #accountMenu,
+        #accountButton:hover+#accountMenu,
         #accountMenu:hover {
             display: block;
         }
-        #shopButton:hover + #dropdownMenu,
+
+        #shopButton:hover+#dropdownMenu,
         #dropdownMenu:hover {
             display: block;
         }
@@ -24,63 +29,103 @@
         /* Ensure dropdowns are initially hidden */
         #accountMenu,
         #dropdownMenu {
-            display: none; /* Hide dropdowns by default */
-            z-index: 100; 
-            position: absolute; 
-            background-color: white; 
-            border: 1px solid #d1d5db; /* Tailwind's border-gray-300 */
-            border-radius: 0.375rem; /* Tailwind's rounded-md */
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Tailwind's shadow-lg */
+            display: none;
+            /* Hide dropdowns by default */
+            z-index: 100;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #d1d5db;
+            /* Tailwind's border-gray-300 */
+            border-radius: 0.375rem;
+            /* Tailwind's rounded-md */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            /* Tailwind's shadow-lg */
         }
     </style>
 </head>
+
 <body class="font-[Poppins] bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee] h-screen">
     <header class="bg-white">
         <nav class="flex justify-between items-center w-[92%] mx-auto">
             <div>
                 <!-- Your logo or brand name can go here -->
             </div>
-    
-            <div class="nav-links duration-500 md:static absolute bg-white md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5"></div>
-                <ul class="flex md:flex-row flex-col md:items-center md:gap-[4vw] gap-8">
-                    <li><a class="hover:text-gray-500" href="#">Home</a></li>
-    
-                    <div class="relative flex items-center gap-6">
-                        <button class="text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="shopButton">
-                            Shop
-                        </button>
-                    
-                        <!-- Dropdown Menu -->
-                        <div class="hidden absolute top-10 right-0 w-32" id="dropdownMenu">
-                            <a href="./src/components/skinCare.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Skin Care</a>
-                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Makeup</a>
-                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Hair Care</a>
-                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Fragrances</a>
-                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Bath & Body</a>
-                        </div>
-                    
-                        <!-- Mobile Menu Icon -->
-                        <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
-                    </div>
-    
-                    <li><a class="hover:text-gray-500" href="#">New Arrivals</a></li>
-                    <li><a class="hover:text-gray-500" href="#">Best Sellers</a></li>
-                    <li><a class="hover:text-gray-500" href="#">Offers</a></li>
-                    <li><a class="hover:text-gray-500" href="#">Brands</a></li>
-                    <li><a class="hover:text-gray-500" href="#">Blog</a></li>
-                    <li><a class="hover:text-gray-500" href="#">About Us</a></li>
-                    <li><a class="hover:text-gray-500" href="#">Contact Us</a></li>
-                </ul>
+
+            <div
+                class="nav-links duration-500 md:static absolute bg-white md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5">
             </div>
-    
+            <ul class="flex md:flex-row flex-col md:items-center md:gap-[4vw] gap-8">
+                <li><a class="hover:text-gray-500" href="../../index.html">Home</a></li>
+
+                <div class="relative flex items-center gap-6">
+                    <button class="text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="shopButton">
+                        Shop
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div class="hidden absolute top-10 right-0 w-32" id="dropdownMenu">
+                        <a href="../../skinCare.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Skin
+                            Care</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Makeup</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Hair Care</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Fragrances</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Bath & Body</a>
+                    </div>
+
+                    <!-- Mobile Menu Icon -->
+                    <ion-icon onclick="onToggleMenu(this)" name="menu"
+                        class="text-3xl cursor-pointer md:hidden"></ion-icon>
+                </div>
+
+                <li><a class="hover:text-gray-500" href="#">New Arrivals</a></li>
+                <li><a class="hover:text-gray-500" href="#">Best Sellers</a></li>
+                <li><a class="hover:text-gray-500" href="#">Offers</a></li>
+                <li><a class="hover:text-gray-500" href="#">Brands</a></li>
+                <li><a class="hover:text-gray-500" href="#">Blog</a></li>
+                <li><a class="hover:text-gray-500" href="#">About Us</a></li>
+                <li><a class="hover:text-gray-500" href="#">Contact Us</a></li>
+            </ul>
+            </div>
+
+
+            <!-- Cart Icon/Link in Navbar -->
+            <!-- <div class="cart-icon" onclick="fetchCartDetails()">
+                <img src="../../assests/image/trolley.png" alt="Cart" />
+            </div>
+
+            <div id="cart-details-modal" class="hidden fixed inset-0 z-50 overflow-auto bg-smoke-light flex">
+                <div class="relative p-8 bg-white w-full max-w-md m-auto flex-col flex rounded-lg">
+                    <span class="cart-close-btn" onclick="closeCartDetails()">X</span>
+                    <h3 class="text-xl font-bold mb-4">Your Cart</h3>
+                    <div id="cart-products">
+                    </div>
+                    <button class="checkout-btn bg-green-500 text-white p-2 rounded">Checkout</button>
+                </div>
+            </div> -->
+
+
+
+            <div class="flex items-center">
+                <!-- Other nav links can go here -->
+                <a href="cart.html" class="relative">
+                    <img src="../../assests/image/shopping-cart.png" class="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10" alt="Cart">
+                    <!-- Cart badge -->
+                    <span class="absolute top-0 right-0 inline-block w-4 h-4 bg-red-600 text-white text-xs font-bold rounded-full text-center">1</span>
+                </a>
+            </div>
+
+
+
+
             <div class="relative flex items-center gap-6">
-                <button class="flex items-center text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="accountButton">
+                <button class="flex items-center text-gray-600 hover:text-gray-800 px-5 py-2 relative"
+                    id="accountButton">
                     <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300 mr-2">
                         <img src="../../assests/image/user_icon.png" alt="User" class="w-full h-full object-cover">
                     </div>
                     <span id="userGreeting">Account</span> <!-- Placeholder for username -->
                 </button>
-            
+
                 <div class="hidden absolute top-10 right-0 w-32" id="accountMenu">
                     <div id="userInfo" class="hidden px-4 py-2 text-gray-700">
                         <span id="userName"></span><br>
@@ -90,19 +135,20 @@
                         <a href="#" class="block py-2 hover:bg-gray-100" id="logoutButton">Logout</a>
                     </div>
                     <div id="loginLinks" class="block px-4 py-2 text-gray-700">
-                        <a href="/src/components/login.html" class="block hover:bg-gray-100">Login</a>
+                        <a href="/login.html" class="block hover:bg-gray-100">Login</a>
                         <a href="#" class="block hover:bg-gray-100">Sign Up</a>
                     </div>
                 </div>
-            
+
                 <!-- Mobile Menu Icon -->
                 <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
             </div>
         </nav>
     </header>
-    
+
 
     <!-- Div to include common.html -->
     <div id="common-content"></div>
 </body>
+
 </html>
