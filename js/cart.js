@@ -1,9 +1,10 @@
+let selectedItems = new Set(); // A set to track selected item IDs
 
 async function fetchCartData() {
     try {
         let token = localStorage.getItem("userJwtToken");
         token = "Bearer " + token;
-        const response = await fetch('http://localhost:8081/rapid/cart/cart_details', {
+        const response = await fetch('http://localhost:8081/rapid/cart/details', {
             headers: {
                 'Authorization': token
             }
@@ -18,18 +19,37 @@ async function fetchCartData() {
     }
 }
 
-function calculatePriceDetails(cartItems) {
-    const totalProductPrice = cartItems.reduce((sum, item) => {
-        return sum + (item.products.productActualPrice || 0);
-    }, 0);
+function toggleItemSelection(itemId) {
+    if (selectedItems.has(itemId)) {
+        selectedItems.delete(itemId);
+    } else {
+        selectedItems.add(itemId);
+    }
+    updatePriceDetails();
+}
 
-    const totalDiscounts = cartItems.reduce((sum, item) => {
-        const discount = (item.products.productActualPrice || 0) - (item.products.productDiscountPrice || 0);
-        return sum + discount;
-    }, 0);
+function calculatePriceDetails(cartData) {
+    let totalProductPrice = 0;
+    let totalDiscounts = 0;
+    let deliveryFee = 50; // Default delivery fee
+    let orderTotal = 0;
 
-    const deliveryFee = 62; // You might want to make this dynamic based on your business logic
-    const orderTotal = totalProductPrice - totalDiscounts + deliveryFee;
+    cartData.forEach(item => {
+        if (selectedItems.has(item.id)) {
+            item.productSizePrice.forEach((sizePrice) => {
+                totalProductPrice += sizePrice.price || 0;
+                totalDiscounts += (sizePrice.price || 0) - (sizePrice.finalPrice || 0);
+                orderTotal += sizePrice.finalPrice || 0;
+            });
+        }
+    });
+
+    // Apply free delivery if the order total is above ₹400
+    if (orderTotal >= 400) {
+        deliveryFee = 0;
+    }
+
+    orderTotal += deliveryFee;
 
     return {
         totalProductPrice,
@@ -41,10 +61,14 @@ function calculatePriceDetails(cartItems) {
 
 async function initializeCart() {
     const cartData = await fetchCartData();
+    // Initially select all items
+    cartData.forEach(item => selectedItems.add(item.id));
     const priceDetails = calculatePriceDetails(cartData);
     
     renderCart(cartData, priceDetails);
 }
+
+
 
 function renderCart(cartData, priceDetails) {
     const productDetailsContainer = document.getElementById('productDetails');
@@ -52,104 +76,118 @@ function renderCart(cartData, priceDetails) {
     const itemCountSpan = document.getElementById('itemCount');
     const discountMessageDiv = document.getElementById('discountMessage');
 
-    // Update item count
-    itemCountSpan.textContent = cartData.length;
+    // Update item count based on selected items
+    itemCountSpan.textContent = selectedItems.size;
 
-    // Render product details
+    // Render product details with checkboxes
     productDetailsContainer.innerHTML = cartData.map(item => {
-        const productImage = item.products.productImages.length > 0 ? item.products.productImages[0].picByte : ''; // Get the image byte data
-        const base64Image = `data:${item.products.productImages[0].type};base64,${productImage}`; // Construct base64 image source
+        const isChecked = selectedItems.has(item.id) ? 'checked' : '';
+        return item.product.map((product, index) => {
+            const productImage = product.productImages.length > 0 ? product.productImages[0].picByte : '';
+            const base64Image = `data:${product.productImages[0].type};base64,${productImage}`;
+            const sizePrice = item.productSizePrice[index];
 
-        return `
-            <div class="flex gap-4">
-                <img src="${base64Image}" alt="${item.products.productName}" class="w-20 h-20 bg-gray-200 rounded"/>
-                <div class="flex-1">
-                    <div class="flex justify-between">
-                        <h3 class="font-medium">${item.products.productName}</h3>
-                        <button class="text-purple-600">EDIT</button>
+            return `
+                <div class="flex gap-4 mb-4">
+                    <input type="checkbox" class="item-checkbox" id="item-${item.id}" ${isChecked} onclick="toggleItemSelection(${item.id})" />
+                    <!-- Product Image with Click Event -->
+                <a href="#" onclick="viewProduct(${product.productId}); return false;">
+                <img src="${base64Image}" alt="${product.productName}" class="w-20 h-20 bg-gray-200 rounded"/>
+                    <div class="flex-1">
+                        <div class="flex justify-between">
+                           
+                             <!-- Product Name with Click Event -->
+                    <a href="#" class="font-medium" onclick="viewProduct(${product.productId}); return false;">${product.productName}</a>
+                           
+                            <button class="flex items-center text-gray-500 mt-2" onclick="removeItem(${item.id})">
+                                <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M5 12H19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                REMOVE
+                            </button>
+                        </div>
+                        <div class="flex items-center mt-2">
+                            <span class="font-bold">₹${sizePrice.finalPrice}</span>
+                            <span class="ml-2 text-gray-500 line-through">₹${sizePrice.price}</span>
+                            <span class="ml-2 text-green-600">${sizePrice.discountPercentage}% Off</span>
+                        </div>
+                        <div class="mt-2">
+                            Size: ${sizePrice.size} • Qty: 1
+                        </div>
                     </div>
-                    <div class="flex items-center mt-2">
-                        <span class="font-bold">₹${item.products.productDiscountPrice}</span>
-                        <span class="ml-2 text-gray-500 line-through">₹${item.products.productActualPrice}</span>
-                        <span class="ml-2 text-green-600">${calculateDiscountPercentage(item.products.productActualPrice, item.products.productDiscountPrice)}% Off</span>
-                    </div>
-                    <div class="mt-2">
-                        Size: ${item.products.size || 'N/A'} • Qty: ${item.quantity}
-                    </div>
-                    <button class="flex items-center text-gray-500 mt-2" onclick="removeItem(${item.id})">
-                        <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M5 12H19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        REMOVE
-                    </button>
                 </div>
-            </div>
-            <div class="flex justify-between mt-4 pt-4 border-t">
-                <span>Sold by: ${item.products.productCategory}</span>
-                <span>Delivery Fee: ₹${priceDetails.deliveryFee}</span>
-            </div>
-        `;
+            `;
+        }).join('');
     }).join('');
 
     // Render price details
     priceDetailsContainer.innerHTML = `
         <div class="flex justify-between">
             <span>Total Product Price</span>
-            <span> ₹${priceDetails.totalProductPrice}</span>
+            <span>₹${priceDetails.totalProductPrice.toFixed(2)}</span>
         </div>
         <div class="flex justify-between text-green-600">
             <span>Total Discounts</span>
-            <span> ₹${priceDetails.totalDiscounts}</span>
+            <span>₹${priceDetails.totalDiscounts.toFixed(2)}</span>
         </div>
         <div class="flex justify-between">
-            <span>Additional Fees</span>
-            <span> ₹${priceDetails.deliveryFee}</span>
+            <span>Delivery Fee</span>
+            <span>${priceDetails.deliveryFee === 0 ? 'Free' : `₹${priceDetails.deliveryFee.toFixed(2)}`}</span>
         </div>
         <div class="flex justify-between font-bold pt-3 border-t">
             <span>Order Total</span>
-            <span>₹${priceDetails.orderTotal}</span>
+            <span>₹${priceDetails.orderTotal.toFixed(2)}</span>
         </div>
     `;
 
     // Render discount message
-    discountMessageDiv.textContent = `Yay! Your total discount is ₹${priceDetails.totalDiscounts}`;
+    discountMessageDiv.textContent = `Yay! Your total discount is ₹${priceDetails.totalDiscounts.toFixed(2)}`;
+}
+
+
+function viewProduct(productId) {
+    // Navigate to the product detail page or show a modal with product details
+    window.location.href = `product-detail.html?id=${productId}`; // Example URL, adjust as needed
 }
 
 
 
-function calculateDiscountPercentage(actualPrice, discountPrice) {
-    if (!actualPrice || !discountPrice) return 0;
-    const discount = ((actualPrice - discountPrice) / actualPrice) * 100;
-    return Math.round(discount);
-}
+
+
+
+
+
+
 
 async function removeItem(itemId) {
-    // Implement your remove item logic here
-    console.log(`Removing item with ID: ${itemId}`);
-    // After removing, re-fetch and re-render the cart
-    await initializeCart();
+    try {
+        let token = localStorage.getItem("userJwtToken");
+        token = "Bearer " + token;
+        const response = await fetch(`http://localhost:8081/rapid/cart/deleteCartItem/${itemId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': token
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        // Remove the item from the selectedItems set
+        selectedItems.delete(itemId);
+        // Fetch updated cart data and re-render
+        const updatedCartData = await fetchCartData();
+        const updatedPriceDetails = calculatePriceDetails(updatedCartData);
+        renderCart(updatedCartData, updatedPriceDetails);
+    } catch (error) {
+        console.error('Error removing item from cart:', error);
+    }
 }
 
-// Initialize the cart when the page loads
-document.addEventListener('DOMContentLoaded', initializeCart);
-
-
-
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const [navbarResponse, footerResponse] = await Promise.all([
-            fetch('src/components/navbar.html'),
-            fetch('src/components/footer.html')
-        ]);
-
-        const [navbarHtml, footerHtml] = await Promise.all([
-            navbarResponse.text(),
-            footerResponse.text()
-        ]);
-
-        document.getElementById('navbar-placeholder').innerHTML = navbarHtml;
-        document.getElementById('footer-placeholder').innerHTML = footerHtml;
-    } catch (error) {
-        console.error('Error loading page components:', error);
-    }
+function updatePriceDetails() {
+    fetchCartData().then(cartData => {
+        const priceDetails = calculatePriceDetails(cartData);
+        renderCart(cartData, priceDetails);
     });
+}
+
+initializeCart();
