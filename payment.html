@@ -5,48 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="/js/nav-footer.js"></script>
 </head>
 <body class="bg-gray-100">
-    <!-- Payment Header -->
-    <header class="bg-white py-4 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold text-purple-600">Rapid Groove</h1>
-        </div>
-    </header>
 
+       <!-- Navbar placeholder -->
+       <div id="navbar-placeholder"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-purple-600">Rapid Groove</h1>
+    </div>
 
-
-        <div class="container mx-auto p-4 max-w-6xl">
-
+    <div class="container mx-auto p-4 max-w-6xl">
+        <!-- Progress Bar -->
         <div class="flex justify-between mb-8">
+            <!-- Cart Step (Active) -->
             <div class="flex items-center flex-1">
                 <div class="rounded-full w-8 h-8 flex items-center justify-center border-2 bg-purple-600 text-white border-purple-600">1</div>
                 <span class="ml-2 text-purple-600">Cart</span>
-                <div class="w-full h-0.5 mx-2 bg-gray-300"></div>
+                <div class="w-full h-0.5 mx-2 bg-purple-600"></div> <!-- Active Progress Line -->
             </div>
+
+            <!-- Address Step (Active) -->
             <div class="flex items-center flex-1">
-                <div class="rounded-full w-8 h-8 flex items-center justify-center border-2 border-gray-300 text-gray-400">2</div>
-                <span class="ml-2 text-gray-400">Address</span>
-                <div class="w-full h-0.5 mx-2 bg-gray-300"></div>
+                <div class="rounded-full w-8 h-8 flex items-center justify-center border-2 bg-purple-600 text-white border-purple-600">2</div>
+                <span class="ml-2 text-purple-600">Address</span>
+                <div class="w-full h-0.5 mx-2 bg-purple-600"></div> <!-- Active Progress Line -->
             </div>
+
+            <!-- Payment Step (Current Step) -->
             <div class="flex items-center flex-1">
-                <div class="rounded-full w-8 h-8 flex items-center justify-center border-2 border-gray-300 text-gray-400">3</div>
-                <span class="ml-2 text-gray-400">Payment</span>
-                <div class="w-full h-0.5 mx-2 bg-gray-300"></div>
+                <div class="rounded-full w-8 h-8 flex items-center justify-center border-2 bg-purple-600 text-white border-purple-600">3</div>
+                <span class="ml-2 text-purple-600">Payment</span>
+                <div class="w-full h-0.5 mx-2 bg-gray-300"></div> <!-- Inactive Progress Line -->
             </div>
+
+            <!-- Summary Step (Inactive) -->
             <div class="flex items-center">
                 <div class="rounded-full w-8 h-8 flex items-center justify-center border-2 border-gray-300 text-gray-400">4</div>
                 <span class="ml-2 text-gray-400">Summary</span>
             </div>
         </div>
-
+    </div>
 
     <!-- Payment Methods and Order Summary -->
     <div class="max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Payment Methods -->
         <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-lg font-semibold mb-4">Select Payment Method</h2>
-
             <div class="space-y-4">
                 <!-- Pay Online Section -->
                 <div class="border border-gray-200 rounded-md p-4">
@@ -115,7 +121,10 @@
             </div>
             <button class="mt-6 w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700">Continue</button>
         </div>
-    
     </div>
+
+
+     <!-- Footer placeholder -->
+     <div id="footer-placeholder"></div>
 </body>
 </html>
