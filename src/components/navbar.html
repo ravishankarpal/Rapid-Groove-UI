@@ -12,10 +12,10 @@
         rel="stylesheet">
     <link rel="stylesheet" href="../../css/cart.css">
     <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
-    <script src="../../js/navbar.js"></script>
+
     <script src="../../js/cart.js"></script>
     <style>
-        /* Show dropdown on hover */
+       
         #accountButton:hover+#accountMenu,
         #accountMenu:hover {
             display: block;
@@ -26,31 +26,32 @@
             display: block;
         }
 
-        /* Ensure dropdowns are initially hidden */
-        /* #accountMenu, */
+       
 
         #accountMenu {
-        display: none;
-        z-index: 100;
-        position: absolute;
-        background-color: white;
-        border: 1px solid #d1d5db;
-        border-radius: 0.375rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        min-width: 200px; /* Increase width for better visibility */
-    }
-        #dropdownMenu {
             display: none;
-            /* Hide dropdowns by default */
             z-index: 100;
             position: absolute;
             background-color: white;
             border: 1px solid #d1d5db;
-            /* Tailwind's border-gray-300 */
             border-radius: 0.375rem;
-            /* Tailwind's rounded-md */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+           
+        }
+
+        #dropdownMenu {
+            display: none;
+          
+            z-index: 100;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #d1d5db;
+           
+            border-radius: 0.375rem;
+            
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            /* Tailwind's shadow-lg */
+           
         }
     </style>
 </head>
@@ -59,7 +60,7 @@
     <header class="bg-white">
         <nav class="flex justify-between items-center w-[92%] mx-auto">
             <div>
-                <!-- Your logo or brand name can go here -->
+               
             </div>
 
             <div
@@ -73,7 +74,7 @@
                         Shop
                     </button>
 
-                    <!-- Dropdown Menu -->
+               
                     <div class="hidden absolute top-10 right-0 w-32" id="dropdownMenu">
                         <a href="../../skinCare.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Skin
                             Care</a>
@@ -83,7 +84,7 @@
                         <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Bath & Body</a>
                     </div>
 
-                    <!-- Mobile Menu Icon -->
+                    
                     <ion-icon onclick="onToggleMenu(this)" name="menu"
                         class="text-3xl cursor-pointer md:hidden"></ion-icon>
                 </div>
@@ -99,90 +100,53 @@
             </div>
 
 
-            <!-- Cart Icon/Link in Navbar -->
-            <!-- <div class="cart-icon" onclick="fetchCartDetails()">
-                <img src="../../assests/image/trolley.png" alt="Cart" />
-            </div>
-
-            <div id="cart-details-modal" class="hidden fixed inset-0 z-50 overflow-auto bg-smoke-light flex">
-                <div class="relative p-8 bg-white w-full max-w-md m-auto flex-col flex rounded-lg">
-                    <span class="cart-close-btn" onclick="closeCartDetails()">X</span>
-                    <h3 class="text-xl font-bold mb-4">Your Cart</h3>
-                    <div id="cart-products">
-                    </div>
-                    <button class="checkout-btn bg-green-500 text-white p-2 rounded">Checkout</button>
-                </div>
-            </div> -->
-
-
-
             <div class="flex items-center">
-                <!-- Other nav links can go here -->
                 <a href="cart.html" class="relative">
-                    <img src="../../assests/image/shopping-cart.png" class="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10" alt="Cart">
-                    <!-- Cart badge -->
-                    <span class="absolute top-0 right-0 inline-block w-4 h-4 bg-red-600 text-white text-xs font-bold rounded-full text-center">1</span>
+                    <img src="../../assests/image/shopping-cart.png" class="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10"
+                        alt="Cart">
+                    <span
+                        class="absolute top-0 right-0 inline-block w-4 h-4 bg-red-600 text-white text-xs font-bold rounded-full text-center">1</span>
                 </a>
             </div>
+            <button class="flex items-center text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="accountButton">
+                <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300 mr-2">
+                    <img src="../../assests/image/user_icon.png" alt="User" class="w-full h-full object-cover">
+                </div>
+                <span id="userGreeting">Account</span>
+            </button>
 
-
-
-<!-- 
-            <div class="relative flex items-center gap-6">
-                <button class="flex items-center text-gray-600 hover:text-gray-800 px-5 py-2 relative"
-                    id="accountButton">
-                    <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300 mr-2">
-                        <img src="../../assests/image/user_icon.png" alt="User" class="w-full h-full object-cover">
-                    </div>
-                    <span id="userGreeting">Account</span> 
-                </button>
-
-                <div class="hidden absolute top-10 right-0 w-32" id="accountMenu">
-                    <div id="userInfo" class="hidden px-4 py-2 text-gray-700">
-                        <span id="userName"></span><br>
-                        <span id="userEmail"></span><br>
-                        <a href="#" class="block py-2 hover:bg-gray-100">My Orders</a>
-                        <a href="#" class="block py-2 hover:bg-gray-100">Delete Account</a>
-                        <a href="#" class="block py-2 hover:bg-gray-100" id="logoutButton">Logout</a>
-                    </div>
-                    <div id="loginLinks" class="block px-4 py-2 text-gray-700">
-                        <a href="/login.html" class="block hover:bg-gray-100">Login</a>
-                        <a href="/signup.html" class="block hover:bg-gray-100">Sign Up</a>
+             <div class="hidden absolute top-10 right-0 w-48" id="accountMenu">
+                <div id="userInfo" style="display: none;" >
+                    <div class="px-4 py-2 border-b">
+                        <span id="userName" class="block font-medium">Hello</span>
+                        <span id="userEmail" class="block text-sm text-gray-600"></span>
                     </div>
                 </div>
 
-                
-                <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
-            </div> -->
-
-
-            <button class="flex items-center text-gray-600 hover:text-gray-800 px-5 py-2 relative"
-            id="accountButton">
-            <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300 mr-2">
-                <img src="../../assests/image/user_icon.png" alt="User" class="w-full h-full object-cover">
-            </div>
-            <span id="userGreeting">Account</span> 
-        </button>
-            <div class="hidden absolute top-10 right-0 w-48" id="accountMenu">
-                <div id="userInfo" class="py-2">
-                    <div class="px-4 py-2 border-b">
-                        <span id="userName" class="block font-medium"></span>
-                        <span id="userEmail" class="block text-sm text-gray-600"></span>
-                    </div>
-                    <a href="/login.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Login</a>
-                    <a href="/signup.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign Up</a>
+                <div id="loggedInMenu" style="display: none;" >
                     <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">My Orders</a>
                     <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Delete Account</a>
                     <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100" id="logoutButton">Logout</a>
                 </div>
-                
-            </div>
+
+                <div id="guestMenu">
+                    <a href="/login.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Login</a>
+                    <a href="/signup.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign Up</a>
+                </div>
+            </div> 
+
+
+
+
+
+
         </nav>
     </header>
 
 
-    <!-- Div to include common.html -->
+    
     <div id="common-content"></div>
+    <script src="/js/navbar.js"></script>
 </body>
 
 </html>
