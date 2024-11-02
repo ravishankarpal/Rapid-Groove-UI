@@ -27,7 +27,18 @@
         }
 
         /* Ensure dropdowns are initially hidden */
-        #accountMenu,
+        /* #accountMenu, */
+
+        #accountMenu {
+        display: none;
+        z-index: 100;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        min-width: 200px; /* Increase width for better visibility */
+    }
         #dropdownMenu {
             display: none;
             /* Hide dropdowns by default */
@@ -116,14 +127,14 @@
 
 
 
-
+<!-- 
             <div class="relative flex items-center gap-6">
                 <button class="flex items-center text-gray-600 hover:text-gray-800 px-5 py-2 relative"
                     id="accountButton">
                     <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300 mr-2">
                         <img src="../../assests/image/user_icon.png" alt="User" class="w-full h-full object-cover">
                     </div>
-                    <span id="userGreeting">Account</span> <!-- Placeholder for username -->
+                    <span id="userGreeting">Account</span> 
                 </button>
 
                 <div class="hidden absolute top-10 right-0 w-32" id="accountMenu">
@@ -140,8 +151,31 @@
                     </div>
                 </div>
 
-                <!-- Mobile Menu Icon -->
+                
                 <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-3xl cursor-pointer md:hidden"></ion-icon>
+            </div> -->
+
+
+            <button class="flex items-center text-gray-600 hover:text-gray-800 px-5 py-2 relative"
+            id="accountButton">
+            <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300 mr-2">
+                <img src="../../assests/image/user_icon.png" alt="User" class="w-full h-full object-cover">
+            </div>
+            <span id="userGreeting">Account</span> 
+        </button>
+            <div class="hidden absolute top-10 right-0 w-48" id="accountMenu">
+                <div id="userInfo" class="py-2">
+                    <div class="px-4 py-2 border-b">
+                        <span id="userName" class="block font-medium"></span>
+                        <span id="userEmail" class="block text-sm text-gray-600"></span>
+                    </div>
+                    <a href="/login.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Login</a>
+                    <a href="/signup.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign Up</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">My Orders</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Delete Account</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100" id="logoutButton">Logout</a>
+                </div>
+                
             </div>
         </nav>
     </header>
