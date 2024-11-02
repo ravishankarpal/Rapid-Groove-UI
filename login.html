@@ -1,144 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="js/login.js"></script>
-</head>
+    <title>Login | Rapid Groove</title>
+   
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Updated Font Awesome to use the all.css file -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    <script src="/js/common.js"></script>
+    
+    
+    <style>
+        .bg-image {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://localhost:8081/admin/product/images/login3');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+            
+           
+        }
 
-<body>
+        .spinner {
+            display: none;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .alert.show {
+            transform: translateY(0);
+        }
+
+        .shake {
+            animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .password-toggle-icon {
+            cursor: pointer;
+            font-size: 1.2rem; /* Make the icon slightly larger */
+            color: #6B7280; /* Gray-500 color */
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
     <div class="font-[sans-serif]">
         <div id="navbar-placeholder"></div>
-        <div class="min-h-screen flex fle-col items-center justify-center py-6 px-4">
-            <div class="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
-                <div>
-                    <h2 class="lg:text-5xl text-4xl font-extrabold lg:leading-[55px] text-gray-800">
-                        Seamless Login for Exclusive Access
-                    </h2>
-                    <p class="text-sm mt-6 text-gray-800">Immerse yourself in a hassle-free login journey with our
-                        intuitively designed login form. Effortlessly access your account.</p>
-                    <p class="text-sm mt-12 text-gray-800">Don't have an account? <a href="javascript:void(0);"
-                            class="text-blue-600 font-semibold hover:underline ml-1">Register here</a></p>
+    <!-- Alert Component -->
+    <div id="alert" class="alert fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out">
+        <div class="max-w-md mx-auto m-4 bg-red-100 border-l-4 border-red-500 p-4 flex items-center shadow-lg rounded-r">
+            <div class="text-red-500 rounded-full bg-red-100 mr-3">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="flex-grow text-red-800" id="alert-message"></div>
+            <button onclick="closeAlert()" class="text-red-500 hover:text-red-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="min-h-screen flex">
+        <!-- Left Side - Hero Image -->
+        <div class="hidden lg:flex lg:w-1/2 bg-image relative">
+            <div class="w-full flex items-center justify-center p-12">
+                <div class="text-center text-white relative z-10 max-w-lg mx-auto">
+                    <h1 class="text-5xl font-bold mb-6">Rapid Groove</h1>
+                    <p class="text-xl">Experience seamless access to your account with our modern, secure login system.</p>
                 </div>
-                <form id="loginForm" class="max-w-md md:ml-auto w-full">
-                    <h3 class="text-gray-800 text-3xl font-extrabold mb-8">Sign in</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <input id="email" type="email" autocomplete="email" required
-                                class="bg-gray-100 w-full text-sm text-gray-800 px-4 py-3.5 rounded-md outline-blue-600 focus:bg-transparent"
-                                placeholder="Email address" />
-                        </div>
-                        <div>
-                            <input id="password" type="password" autocomplete="current-password" required
-                                class="bg-gray-100 w-full text-sm text-gray-800 px-4 py-3.5 rounded-md outline-blue-600 focus:bg-transparent"
-                                placeholder="Password" />
-                        </div>
-                        <div class="flex flex-wrap items-center justify-between gap-4">
-                            <div class="flex items-center">
-                                <input id="remember-me" name="remember-me" type="checkbox"
-                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
-                                <label for="remember-me" class="ml-3 block text-sm text-gray-800">Remember me</label>
-                            </div>
-                            <div class="text-sm">
-                                <a href="javascript:void(0);"
-                                    class="text-blue-600 hover:text-blue-500 font-semibold">Forgot your password?</a>
-                            </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="flex-1 flex items-center justify-center p-8">
+            <div class="w-full max-w-md">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
+                    <p class="text-gray-600">Please sign in to your account</p>
+                </div>
+
+                <form id="loginForm" class="space-y-6">
+                    <!-- Email Input -->
+                    <div class="relative">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input type="email" id="email" name="email" required
+                                class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Enter your email">
                         </div>
                     </div>
-                    <div class="!mt-8">
-                        <button type="submit"
-                            class="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">Log
-                            in</button>
+
+                    <!-- Password Input -->
+                    <!-- <div class="relative">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" id="password" name="password" required
+                                class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Enter your password">
+                            <button type="button" id="togglePassword"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none">
+                                <i class="fas fa-eye"></i>
+                            </button>
+
+                        </div>
+                    </div> -->
+
+
+
+                    <div class="relative">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                            <input type="password" id="password" name="password" required
+                                class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Enter your password">
+                            <button type="button" id="togglePassword"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none">
+                                <i class="fa-regular fa-eye password-toggle-icon" id="toggleIcon"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="space-x-6 flex justify-center mt-8">
-                        <button type="button" class="border-none outline-none">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png"
-                                alt="Google Logo" class="w-6 h-6 inline-block" />
-                            Login with Google
-                        </button>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember-me" name="remember-me"
+                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                        </div>
+                        <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-500">Forgot password?</a>
                     </div>
+
+                    <!-- Login Button -->
+                    <button type="submit"
+                        class="w-full flex items-center justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        <span id="buttonText">Sign in</span>
+                        <i class="fas fa-circle-notch fa-spin ml-2 spinner" id="spinner"></i>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="relative my-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+
+                    <!-- Google Sign In -->
+                    <button type="button"
+                        class="w-full flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5">
+                        Sign in with Google
+                    </button>
+
+                    <!-- Sign Up Link -->
+                    <p class="text-center text-sm text-gray-600 mt-8">
+                        Don't have an account?
+                        <a href="#" class="font-medium text-blue-600 hover:text-blue-500">Sign up</a>
+                    </p>
                 </form>
             </div>
         </div>
 
-        <div id="footer-placeholder"></div>
+       
+    </div>
+    <div id="footer-placeholder"></div>
     </div>
 
-    <script>
-
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const [navbarResponse, footerResponse] = await Promise.all([
-                    fetch('src/components/navbar.html'),
-                    fetch('src/components/footer.html')
-                ]);
-
-                const [navbarHtml, footerHtml] = await Promise.all([
-                    navbarResponse.text(),
-                    footerResponse.text()
-                ]);
-
-                document.getElementById('navbar-placeholder').innerHTML = navbarHtml;
-                document.getElementById('footer-placeholder').innerHTML = footerHtml;
-            } catch (error) {
-                console.error('Error loading page components:', error);
-            }
-
-            // CATEGORIES.forEach(fetchAndDisplayCategory);
-        });
-
-        document.getElementById('loginForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                const response = await fetch('http://localhost:8081/authenticate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userName: email,
-                        userPassword: password
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Invalid email or password');
-                }
-                const data = await response.json();
-
-                const userEmail = data.user.email;
-                const userName = data.user.name;
-
-                const userJwtToken = data.jwtToken;
-
-                localStorage.setItem('userName', userName);
-                localStorage.setItem('userEmail', userEmail);
-                localStorage.setItem('userJwtToken',userJwtToken);
-
-                const userRole = data.user.role[0].roleName;
-
-                if (userRole.toLowerCase() === 'admin') {
-                    window.location.href = '../../admin.html'; // Adjust the path as needed
-                    console.log('Login successful:', data);
-                } else {
-                    console.log('Login successful:', data);
-                    window.location.href = '../../index.html';
-                    console.log(localStorage.getItem('userName'));
-                    console.log(localStorage.getItem('userEmail'));
-                }
-
-            } catch (error) {
-                alert(error.message);
-            }
-        });
-    </script>
+   
+      <script src="/js/login.js"></script>
+    
+  
 </body>
-
 </html>

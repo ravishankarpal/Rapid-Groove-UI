@@ -14,10 +14,20 @@
             background: rgb(211, 211, 211);
         }
 
-        .product-image {
-            max-height: 400px;
+        /* .product-image {
+            max-height: 500px;
             object-fit: cover;
+        } */
+
+
+        .product-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
         }
+
 
         .rating {
             display: flex;
@@ -59,7 +69,15 @@
                     <span class="text-red-600">₹ <span id="product-price" class="font-bold"></span></span>
                     <span id="product-discount" class="text-sm text-green-600"></span>
                 </div>
-                <p class="text-sm text-gray-600 mb-4">inclusive of all taxes</p>
+               
+                
+               <!-- Tax-Information -->
+
+               <p id="tax-info" class="text-sm text-gray-600 mb-4"></p>
+
+               <div id="tax-amount" class="text-sm text-gray-600 mb-4"> ₹ </div>
+
+                <p class="text-sm text-gray-600 mb-4"></p>
                 <p id="promotion" class="text-sm text-blue-600 mb-4"></p>
 
                 <!-- Size Options -->
@@ -80,15 +98,18 @@
                     </div>
                 </div>
 
+
                 <!-- Total Price -->
                 <div class="text-2xl font-semibold mb-4">
                     Total Price: ₹<span id="total-price" class="font-bold"></span>
                 </div>
 
                 <!-- Add to Bag Button -->
+                 <div id="cartCount">
                 <button class="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition duration-300 mb-4">
                     Add to Bag
                 </button>
+            </div>
 
                 <!-- Delivery Options -->
                 
