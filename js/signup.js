@@ -52,14 +52,14 @@ function showAlert(message, isSuccess = false) {
     alertMessage.textContent = message;
     const alertDiv = document.querySelector('#alert > div');
     if (isSuccess) {
-        alertDiv.classList.remove('bg-red-100', 'border-red-500');
+       // alertDiv.classList.remove('bg-red-100', 'border-red-500');
         alertDiv.classList.add('bg-green-100', 'border-green-500');
-        alertMessage.classList.remove('text-red-800');
+        //alertMessage.classList.remove('text-red-800');
         alertMessage.classList.add('text-green-800');
     } else {
-        alertDiv.classList.remove('bg-green-100', 'border-green-500');
+       // alertDiv.classList.remove('bg-green-100', 'border-green-500');
         alertDiv.classList.add('bg-red-100', 'border-red-500');
-        alertMessage.classList.remove('text-green-800');
+      //  alertMessage.classList.remove('text-green-800');
         alertMessage.classList.add('text-red-800');
     }
     alert.classList.add('show');
@@ -132,10 +132,11 @@ form.addEventListener('submit', async (event) => {
             }),
         });
 
-    
+       const data = await response.json();
+       console.log(data);
 
-        if (!response.ok) {
-            throw new Error(data.message || 'Failed to sign up');
+        if (data.code === 'BAD_REQUEST') {
+            throw new Error(data.message);
         }
 
         
