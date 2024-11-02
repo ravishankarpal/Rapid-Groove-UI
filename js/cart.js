@@ -80,7 +80,7 @@ function renderCart(cartData, priceDetails) {
     itemCountSpan.textContent = selectedItems.size;
 
     // Render product details with checkboxes
-    console.log(cartData);
+    
     productDetailsContainer.innerHTML = cartData.map(item => {
         const isChecked = selectedItems.has(item.id) ? 'checked' : '';
         return item.product.map((product, index) => {
@@ -196,6 +196,14 @@ function saveOrderSummaryToLocalStorage(priceDetails) {
     localStorage.setItem("orderSummary", JSON.stringify(priceDetails));
 }
 
+
+
+function updateSelectedCartDataAndPrice() {
+    const selectedCartData = cartData.filter(item => selectedItems.has(item.id));
+    cartData = selectedCartData;
+    localStorage.setItem('cartData', JSON.stringify(cartData));
+}
+
 // Update the button click event to save summary before navigating
 document.querySelector("button").addEventListener("click", () => {
     const cartData =  fetchCartData();
@@ -203,5 +211,6 @@ document.querySelector("button").addEventListener("click", () => {
     saveOrderSummaryToLocalStorage(priceDetails);
     window.location.href = "payment.html"; // Navigate to payment page
 });
+
 
 initializeCart();
