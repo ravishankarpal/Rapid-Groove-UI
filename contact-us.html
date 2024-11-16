@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Form - E-commerce Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="/js/common.js"></script>
+    
+    <style>
+         .bg-gradient-pattern {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            background-color: cadetblue;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .pattern-dots {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2px);
+            background-size: 32px 32px;
+        }
+        .bg-slate-200{
+           background-color:  rgb(226 232 240);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-200">
+
+    
+    <div id="navbar-placeholder"></div>
+    <div class="max-w-4xl mx-auto">
+
+        
+        <!-- Header Section -->
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Lodge a Complaint</h1>
+            <p class="text-gray-600">We take your complaints seriously and will address them promptly.</p>
+        </div>
+
+        <!-- Complaint Form -->
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Tell us about your complaint</h2>
+            
+            <!-- Status Messages -->
+            <div id="statusMessage" class="hidden mb-6 p-4 rounded-lg"></div>
+
+            <form id="complaintForm" class="space-y-6">
+
+                <!-- Order Number and Department Row -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="orderNumber" class="block text-sm font-medium text-gray-700 mb-1">Order Number *</label>
+                        <input type="text" id="orderNumber" name="orderNumber"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                            placeholder="Enter order number" required>
+                    </div>
+                    <div>
+                        <label for="department" class="block text-sm font-medium text-gray-700 mb-1">Complaint Category *</label>
+                        <select id="department" name="department" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors">
+                            <option value="">Select a category</option>
+                            <option value="product">Product Quality</option>
+                            <option value="shipping">Shipping & Delivery</option>
+                            <option value="customer-service">Customer Service</option>
+                            <option value="website">Website Issues</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Complaint Summary -->
+                <div>
+                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Complaint Summary *</label>
+                    <input type="text" id="subject" name="subject" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                        placeholder="Briefly describe your complaint">
+                </div>
+
+                <!-- Detailed Complaint -->
+                <div>
+                    <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Detailed Complaint *</label>
+                    <textarea id="message" name="message" rows="4" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-none"
+                        placeholder="Please provide a detailed description of your complaint"></textarea>
+                </div>
+
+                <!-- File Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Bill Attachments *</label>
+                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
+                        <div class="space-y-1 text-center">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <div class="flex text-sm text-gray-600">
+                                <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                    <span>Upload a file</span>
+                                    <input id="file-upload" name="file-upload" type="file" class="sr-only" multiple required>
+                                </label>
+                                <p class="pl-1">or drag and drop</p>
+                            </div>
+                            <p class="text-xs text-gray-500">PNG, JPG, PDF up to 10MB</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn"
+                    class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2">
+                    <span>Submit Complaint</span>
+                    <div id="spinner" class="hidden animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+
+    <script src="js/complain.js">
+       
+    </script>
+</body>
+</html>
