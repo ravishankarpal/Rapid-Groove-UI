@@ -1,3 +1,7 @@
+
+import { API_URLS } from './api-constants.js';
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('complaintForm');
     const statusMessage = document.getElementById('statusMessage');
@@ -132,7 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
 
-            const response = await fetch('http://localhost:8081/rapid/user/register/complain', {
+           const url =  API_URLS.USER_COMPLAIN;
+           console.log(url);
+
+            const response = await fetch(API_URLS.USER_COMPLAIN, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
