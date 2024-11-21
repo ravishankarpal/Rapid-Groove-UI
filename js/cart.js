@@ -1,6 +1,19 @@
 import { API_URLS } from './api-constants.js';
 let selectedItems = new Set();
 
+
+function toggleItemSelection(itemId) {
+    if (selectedItems.has(itemId)) {
+        selectedItems.delete(itemId);
+    } else {
+        selectedItems.add(itemId);
+    }
+    updatePriceDetails();
+}
+
+window.toggleItemSelection = toggleItemSelection;
+
+
 async function fetchCartData() {
     try {
         let token = localStorage.getItem("userJwtToken");
@@ -20,19 +33,10 @@ async function fetchCartData() {
     }
 }
 
-function toggleItemSelection(itemId) {
-    if (selectedItems.has(itemId)) {
-        selectedItems.delete(itemId);
-    } else {
-        selectedItems.add(itemId);
-    }
-    updatePriceDetails();
-}
-
 function calculatePriceDetails(cartData) {
     let totalProductPrice = 0;
     let totalDiscounts = 0;
-    let deliveryFee = 50; // Default delivery fee
+    let deliveryFee = 50; 
     let orderTotal = 0;
 
     cartData.forEach(item => {
@@ -41,6 +45,7 @@ function calculatePriceDetails(cartData) {
                 totalProductPrice += (sizePrice.price || 0) * (sizePrice.qty || 1);
                 totalDiscounts += ((sizePrice.price || 0) - (sizePrice.finalPrice || 0)) * (sizePrice.qty || 1);
                 orderTotal += (sizePrice.finalPrice || 0) * (sizePrice.qty || 1);
+                 
             });
         }
     });
@@ -83,6 +88,8 @@ async function updateItemQuantity(itemId, newQuantity) {
         const updatedCartData = await fetchCartData();
         const updatedPriceDetails = calculatePriceDetails(updatedCartData);
         renderCart(updatedCartData, updatedPriceDetails);
+        updateCartIconQuantity(updatedCartData);
+        
     } catch (error) {
         console.error('Error updating item quantity:', error);
     }
@@ -104,7 +111,7 @@ window.decreaseQuantity = function(itemId) {
     const quantityElement = cartItem.querySelector('.quantity-value');
     const currentQuantity = parseInt(quantityElement.textContent);
     
-    // Prevent quantity from going below 1
+   
     if (currentQuantity > 1) {
         updateItemQuantity(itemId, currentQuantity - 1);
     }
@@ -116,6 +123,8 @@ async function initializeCart() {
     const priceDetails = calculatePriceDetails(cartData);
 
     renderCart(cartData, priceDetails);
+    updateCartIconQuantity(cartData);
+
 }
 
 function renderCart(cartData, priceDetails) {
@@ -135,9 +144,7 @@ function renderCart(cartData, priceDetails) {
         const removecontent = document.getElementById("removecontent");
         removecontent.style.display = 'none';
         
-        productDetailsContainer.innerHTML = `
-            <!-- Empty cart HTML (unchanged from previous implementation) -->
-        `;
+        productDetailsContainer.innerHTML = ``;
 
         if (priceDetailsContainer) priceDetailsContainer.style.display = 'none';
         if (itemCountSpan) itemCountSpan.style.display = 'none';
@@ -152,6 +159,7 @@ function renderCart(cartData, priceDetails) {
             const productImage = product.productImages.length > 0 ? product.productImages[0].picByte : '';
             const base64Image = `data:${product.productImages[0].type};base64,${productImage}`;
             const sizePrice = item.productSizePrice[index];
+          
 
             return `
                 <div class="flex gap-4 mb-4" data-cart-item-id="${item.id}">
@@ -182,7 +190,6 @@ function renderCart(cartData, priceDetails) {
         }).join('');
     }).join('');
 
-    // Price details rendering (unchanged)
     priceDetailsContainer.innerHTML = `
         <div class="flex justify-between">
             <span>Total Product Price</span>
@@ -202,11 +209,10 @@ function renderCart(cartData, priceDetails) {
         </div>
     `;
 
-    // Render discount message
+   
     discountMessageDiv.textContent = `Yay! Your total discount is ₹${priceDetails.totalDiscounts.toFixed(2)}`;
 }
 
-// Existing functions remain the same (viewProduct, removeItem, etc.)
 function viewProduct(productId) {
     window.location.href = `product-detail.html?id=${productId}`;
 }
@@ -228,12 +234,14 @@ window.removeItem = async function (itemId) {
         const updatedCartData = await fetchCartData();
         const updatedPriceDetails = calculatePriceDetails(updatedCartData);
         renderCart(updatedCartData, updatedPriceDetails);
+        updateCartIconQuantity(updatedCartData);
     } catch (error) {
         console.error('Error removing item from cart:', error);
     }
 };
 
 function updatePriceDetails() {
+    console.log("price details called");
     fetchCartData().then(cartData => {
         const priceDetails = calculatePriceDetails(cartData);
         renderCart(cartData, priceDetails);
@@ -246,6 +254,21 @@ function saveOrderSummaryToLocalStorage() {
         localStorage.setItem("orderSummary", JSON.stringify(priceDetails));
         window.location.href = "address.html";
     });
+}
+
+
+function updateCartIconQuantity(cartData) {
+    const cartQuantityElement = document.getElementById('cartQuantity');
+    console.log(cartQuantityElement);
+    let totalCartQuantity = 0;
+    cartData.forEach(item => {
+        item.productSizePrice.forEach((sizePrice) => {
+            totalCartQuantity += sizePrice.qty  ;
+        });
+       
+    });
+    console.log(totalCartQuantity);
+    cartQuantityElement.textContent = totalCartQuantity;
 }
 
 // Initialize cart on page load
