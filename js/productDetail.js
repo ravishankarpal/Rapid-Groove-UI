@@ -1,3 +1,5 @@
+import { API_URLS } from "./api-constants.js";
+
 // Initialize variables
 let selectedSize = null;
 let selectedQuantity = 1;
@@ -161,12 +163,10 @@ async function addToCart() {
     };
 
     try {
-        console.log("Product ID:", requestBody.productId);
-        console.log("Size Price ID:", requestBody.sizePriceId);
-        console.log("Quantity:", requestBody.quantity);
+        
         let token = localStorage.getItem("userJwtToken");
         token = "Bearer"+ token;
-        const response = await fetch('http://localhost:8081/rapid/cart/addItemToCart', {
+        const response = await fetch(API_URLS.ADD_ITEM_TO_CART, {
             method: 'POST',
             headers: {
                 'Authorization': token, 
@@ -174,6 +174,15 @@ async function addToCart() {
             },
             body: JSON.stringify(requestBody)
         });
+        console.log(response);
+        if(response.ok){
+
+        
+                showMessage('Item Added in cart.', 'success');
+            
+        }else{
+            alert('An error occurred while adding the product to the cart.','error');
+        }
 
     } catch (error) {
         console.error('Error adding product to cart:', error);
