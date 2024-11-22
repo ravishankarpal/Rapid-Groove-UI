@@ -22,8 +22,20 @@ function closeAddressPopup() {
 document.addEventListener('DOMContentLoaded', async () => {
     // Add click event listener to Continue button
     const continueButton = document.querySelector('.bg-purple-600.text-white.py-3');
+   
     if (continueButton) {
-        continueButton.addEventListener('click', showAddressPopup);
+        continueButton.addEventListener('click', async () => {
+            try {
+                const success = await saveCheckoutDetails(); // Call saveCheckoutDetails()
+                if (success) {
+                    showAddressPopup(); // Open the popup only if saveCheckoutDetails is successful
+                } else {
+                    alert('Unable to proceed. Please try again.');
+                }
+            } catch (error) {
+                console.error("Error during checkout process:", error);
+            }
+        });
     } else {
         console.error("Continue button not found.");
     }

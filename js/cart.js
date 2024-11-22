@@ -248,13 +248,6 @@ function updatePriceDetails() {
     });
 }
 
-function saveOrderSummaryToLocalStorage() {
-    fetchCartData().then(cartData => {
-        const priceDetails = calculatePriceDetails(cartData);
-        localStorage.setItem("orderSummary", JSON.stringify(priceDetails));
-        window.location.href = "address.html";
-    });
-}
 
 
 function updateCartIconQuantity(cartData) {
@@ -271,5 +264,59 @@ function updateCartIconQuantity(cartData) {
     cartQuantityElement.textContent = totalCartQuantity;
 }
 
+
+
+window.saveCheckoutDetails = async function() {
+    try {
+        const cartData = await fetchCartData();
+        const selectedCartItems = cartData.filter(item => selectedItems.has(item.id)).map(item => {
+            return item.product.map((product, index) => {
+                const sizePrice = item.productSizePrice[index];
+                return {
+                    productId: product.productId,
+                    productName: product.productName,
+                    picByte: product.productImages.length > 0 ? product.productImages[0].picByte : '',
+                    quantity: sizePrice.qty,
+                    size: sizePrice.size,
+                    price: sizePrice.finalPrice
+                };
+            });
+        }).flat();
+
+        const priceDetails = calculatePriceDetails(cartData);
+
+        const checkoutPayload = {
+            checkoutItems: selectedCartItems,
+            totalAmount: priceDetails.orderTotal,
+            discountAmount: priceDetails.totalDiscounts
+        };
+
+        // Trigger the checkout API
+        let token = localStorage.getItem("userJwtToken");
+        token = "Bearer " + token;
+
+        const response = await fetch(API_URLS.CHECKOUT, {
+            method: 'POST',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(checkoutPayload)
+        });
+
+        if(response.ok){
+            return true;
+        }
+
+        if (!response.ok) {
+            return false;
+        }
+    
+    } catch (error) {
+        console.error('Error during checkout:', error);
+        alert('Checkout failed. Please try again.');
+        return false;
+    }
+};
 // Initialize cart on page load
 initializeCart();

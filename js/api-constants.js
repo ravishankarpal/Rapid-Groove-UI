@@ -7,7 +7,8 @@ const API_URLS = {
     CART_DETAILS:`${BASE_URL}/rapid/cart/details`,
     DELETE_CART_ITEM: (itemId) => `${BASE_URL}/rapid/cart/deleteCartItem/${itemId}`,
     ADD_ITEM_TO_CART:`${BASE_URL}/rapid/cart/addItemToCart`,
-    UPDATE_CART_ITEM_QUANTITY:`${BASE_URL}/rapid/cart/update-quantity`
+    UPDATE_CART_ITEM_QUANTITY:`${BASE_URL}/rapid/cart/update-quantity`,
+    CHECKOUT:`${BASE_URL}/rapid/cart/checkout`
 };
 
 export { BASE_URL, API_URLS };
