@@ -136,8 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
 
-           const url =  API_URLS.USER_COMPLAIN;
-           console.log(url);
+           
 
             const response = await fetch(API_URLS.USER_COMPLAIN, {
                 method: 'POST',
