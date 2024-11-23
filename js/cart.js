@@ -288,8 +288,11 @@ window.saveCheckoutDetails = async function() {
         const checkoutPayload = {
             checkoutItems: selectedCartItems,
             totalAmount: priceDetails.orderTotal,
-            discountAmount: priceDetails.totalDiscounts
+            discountAmount: priceDetails.totalDiscounts,
+            deliveryFee: priceDetails.deliveryFee 
         };
+
+        console.log("delivery fee"+priceDetails.deliveryFee );
 
         // Trigger the checkout API
         let token = localStorage.getItem("userJwtToken");
