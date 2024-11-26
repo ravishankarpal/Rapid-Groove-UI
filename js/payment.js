@@ -1,26 +1,15 @@
-let selectedItems = new Set();
-function calculatePriceDetails(cartData) {
-    let totalProductPrice = 0;
-    let totalDiscounts = 0;
-    let deliveryFee = 50; // Default delivery fee
-    let orderTotal = 0;
+import { API_URLS } from "./api-constants.js";
 
-    cartData.forEach(item => {
-            item.productSizePrice.forEach((sizePrice) => {
-                totalProductPrice += sizePrice.price || 0;
-                totalDiscounts += (sizePrice.price || 0) - (sizePrice.finalPrice || 0);
-                orderTotal += sizePrice.finalPrice || 0;
-            });
-        
-    });
+function calculatePriceDetails(apiResponse) {
+    const totalProductPrice = apiResponse.checkoutItemResponses.reduce((sum, item) => {
+        return sum + (item.price * item.quantity);
+    }, 0);
 
-    // Apply free delivery if the order total is above ₹400
-    if (orderTotal >= 400) {
-        deliveryFee = 0;
-    }
-
-    orderTotal += deliveryFee;
-
+    const totalDiscounts = apiResponse.discountAmount || 0;
+    
+    let deliveryFee = parseFloat(apiResponse.deliveryFee) ;
+    
+    let orderTotal = apiResponse.totalAmount || 0;
     return {
         totalProductPrice,
         totalDiscounts,
@@ -29,16 +18,44 @@ function calculatePriceDetails(cartData) {
     };
 }
 
-function loadSelectedCartItems() {
+async function loadSelectedCartItems() {
+    try {
+       
+        let token = localStorage.getItem("userJwtToken");
+        token = "Bearer " + token;
+        const response = await fetch(API_URLS.CHECKOUT_DETAILS, {
+            method: 'GET',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+            }
+        });
 
-    const cartData = JSON.parse(localStorage.getItem('cartData') || '[]');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-    const priceDetails = calculatePriceDetails(cartData);
-  
-   console.log(cartData);
-   console.log(priceDetails);
+        const apiCartData = await response.json();
+        
+        const priceDetails = calculatePriceDetails(apiCartData);
+        document.getElementById('totalAmount').textContent = `₹${priceDetails.totalProductPrice.toFixed(2)}`;
+        document.getElementById('totalDiscounts').textContent = `-₹${priceDetails.totalDiscounts.toFixed(2)}`;
+        const deliveryFeeElement = document.getElementById('deliveryFee');
 
+        if (priceDetails.deliveryFee === 0) {
+            deliveryFeeElement.textContent = "Free";
+            deliveryFeeElement.style.color = "green"; 
+        } else {
+            deliveryFeeElement.textContent = `₹${priceDetails.deliveryFee.toFixed(2)}`;
+            deliveryFeeElement.style.color = ""; 
+        }
+    
+        document.getElementById('finalAmount').textContent = `₹${priceDetails.orderTotal.toFixed(2)}`;
+        document.getElementById('totalSavings').textContent = priceDetails.totalDiscounts.toFixed(2);
 
+    } catch (error) {
+        console.error('Error fetching cart details:', error);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', loadSelectedCartItems);
