@@ -1,3 +1,4 @@
+import { API_URLS } from './api-constants.js';
 const form = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
@@ -6,6 +7,8 @@ const spinner = document.getElementById('spinner');
 const buttonText = document.getElementById('buttonText');
 const alert = document.getElementById('alert');
 const alertMessage = document.getElementById('alert-message');
+
+const googleSignInBtn = document.getElementById('google');
 
 // Toggle password visibility
 // togglePassword.addEventListener('click', () => {
