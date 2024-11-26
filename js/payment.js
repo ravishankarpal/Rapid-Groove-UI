@@ -1,3 +1,5 @@
+import { API_URLS } from "./api-constants.js";
+
 function calculatePriceDetails(apiResponse) {
     const totalProductPrice = apiResponse.checkoutItemResponses.reduce((sum, item) => {
         return sum + (item.price * item.quantity);
@@ -21,7 +23,7 @@ async function loadSelectedCartItems() {
        
         let token = localStorage.getItem("userJwtToken");
         token = "Bearer " + token;
-        const response = await fetch('http://localhost:8081/rapid/cart/checkoutdetails', {
+        const response = await fetch(API_URLS.CHECKOUT_DETAILS, {
             method: 'GET',
             headers: {
                 'Authorization': token,
