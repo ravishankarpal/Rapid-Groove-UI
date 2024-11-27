@@ -22,18 +22,27 @@ const mobileMenu = document.getElementById('mobile-menu');
 function updateUIForLoggedInUser() {
     // Desktop UI
     // userName.textContent = `Hello, ${user}`;
-    userEmail.textContent = email;
-    userGreeting.textContent = `Hello, ${user}`;
-    userInfo.classList.remove('hidden');
-    loggedInMenu.classList.remove('hidden');
-    guestMenu.classList.add('hidden');
+  
+   
+        console.log("email"+userEmail);
+        console.log("name"+userGreeting);
+        console.log("email1"+email);
+        console.log("name1"+user);
+        userEmail.textContent = email;
+        userGreeting.textContent = `Hello, ${user}`;
+        userInfo.classList.remove('hidden');
+        loggedInMenu.classList.remove('hidden');
+        guestMenu.classList.add('hidden');
+
 
     // Mobile UI
+   
     mobileUserName.textContent = `Hello, ${user}`;
     mobileUserEmail.textContent = email;
     mobileUserInfo.classList.remove('hidden');
     mobileLoggedInMenu.classList.remove('hidden');
     mobileGuestMenu.classList.add('hidden');
+    
 }
 
 function updateUIForGuestUser() {

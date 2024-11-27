@@ -252,7 +252,7 @@ function updatePriceDetails() {
 
 function updateCartIconQuantity(cartData) {
     const cartQuantityElement = document.getElementById('cartQuantity');
-    console.log(cartQuantityElement);
+   
     let totalCartQuantity = 0;
     cartData.forEach(item => {
         item.productSizePrice.forEach((sizePrice) => {
