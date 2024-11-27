@@ -1,166 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce Navbar</title>
+    <title>New Arrivals | Fashion Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="../../css/cart.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
-
-    <script src="../../js/cart.js"></script>
     <style>
-        #accountButton:hover+#accountMenu,
-        #accountMenu:hover {
-            display: block;
+        .dropdown {
+            position: relative;
         }
 
-        #shopButton:hover+#dropdownMenu,
-        #dropdownMenu:hover {
-            display: block;
-        }
-
-
-
-        #accountMenu {
-            display: none;
-            z-index: 100;
+        .dropdown-menu {
             position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            min-width: 12rem;
             background-color: white;
-            border: 1px solid #d1d5db;
             border-radius: 0.375rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            min-width: 200px;
-
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        #dropdownMenu {
-            display: none;
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: block;
+            }
 
-            z-index: 100;
-            position: absolute;
-            background-color: white;
-            border: 1px solid #d1d5db;
-
-            border-radius: 0.375rem;
-
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-
+            .desktop-menu {
+                display: none;
+            }
         }
     </style>
 </head>
+<body class="bg-gray-50 font-sans antialiased">
+    <nav class="bg-purple-600 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold text-white">
+                        <i class="fas fa-shopping-bag mr-2 text-pink-300"></i>Rapid Groove
+                    </a>
+                </div>
 
-<body class="font-[Poppins] bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee] h-screen">
-    <header class="bg-white">
-        <nav class="flex justify-between items-center w-[92%] mx-auto">
-            <div>
+                <!-- Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-md mx-6">
+                    <div class="relative w-full">
+                        <input type="text" 
+                               placeholder="Search products..." 
+                               class="w-full px-4 py-2 rounded-md text-gray-800 bg-white border-none focus:ring-2 focus:ring-pink-300 focus:outline-none">
+                        <div class="absolute right-3 top-2.5 text-gray-400">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>
 
-            </div>
-
-            <div
-                class="nav-links duration-500 md:static absolute bg-white md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5">
-            </div>
-            <ul class="flex md:flex-row flex-col md:items-center md:gap-[4vw] gap-8">
-                <li><a class="hover:text-gray-500" href="../../index.html">Home</a></li>
-
-                <div class="relative flex items-center gap-6">
-                    <button class="text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="shopButton">
-                        Shop
+                <!-- Mobile Menu Toggle -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-toggle" class="text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
                     </button>
+                </div>
 
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex desktop-menu items-center space-x-6">
+                    <a href="#" class="text-white hover:text-pink-200 transition">Home</a>
 
-                    <div class="hidden absolute top-10 right-0 w-32" id="dropdownMenu">
-                        <a href="../../skinCare.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Skin
-                            Care</a>
-                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Makeup</a>
-                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Hair Care</a>
-                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Fragrances</a>
-                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Bath & Body</a>
+                    <!-- Categories Dropdown -->
+                    <div class="dropdown">
+                        <a href="#" class="text-white hover:text-pink-200 transition">Categories</a>
+                        <div class="dropdown-menu hidden bg-white shadow-lg rounded-md mt-2">
+                            <a href="skinCare.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Skin Care</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Makeup</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Hair Care</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Fragrances</a>
+                        </div>
                     </div>
 
+                    <a href="#" class="text-white hover:text-pink-200 transition">New Arrivals</a>
 
-                    <ion-icon onclick="onToggleMenu(this)" name="menu"
-                        class="text-3xl cursor-pointer md:hidden"></ion-icon>
-                </div>
+                    <!-- Account Dropdown -->
+                    <div class="dropdown relative">
+                        <button id="accountButton" class="text-white hover:text-pink-200 transition flex items-center">
+                            <i class="fas fa-user mr-2"></i>
+                            <span id="userGreeting">Account</span>
+                        </button>
+                        
+                        <div id="accountMenu" class="dropdown-menu hidden">
+                            <!-- User Info Section (Initially Hidden) -->
+                            <div id="userInfo" class="hidden px-4 py-2 border-b border-gray-200">
+                                <div id="userName" class="font-medium text-gray-800"></div>
+                                <div id="userEmail" class="text-sm text-gray-600"></div>
+                            </div>
 
-                <li><a class="hover:text-gray-500" href="#">New Arrivals</a></li>
-                <li><a class="hover:text-gray-500" href="#">Best Sellers</a></li>
-                <li><a class="hover:text-gray-500" href="#">Offers</a></li>
-                <li><a class="hover:text-gray-500" href="#">Brands</a></li>
-                <li><a class="hover:text-gray-500" href="#">Blog</a></li>
-                <li><a class="hover:text-gray-500" href="#">About Us</a></li>
-                <li><a class="hover:text-gray-500" href="../../contact-us.html">Contact Us</a></li>
-            </ul>
-            </div>
+                            <!-- Guest Menu -->
+                            <div id="guestMenu">
+                                <a href="/login.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Login</a>
+                                <a href="/signup.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Sign Up</a>
+                            </div>
 
+                            <!-- Logged In Menu -->
+                            <div id="loggedInMenu" class="hidden">
+                                <a href="/orders.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">My Orders</a>
+                                <button id="logoutButton" class="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</button>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="flex items-center">
-                <a href="cart.html" class="relative">
-                    <img src="../../assests/image/shopping-cart.png" class="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10"
-                        alt="Cart">
-                   
-                         <span class="absolute top-0 right-0 inline-block w-4 h-4 bg-red-600 text-white text-xs font-bold rounded-full text-center" id = "cartQuantity">0</span> 
-
-                </a>
-            </div>
-
-            <button class="flex items-center text-gray-600 hover:text-gray-800 px-5 py-2 relative" id="accountButton">
-                <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300 mr-2">
-                    <img src="../../assests/image/user_icon.png" alt="User" class="w-full h-full object-cover">
-                </div>
-                <span id="userGreeting">Account</span>
-            </button>
-
-            <div class="hidden absolute top-10 right-0 w-48 bg-white shadow-md rounded-md" id="accountMenu">
-                <div id="userInfo" style="display: none;">
-                    <div class="px-4 py-2 border-b">
-                        <span id="userName" class="block font-medium">Hello</span>
-                        <span id="userEmail" class="block text-sm text-gray-600"></span>
+                    <div class="relative">
+                        <i class="fas fa-shopping-cart text-white cursor-pointer"></i>
+                        <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-2">0</span>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div id="loggedInMenu" style="display: none;">
-                    <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-box mr-2"></i> My Orders
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-trash-alt mr-2"></i> Delete Account
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" id="logoutButton">
-                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                    </a>
-                </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden bg-purple-700 text-white">
+            <a href="#" class="block px-4 py-2 hover:bg-purple-600">Home</a>
+            <a href="#" class="block px-4 py-2 hover:bg-purple-600">Categories</a>
 
-                <div id="guestMenu">
-                    <a href="/login.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-sign-in-alt mr-2"></i> Login
-                    </a>
-                    <a href="/signup.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-user-plus mr-2"></i> Sign Up
-                    </a>
-                </div>
+            <div class="px-4 py-2">
+                <a href="skinCare.html" class="block py-2 hover:bg-purple-600">Skin Care</a>
+                <a href="#" class="block py-2 hover:bg-purple-600">Makeup</a>
+                <a href="#" class="block py-2 hover:bg-purple-600">Hair Care</a>
+                <a href="#" class="block py-2 hover:bg-purple-600">Fragrances</a>
             </div>
 
+            <a href="#" class="block px-4 py-2 hover:bg-purple-600">New Arrivals</a>
+            
+            <!-- Mobile Account Section -->
+            <div class="px-4 py-2">
+                <div id="mobileUserInfo" class="hidden">
+                    <div id="mobileUserName" class="font-medium"></div>
+                    <div id="mobileUserEmail" class="text-sm"></div>
+                </div>
+                <div id="mobileGuestMenu">
+                    <a href="/login.html" class="block py-2 hover:bg-purple-600">Login</a>
+                    <a href="/signup.html" class="block py-2 hover:bg-purple-600">Sign Up</a>
+                </div>
+                <div id="mobileLoggedInMenu" class="hidden">
+                    <a href="/orders.html" class="block py-2 hover:bg-purple-600">My Orders</a>
+                    <button id="mobileLogoutButton" class="block py-2 hover:bg-purple-600 w-full text-left">Logout</button>
+                </div>
+            </div>
+        </div>
+
+
+    </nav>
+
+    <script>
+        // Get DOM elements
+        const user = localStorage.getItem('userName');
+        const email = localStorage.getItem('userEmail');
+        const token = localStorage.getItem('userJwtToken');
+        const userGreeting = document.getElementById('userGreeting');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const userInfo = document.getElementById('userInfo');
+        const guestMenu = document.getElementById('guestMenu');
+        const loggedInMenu = document.getElementById('loggedInMenu');
+        const accountMenu = document.getElementById('accountMenu');
+        const accountButton = document.getElementById('accountButton');
+
+        // Mobile elements
+        const mobileUserInfo = document.getElementById('mobileUserInfo');
+        const mobileUserName = document.getElementById('mobileUserName');
+        const mobileUserEmail = document.getElementById('mobileUserEmail');
+        const mobileGuestMenu = document.getElementById('mobileGuestMenu');
+        const mobileLoggedInMenu = document.getElementById('mobileLoggedInMenu');
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        function updateUIForLoggedInUser() {
+            // Desktop UI
+            // userName.textContent = `Hello, ${user}`;
+            userEmail.textContent = email;
+            userGreeting.textContent = `Hello, ${user}`;
+            userInfo.classList.remove('hidden');
+            loggedInMenu.classList.remove('hidden');
+            guestMenu.classList.add('hidden');
+
+            // Mobile UI
+            mobileUserName.textContent = `Hello, ${user}`;
+            mobileUserEmail.textContent = email;
+            mobileUserInfo.classList.remove('hidden');
+            mobileLoggedInMenu.classList.remove('hidden');
+            mobileGuestMenu.classList.add('hidden');
+        }
+
+        function updateUIForGuestUser() {
+            // Desktop UI
+            userGreeting.textContent = 'Account';
+            userInfo.classList.add('hidden');
+            loggedInMenu.classList.add('hidden');
+            guestMenu.classList.remove('hidden');
+
+            // Mobile UI
+            mobileUserInfo.classList.add('hidden');
+            mobileLoggedInMenu.classList.add('hidden');
+            mobileGuestMenu.classList.remove('hidden');
+        }
+
+        // Check authentication state on load
+        if (token && user) {
+            updateUIForLoggedInUser();
+        } else {
+            updateUIForGuestUser();
+        }
+
+        // Account dropdown toggle
+        accountButton.addEventListener('mouseover', () => {
+            accountMenu.classList.remove('hidden');
+        });
+
+        accountMenu.addEventListener('mouseleave', () => {
+            accountMenu.classList.add('hidden');
+        });
+
+        // Logout functionality
+        function handleLogout(e) {
+            e.preventDefault();
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userJwtToken');
+            updateUIForGuestUser();
+            window.location.href = '/login.html';
+        }
+
+        const logoutButton = document.getElementById('logoutButton');
+        const mobileLogoutButton = document.getElementById('mobileLogoutButton');
+        if (logoutButton) logoutButton.addEventListener('click', handleLogout);
+        if (mobileLogoutButton) mobileLogoutButton.addEventListener('click', handleLogout);
+
+        // Mobile menu toggle
+      
+
+        
+        
+         
+
+          // Categories dropdown specific handling
+const categoriesDropdown = document.querySelector('.dropdown');
+const categoriesMenu = categoriesDropdown ? categoriesDropdown.querySelector('.dropdown-menu') : null;
+
+if (categoriesDropdown && categoriesMenu) {
+    categoriesDropdown.addEventListener('mouseover', () => {
+        categoriesMenu.classList.remove('hidden');
+    });
+
+    categoriesDropdown.addEventListener('mouseleave', () => {
+        categoriesMenu.classList.add('hidden');
+    });
+}
+
+
+mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
 
 
 
 
 
+        
 
-        </nav>
-    </header>
-
-
-
-    <div id="common-content"></div>
-    <script src="/js/navbar.js"></script>
+    </script>
 </body>
-
 </html>
