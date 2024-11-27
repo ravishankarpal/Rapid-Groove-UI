@@ -114,3 +114,36 @@ if (logoutButton) {
 }
 
 
+const mobileCategoriesToggle = document.querySelector('#mobile-menu a[href="#"]');
+const mobileCategoriesSubmenu = document.querySelector('#mobile-menu div[class*="px-4"]');
+
+if (mobileCategoriesToggle && mobileCategoriesSubmenu) {
+    mobileCategoriesSubmenu.classList.add('hidden');
+
+    mobileCategoriesToggle.addEventListener('click', function(e) {
+        e.preventDefault(); 
+        mobileCategoriesSubmenu.classList.toggle('hidden');
+    
+        this.classList.toggle('active');
+    });
+
+
+    const categoryItems = mobileCategoriesSubmenu.querySelectorAll('a');
+    categoryItems.forEach(item => {
+        item.addEventListener('click', () => {
+            mobileCategoriesSubmenu.classList.add('hidden');
+            mobileCategoriesToggle.classList.remove('active');
+        });
+    });
+}
+
+
+
+const accountDropdownToggle = document.querySelector('.accountDropDown');
+const accountSubDropdown = document.querySelector('.accountsubDropDown');
+if (accountDropdownToggle && accountSubDropdown) {
+    accountDropdownToggle.addEventListener('click', (e) => {
+        e.preventDefault(); 
+        accountSubDropdown.classList.toggle('hidden'); 
+    });
+}
