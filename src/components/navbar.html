@@ -6,32 +6,7 @@
     <title>New Arrivals | Fashion Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .dropdown {
-            position: relative;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            z-index: 1000;
-            min-width: 12rem;
-            background-color: white;
-            border-radius: 0.375rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu {
-                display: block;
-            }
-
-            .desktop-menu {
-                display: none;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/navbar.css">
 </head>
 <body class="bg-gray-50 font-sans antialiased">
     <nav class="bg-purple-600 shadow-md sticky top-0 z-50">
@@ -65,13 +40,13 @@
 
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex desktop-menu items-center space-x-6">
-                    <a href="#" class="text-white hover:text-pink-200 transition">Home</a>
+                    <a href="index.html" class="text-white hover:text-pink-200 transition">Home</a>
 
                     <!-- Categories Dropdown -->
                     <div class="dropdown">
                         <a href="#" class="text-white hover:text-pink-200 transition">Categories</a>
                         <div class="dropdown-menu hidden bg-white shadow-lg rounded-md mt-2">
-                            <a href="skinCare.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Skin Care</a>
+                            <a href="skin-care.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Skin Care</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Makeup</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Hair Care</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Fragrances</a>
@@ -79,6 +54,8 @@
                     </div>
 
                     <a href="#" class="text-white hover:text-pink-200 transition">New Arrivals</a>
+                    <a href="#" class="text-white hover:text-pink-200 transition">Offers</a>
+                    <a href="../../contact-us.html" class="text-white hover:text-pink-200 transition">Contact Us</a>
 
                     <!-- Account Dropdown -->
                     <div class="dropdown relative">
@@ -118,17 +95,22 @@
 
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden bg-purple-700 text-white">
-            <a href="#" class="block px-4 py-2 hover:bg-purple-600">Home</a>
+            <a href="index.html" class="block px-4 py-2 hover:bg-purple-600">Home</a>
             <a href="#" class="block px-4 py-2 hover:bg-purple-600">Categories</a>
 
             <div class="px-4 py-2">
-                <a href="skinCare.html" class="block py-2 hover:bg-purple-600">Skin Care</a>
+                <a href="skin-care.html" class="block py-2 hover:bg-purple-600">Skin Care</a>
                 <a href="#" class="block py-2 hover:bg-purple-600">Makeup</a>
                 <a href="#" class="block py-2 hover:bg-purple-600">Hair Care</a>
                 <a href="#" class="block py-2 hover:bg-purple-600">Fragrances</a>
             </div>
 
             <a href="#" class="block px-4 py-2 hover:bg-purple-600">New Arrivals</a>
+            <a href="#" class="block px-4 py-2 hover:bg-purple-600">Offers</a>
+            <a href="../../contact-us.html" class="block px-4 py-2 hover:bg-purple-600">Contact Us</a>
+
+
+        
             
             <!-- Mobile Account Section -->
             <div class="px-4 py-2">
@@ -150,122 +132,8 @@
 
     </nav>
 
-    <script>
-        // Get DOM elements
-        const user = localStorage.getItem('userName');
-        const email = localStorage.getItem('userEmail');
-        const token = localStorage.getItem('userJwtToken');
-        const userGreeting = document.getElementById('userGreeting');
-        const userName = document.getElementById('userName');
-        const userEmail = document.getElementById('userEmail');
-        const userInfo = document.getElementById('userInfo');
-        const guestMenu = document.getElementById('guestMenu');
-        const loggedInMenu = document.getElementById('loggedInMenu');
-        const accountMenu = document.getElementById('accountMenu');
-        const accountButton = document.getElementById('accountButton');
-
-        // Mobile elements
-        const mobileUserInfo = document.getElementById('mobileUserInfo');
-        const mobileUserName = document.getElementById('mobileUserName');
-        const mobileUserEmail = document.getElementById('mobileUserEmail');
-        const mobileGuestMenu = document.getElementById('mobileGuestMenu');
-        const mobileLoggedInMenu = document.getElementById('mobileLoggedInMenu');
-        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        function updateUIForLoggedInUser() {
-            // Desktop UI
-            // userName.textContent = `Hello, ${user}`;
-            userEmail.textContent = email;
-            userGreeting.textContent = `Hello, ${user}`;
-            userInfo.classList.remove('hidden');
-            loggedInMenu.classList.remove('hidden');
-            guestMenu.classList.add('hidden');
-
-            // Mobile UI
-            mobileUserName.textContent = `Hello, ${user}`;
-            mobileUserEmail.textContent = email;
-            mobileUserInfo.classList.remove('hidden');
-            mobileLoggedInMenu.classList.remove('hidden');
-            mobileGuestMenu.classList.add('hidden');
-        }
-
-        function updateUIForGuestUser() {
-            // Desktop UI
-            userGreeting.textContent = 'Account';
-            userInfo.classList.add('hidden');
-            loggedInMenu.classList.add('hidden');
-            guestMenu.classList.remove('hidden');
-
-            // Mobile UI
-            mobileUserInfo.classList.add('hidden');
-            mobileLoggedInMenu.classList.add('hidden');
-            mobileGuestMenu.classList.remove('hidden');
-        }
-
-        // Check authentication state on load
-        if (token && user) {
-            updateUIForLoggedInUser();
-        } else {
-            updateUIForGuestUser();
-        }
-
-        // Account dropdown toggle
-        accountButton.addEventListener('mouseover', () => {
-            accountMenu.classList.remove('hidden');
-        });
-
-        accountMenu.addEventListener('mouseleave', () => {
-            accountMenu.classList.add('hidden');
-        });
-
-        // Logout functionality
-        function handleLogout(e) {
-            e.preventDefault();
-            localStorage.removeItem('userName');
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('userJwtToken');
-            updateUIForGuestUser();
-            window.location.href = '/login.html';
-        }
-
-        const logoutButton = document.getElementById('logoutButton');
-        const mobileLogoutButton = document.getElementById('mobileLogoutButton');
-        if (logoutButton) logoutButton.addEventListener('click', handleLogout);
-        if (mobileLogoutButton) mobileLogoutButton.addEventListener('click', handleLogout);
-
-        // Mobile menu toggle
-      
-
-        
-        
-         
-
-          // Categories dropdown specific handling
-const categoriesDropdown = document.querySelector('.dropdown');
-const categoriesMenu = categoriesDropdown ? categoriesDropdown.querySelector('.dropdown-menu') : null;
-
-if (categoriesDropdown && categoriesMenu) {
-    categoriesDropdown.addEventListener('mouseover', () => {
-        categoriesMenu.classList.remove('hidden');
-    });
-
-    categoriesDropdown.addEventListener('mouseleave', () => {
-        categoriesMenu.classList.add('hidden');
-    });
-}
+    <script src="/js/navbar.js"></script>
 
 
-mobileMenuToggle.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-
-
-
-
-        
-
-    </script>
 </body>
 </html>
