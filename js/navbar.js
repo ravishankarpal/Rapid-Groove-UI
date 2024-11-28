@@ -22,12 +22,7 @@ const mobileMenu = document.getElementById('mobile-menu');
 function updateUIForLoggedInUser() {
     // Desktop UI
     // userName.textContent = `Hello, ${user}`;
-  
-   
-        console.log("email"+userEmail);
-        console.log("name"+userGreeting);
-        console.log("email1"+email);
-        console.log("name1"+user);
+
         userEmail.textContent = email;
         userGreeting.textContent = `Hello, ${user}`;
         userInfo.classList.remove('hidden');
