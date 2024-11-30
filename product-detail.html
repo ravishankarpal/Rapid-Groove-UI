@@ -24,22 +24,22 @@
                             <img src="/api/placeholder/200/200" alt="View 1" class="w-full aspect-square object-cover rounded">
                         </div>
                         <div class="bg-white rounded-lg shadow-md p-2 cursor-pointer hover:border-2 hover:border-blue-500"
-                            onmouseover="showImage('/api/placeholder/200/201')"
+                            onmouseover="showImage('/api/placeholder/200/200')"
                             onmouseout="showMainImage()"
-                            onclick="setMainImage('/api/placeholder/200/201')">
-                            <img src="/api/placeholder/200/201" alt="View 2" class="w-full aspect-square object-cover rounded">
+                            onclick="setMainImage('/api/placeholder/200/200')">
+                            <img src="/api/placeholder/200/200" alt="View 2" class="w-full aspect-square object-cover rounded">
                         </div>
                         <div class="bg-white rounded-lg shadow-md p-2 cursor-pointer hover:border-2 hover:border-blue-500"
-                            onmouseover="showImage('/api/placeholder/200/202')"
+                            onmouseover="showImage('/api/placeholder/200/200')"
                             onmouseout="showMainImage()"
-                            onclick="setMainImage('/api/placeholder/200/202')">
-                            <img src="/api/placeholder/200/202" alt="View 3" class="w-full aspect-square object-cover rounded">
+                            onclick="setMainImage('/api/placeholder/200/200')">
+                            <img src="/api/placeholder/200/200" alt="View 3" class="w-full aspect-square object-cover rounded">
                         </div>
                         <div class="bg-white rounded-lg shadow-md p-2 cursor-pointer hover:border-2 hover:border-blue-500"
-                            onmouseover="showImage('/api/placeholder/200/203')"
+                            onmouseover="showImage('/api/placeholder/200/200')"
                             onmouseout="showMainImage()"
-                            onclick="setMainImage('/api/placeholder/200/203')">
-                            <img src="/api/placeholder/200/203" alt="View 4" class="w-full aspect-square object-cover rounded">
+                            onclick="setMainImage('/api/placeholder/200/200')">
+                            <img src="/api/placeholder/200/200" alt="View 4" class="w-full aspect-square object-cover rounded">
                         </div>
                     </div>
             
@@ -118,23 +118,36 @@
 
                 <!-- Action and Delivery Grid -->
                 <div class="bg-white rounded-xl shadow-lg p-6 grid grid-cols-1 gap-4">
-                    <!-- Add to Bag Button -->
-                    <button class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition grid place-items-center">
-                        Add to Bag
-                    </button>
+                  
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Add to Bag Button -->
+                        <button class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
+                        onclick="window.location.href = 'cart.html';">
+                            Add to Cart
+                        </button>
+                        
+                        <!-- Shop Now Button -->
+                        <button class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
+                        onclick="window.location.href = 'payment.html';">
+                            Shop Now
+                        </button>
+                    </div>
+
 
                     <!-- Delivery Checker -->
                     <div class="grid grid-cols-1 gap-2">
                         <label class="text-sm font-medium text-gray-700">Check Delivery</label>
                         <div class="grid grid-cols-3 gap-2">
                             <input 
-                                type="text" 
+                                type="number" 
                                 id="pincode-input" 
                                 placeholder="Pincode" 
+                                required
                                 class="col-span-2 px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
                             >
                             <button 
-                                onclick="checkPincode()" 
+                                
+                                id="check-button" 
                                 class="bg-blue-500 text-white rounded-md hover:bg-blue-600"
                             >
                                 Check
@@ -193,37 +206,40 @@
                 <!-- Dynamic product thumbnails will be added here -->
             </div>
         </div>
+        
     </div>
 
     <div id="footer-placeholder"></div>
+
+    
 
     <!-- Scripts -->
 
 
     <script>
-         const products = [
-            { id: 1, name: 'Product A', image: '/images/product-a.jpg', description: 'Description A', specifications: 'Specifications A', reviews: 'Reviews A' },
-            { id: 2, name: 'Product B', image: '/images/product-b.jpg', description: 'Description B', specifications: 'Specifications B', reviews: 'Reviews B' },
-            { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
-            { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
-            { id: 1, name: 'Product A', image: '/images/product-a.jpg', description: 'Description A', specifications: 'Specifications A', reviews: 'Reviews A' },
-            { id: 2, name: 'Product B', image: '/images/product-b.jpg', description: 'Description B', specifications: 'Specifications B', reviews: 'Reviews B' },
-            { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
-            { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
-        ];
+        //  const products = [
+        //     { id: 1, name: 'Product A', image: '/images/product-a.jpg', description: 'Description A', specifications: 'Specifications A', reviews: 'Reviews A' },
+        //     { id: 2, name: 'Product B', image: '/images/product-b.jpg', description: 'Description B', specifications: 'Specifications B', reviews: 'Reviews B' },
+        //     { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
+        //     { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
+        //     { id: 1, name: 'Product A', image: '/images/product-a.jpg', description: 'Description A', specifications: 'Specifications A', reviews: 'Reviews A' },
+        //     { id: 2, name: 'Product B', image: '/images/product-b.jpg', description: 'Description B', specifications: 'Specifications B', reviews: 'Reviews B' },
+        //     { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
+        //     { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
+        // ];
 
         // Render Related Products
-        const relatedProductsContainer = document.getElementById('related-products');
-        products.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.className = 'bg-white rounded-xl shadow-lg p-4 text-center cursor-pointer hover:shadow-md';
-            productCard.innerHTML = `
-                <img src="${product.image}" class="w-full h-40 object-contain rounded-lg mb-2" alt="${product.name}">
-                <h3 class="text-lg font-semibold">${product.name}</h3>
-            `;
-            productCard.addEventListener('click', () => displayProductDetails(product));
-            relatedProductsContainer.appendChild(productCard);
-        });
+        // const relatedProductsContainer = document.getElementById('related-products');
+        // products.forEach(product => {
+        //     const productCard = document.createElement('div');
+        //     productCard.className = 'bg-white rounded-xl shadow-lg p-4 text-center cursor-pointer hover:shadow-md';
+        //     productCard.innerHTML = `
+        //         <img src="${product.image}" class="w-full h-40 object-contain rounded-lg mb-2" alt="${product.name}">
+        //         <h3 class="text-lg font-semibold">${product.name}</h3>
+        //     `;
+        //     productCard.addEventListener('click', () => displayProductDetails(product));
+        //     relatedProductsContainer.appendChild(productCard);
+        // });
 
 
         let mainImageSrc = '/api/placeholder/200/200'; // Store the main product image URL
@@ -247,8 +263,11 @@
             mainImageSrc = imageSrc;
             productImage.src = mainImageSrc;
         }
+
+
+    
     </script>
-    <script src="/js/common/footerNav.js"></script>
+    <!-- <script src="/js/common/footerNav.js"></script> -->
     <script type="module" src="/js/productDetail.js"></script>
     <script src="/js/common/message.js"></script>
     <script src="/js/common/footerNav.js"></script>

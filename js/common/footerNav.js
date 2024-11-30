@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             fetch('src/components/footer.html')
         ]);
 
-        const [navbarHtml, footerHtml] = await Promise.all([
+        const [footerHtml] = await Promise.all([
             footerResponse.text()
         ]);
 

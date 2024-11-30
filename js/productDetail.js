@@ -1,211 +1,247 @@
-import { API_URLS } from "./api-constants.js";
 
-// Initialize variables
-let selectedSize = null;
-let selectedQuantity = 1;
-let currentProduct = null;
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
-
-    if (productId) {
-        try {
-            const response = await fetch(`http://localhost:8081/product/productDetails/yes/${productId}`);
-            const productArray = await response.json();
-
-            if (productArray.length > 0) {
-                currentProduct = productArray[0];
-                updateProductDetails(currentProduct);
-            } else {
-                console.error('No product found for the given ID.');
+// Function to fetch product details from backend
+async function fetchProductDetails() {
+    try {
+        const token = 'Bearer' + localStorage.getItem('userJwtToken');
+        const response = await fetch('http://localhost:8081/product/details/true/1?category=Serum', {
+            method: 'GET',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
             }
-        } catch (error) {
-            console.error('Error fetching product details:', error);
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch product details');
         }
+
+        const [productData] = await response.json();
+        renderProductDetails(productData);
+    } catch (error) {
+        console.error('Error fetching product details:', error);
+        displayErrorMessage('Unable to load product details. Please try again later.');
     }
+}
 
-    // Event listeners for quantity buttons
-    document.getElementById('increase-quantity').addEventListener('click', () => {
-        selectedQuantity++;
-        updateQuantityAndPrice();
+// Function to render product details
+function renderProductDetails(product) {
+    // Product Name and Subtitle
+    document.getElementById('product-name').textContent = product.name;
+    document.getElementById('product-subtitle').textContent = product.subtitle;
+
+    // Product Images
+    const primaryImage = product.productImages.find(img => img.primaryImage);
+    mainImageSrc = primaryImage 
+        ? `data:${primaryImage.type};base64,${primaryImage.picByte}` 
+        : '/api/placeholder/200/200';
+    document.getElementById('product-image').src = mainImageSrc;
+
+    // Side Images
+    const sideImagesContainer = document.querySelector('.col-span-2');
+    const sideImageTemplate = sideImagesContainer.querySelector('div').cloneNode(true);
+    sideImagesContainer.innerHTML = ''; // Clear existing images
+
+    product.productImages.slice(0, 4).forEach((image, index) => {
+        const imageElement = sideImageTemplate.cloneNode(true);
+        const img = imageElement.querySelector('img');
+        img.src = `data:${image.type};base64,${image.picByte}`;
+        img.alt = `View ${index + 1}`;
+        
+        imageElement.setAttribute('onmouseover', `showImage('data:${image.type};base64,${image.picByte}')`);
+        imageElement.setAttribute('onmouseout', 'showMainImage()');
+        imageElement.setAttribute('onclick', `setMainImage('data:${image.type};base64,${image.picByte}')`);
+        
+        sideImagesContainer.appendChild(imageElement);
     });
 
-    document.getElementById('decrease-quantity').addEventListener('click', () => {
-        if (selectedQuantity > 1) {
-            selectedQuantity--;
-            updateQuantityAndPrice();
-        }
+    // Pricing (using first size's price)
+    const selectedSize = product.sizes[0];
+    document.getElementById('product-price').textContent = selectedSize.price.current.toFixed(2);
+    document.getElementById('product-original-price').textContent = selectedSize.price.original.toFixed(2);
+    document.getElementById('product-discount').textContent = `${selectedSize.price.discountPercentage}% OFF`;
+    document.getElementById('total-price').textContent = selectedSize.price.current.toFixed(2);
+
+    // Ratings
+    document.getElementById('product-rating').textContent = product.rating.average.toFixed(1);
+    document.getElementById('product-ratings-count').textContent = `(${product.rating.totalRatings} Ratings)`;
+    document.getElementById('product-reviews-count').textContent = `${product.rating.totalReviews} Reviews`;
+
+    // Sizes
+    const sizeOptionsContainer = document.getElementById('size-options');
+    sizeOptionsContainer.innerHTML = ''; // Clear existing sizes
+    product.sizes.forEach(size => {
+        const sizeButton = document.createElement('button');
+        sizeButton.textContent = size.value;
+        sizeButton.className = `px-3 py-2 rounded-md ${size.available 
+            ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' 
+            : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`;
+        sizeButton.disabled = !size.available;
+        sizeButton.addEventListener('click', () => updateSizeSelection(size));
+        sizeOptionsContainer.appendChild(sizeButton);
     });
 
-    // Add to Bag functionality
-    document.querySelector('.bg-blue-500').addEventListener('click', addToCart);
+    // Description
+    document.getElementById('product-description').textContent = product.description;
+
+    // Specifications
+    const specificationsContainer = document.getElementById('product-specifications');
+    specificationsContainer.innerHTML = ''; // Clear existing specifications
+    product.specifications.forEach(spec => {
+        const li = document.createElement('li');
+        li.textContent = spec;
+        specificationsContainer.appendChild(li);
+    });
+
+    // Reviews
+    const reviewsContainer = document.getElementById('product-reviews');
+    reviewsContainer.innerHTML = ''; // Clear existing reviews
+    product.reviews.forEach(review => {
+        const reviewElement = document.createElement('div');
+        reviewElement.className = 'border-b pb-3';
+        reviewElement.innerHTML = `
+            <div class="flex justify-between">
+                <span class="font-medium">${review.name}</span>
+                <div class="text-yellow-500">
+                    ${generateStarRating(review.rating)}
+                </div>
+            </div>
+            <p class="text-gray-600 mt-2">${review.comment}</p>
+        `;
+        reviewsContainer.appendChild(reviewElement);
+    });
+
+    // Related Products
+    renderRelatedProducts(product.relatedProducts);
+
+    // Delivery Options
+    checkPincode(product.deliveryInfo);
+}
+
+// Function to update price and total price when size is selected
+function updateSizeSelection(selectedSize) {
+    document.getElementById('product-price').textContent = selectedSize.price.current.toFixed(2);
+    document.getElementById('product-original-price').textContent = selectedSize.price.original.toFixed(2);
+    document.getElementById('product-discount').textContent = `${selectedSize.price.discountPercentage}% OFF`;
+    
+    const quantity = parseInt(document.getElementById('quantity').textContent);
+    const totalPrice = (selectedSize.price.current * quantity).toFixed(2);
+    document.getElementById('total-price').textContent = totalPrice;
+}
+
+// Generate star rating HTML
+function generateStarRating(rating) {
+    let starHTML = '';
+    for (let i = 1; i <= 5; i++) {
+        starHTML += i <= rating 
+            ? '<i class="fas fa-star"></i>' 
+            : '<i class="far fa-star"></i>';
+    }
+    return starHTML;
+}
+
+// Render Related Products
+function renderRelatedProducts(relatedProducts) {
+    const relatedProductsContainer = document.getElementById('related-products');
+    relatedProductsContainer.innerHTML = ''; // Clear existing related products
+
+    relatedProducts.forEach(product => {
+        const primaryImage = product.productImages.find(img => img.primaryImage) || product.productImages[0];
+        const productCard = document.createElement('div');
+        productCard.className = 'bg-white rounded-xl shadow-lg p-4 text-center cursor-pointer hover:shadow-md';
+        productCard.innerHTML = `
+            <img src="data:${primaryImage.type};base64,${primaryImage.picByte}" 
+                 class="w-full h-40 object-contain rounded-lg mb-2" 
+                 alt="${product.name}">
+            <h3 class="text-lg font-semibold">${product.name}</h3>
+            <p class="text-blue-600 font-bold">₹${product.productSize.price.current.toFixed(2)}</p>
+        `;
+        relatedProductsContainer.appendChild(productCard);
+    });
+}
+
+// Quantity Handling
+document.getElementById('decrease-quantity').addEventListener('click', () => {
+    const quantitySpan = document.getElementById('quantity');
+    let quantity = parseInt(quantitySpan.textContent);
+    if (quantity > 1) {
+        quantity--;
+        quantitySpan.textContent = quantity;
+        updateTotalPrice();
+    }
 });
 
-function updateProductDetails(product) {
-    document.getElementById('product-name').textContent = product.productName;
-    document.getElementById('product-subtitle').textContent = product.productDescription;
+document.getElementById('increase-quantity').addEventListener('click', () => {
+    const quantitySpan = document.getElementById('quantity');
+    let quantity = parseInt(quantitySpan.textContent);
+    quantity++;
+    quantitySpan.textContent = quantity;
+    updateTotalPrice();
+});
 
-    updateRatingAndReviews(product);
-    updateSizeOptions(product);
-    updateProductImage(product);
-    updatePromotion(product);
-
-    // Select the first size by default
-    if (product.sizePrices.length > 0) {
-        selectSize(product.sizePrices[0]);
-    }
+function updateTotalPrice() {
+    const price = parseFloat(document.getElementById('product-price').textContent);
+    const quantity = parseInt(document.getElementById('quantity').textContent);
+    const totalPrice = (price * quantity).toFixed(2);
+    document.getElementById('total-price').textContent = totalPrice;
 }
 
-function updateRatingAndReviews(product) {
-    document.getElementById('product-rating').textContent = product.productRating ? `${product.productRating} out of 5` : "";
-    document.getElementById('product-ratings-count').textContent = product.ratingsCount ? `${product.ratingsCount} ratings` : "";
-    document.getElementById('product-reviews-count').textContent = product.reviewsCount ? `${product.reviewsCount} reviews` : "";
-}
+// Pincode Delivery Check
+function checkPincode(deliveryInfo) {
+    document.getElementById('check-button').addEventListener('click', function () {
+        const pincodeInput = document.getElementById('pincode-input').value.trim();
+        const deliveryMessage = document.getElementById('delivery-message');
 
-function updateSizeOptions(product) {
-    const sizeOptionsContainer = document.getElementById('size-options').querySelector('.flex');
-    sizeOptionsContainer.innerHTML = ''; // Clear existing options
+        if (!pincodeInput) {
+            deliveryMessage.innerHTML = `
+                <span class="text-red-600">
+                    <i class="fas fa-times-circle mr-2"></i>
+                    Please enter a pincode.
+                </span>
+            `;
+            return; 
+        }
 
-    product.sizePrices.forEach(sizePrice => {
-        const button = document.createElement('button');
-        button.className = 'border rounded-md p-2 hover:bg-blue-500 hover:text-white';
-        button.textContent = sizePrice.size;
-        button.onclick = () => selectSize(sizePrice);
-        sizeOptionsContainer.appendChild(button);
+
+        const pincodeRegex = /^\d{6}$/;
+        if (!pincodeRegex.test(pincodeInput)) {
+            deliveryMessage.innerHTML = `
+                <span class="text-red-600">
+                    <i class="fas fa-times-circle mr-2"></i>
+                    Please enter a valid 6-digit pincode.
+                </span>
+            `;
+            return; 
+        }
+
+        if (pincodeInput === deliveryInfo.pinCode && deliveryInfo.expressDeliveryAvailable) {
+            deliveryMessage.innerHTML = `
+                <span class="text-green-600">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    Delivery available to ${deliveryInfo.city}
+                </span>
+            `;
+        } else {
+            deliveryMessage.innerHTML = `
+                <span class="text-red-600">
+                    <i class="fas fa-times-circle mr-2"></i>
+                    Delivery not available to ${pincodeInput}
+                </span>
+            `;
+        }
     });
 }
 
-function updateProductImage(product) {
-    if (product.productImages.length > 0) {
-        const productImage = product.productImages[0];
-        document.getElementById('product-image').src = `data:${productImage.type};base64,${productImage.picByte}`;
-    } else {
-        console.warn('No images available for this product.');
-    }
+// Initialize page
+document.addEventListener('DOMContentLoaded', fetchProductDetails);
+
+// Error message display function
+function displayErrorMessage(message) {
+    const errorContainer = document.createElement('div');
+    errorContainer.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative';
+    errorContainer.textContent = message;
+    
+    const mainContainer = document.querySelector('.container');
+    mainContainer.insertBefore(errorContainer, mainContainer.firstChild);
 }
 
-function updatePromotion(product) {
-    document.getElementById('promotion').textContent = product.promotionRequired ? product.promotions : "";
-}
-
-function selectSize(sizePrice) {
-    selectedSize = sizePrice;
-    updatePricing();
-    console.log(`Selected size: ${sizePrice.size}`);
-}
-
-function updatePricing() {
-    if (!selectedSize || !currentProduct) return;
-
-    document.getElementById('product-price').textContent = selectedSize.price.toFixed(2);
-    document.getElementById('product-original-price').textContent = selectedSize.actualPrice.toFixed(2);
-    document.getElementById('product-discount').textContent = selectedSize.discountPercentage ? `${selectedSize.discountPercentage}% Off` : "";
-
-    updateTotalPrice();
-}
-
-function updateQuantityAndPrice() {
-    document.getElementById('quantity').textContent = selectedQuantity;
-    updateTotalPrice();
-}
-
-function updateTotalPrice() {
-    if (!selectedSize) return;
-
-    let totalPrice = selectedQuantity * selectedSize.price;
-
-    if (!currentProduct.taxIncluded && currentProduct.taxPercent > 0) {
-        const taxAmount = totalPrice * (currentProduct.taxPercent / 100);
-        document.getElementById('total-price').textContent = totalPrice.toFixed(2);
-        document.getElementById('tax-amount').textContent = `${taxAmount.toFixed(2)} (${currentProduct.taxPercent}% tax added to total)`;
-    } else {
-        document.getElementById('total-price').textContent = totalPrice.toFixed(2);
-        document.getElementById('tax-amount').textContent = ""; // Clear any previous tax amount
-    }
-}
-
-async function checkPincode() {
-    const pincode = document.getElementById('pincode-input').value;
-    const deliveryMessage = document.getElementById('delivery-message');
-
-    try {
-        const response = await fetch(`http://localhost:8081/rapid/user/check/delivery/${pincode}`);
-        const result = await response.json();
-
-        if (response.ok) {
-            deliveryMessage.innerHTML = `<span class="text-green-600">Delivery is available in ${result.city}, ${result.state}. Estimated delivery in ${result.estimatedDays} days.</span>`;
-        } else {
-            deliveryMessage.innerHTML = `<span class="text-red-600">${result.message}</span>`;
-        }
-    } catch (error) {
-        deliveryMessage.innerHTML = `<span class="text-red-600">Error checking delivery: ${error.message}</span>`;
-    }
-}
-
-async function addToCart() {
-    if (!currentProduct || !selectedSize) {
-        console.error("Product or size not selected.");
-        return;
-    }
-
-    const selectedSizePrice = currentProduct.sizePrices.find(size => size.sizePriceId === selectedSize.sizePriceId);
-
-    if (!selectedSizePrice) {
-        console.error("Selected size not found in product details.");
-        return;
-    }
-
-    const requestBody = {
-        productId: currentProduct.productId,  // Product ID from the API response
-        sizePriceId: selectedSizePrice.sizePriceId, // Size Price ID from selected sizePrices list
-        quantity: selectedQuantity // The quantity selected by the user
-    };
-
-    try {
-        
-        let token = localStorage.getItem("userJwtToken");
-        token = "Bearer"+ token;
-        const response = await fetch(API_URLS.ADD_ITEM_TO_CART, {
-            method: 'POST',
-            headers: {
-                'Authorization': token, 
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        });
-        console.log(response);
-        if(response.ok){
-
-        
-                showMessage('Item Added in cart.', 'success');
-            
-        }else{
-            alert('An error occurred while adding the product to the cart.','error');
-        }
-
-    } catch (error) {
-        console.error('Error adding product to cart:', error);
-        alert('An error occurred while adding the product to the cart.');
-    }
-}
-
-// Loading navbar and footer components
-// document.addEventListener('DOMContentLoaded', async () => {
-//     try {
-//         const [navbarResponse, footerResponse] = await Promise.all([
-//             fetch('src/components/navbar.html'),
-//             fetch('src/components/footer.html')
-//         ]);
-
-//         const [navbarHtml, footerHtml] = await Promise.all([
-//             navbarResponse.text(),
-//             footerResponse.text()
-//         ]);
-
-//         document.getElementById('navbar-placeholder').innerHTML = navbarHtml;
-//         document.getElementById('footer-placeholder').innerHTML = footerHtml;
-//     } catch (error) {
-//         console.error('Error loading page components:', error);
-//     }
-// });

@@ -9,7 +9,11 @@ const API_URLS = {
     ADD_ITEM_TO_CART:`${BASE_URL}/rapid/cart/addItemToCart`,
     UPDATE_CART_ITEM_QUANTITY:`${BASE_URL}/rapid/cart/update-quantity`,
     CHECKOUT:`${BASE_URL}/rapid/cart/checkout`,
-    CHECKOUT_DETAILS:`${BASE_URL}/rapid/cart/checkoutdetails`
+    CHECKOUT_DETAILS:`${BASE_URL}/rapid/cart/checkoutdetails`,
+    PRODUCT_DETAILS : (isSingleProduct, productId, category = 'Serum') => 
+        `${BASE_URL}/product/details/${isSingleProduct}/${productId}?category=${category}`,
+
+    
 };
 
 export { BASE_URL, API_URLS };
