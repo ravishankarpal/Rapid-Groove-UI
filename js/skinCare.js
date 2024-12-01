@@ -3,6 +3,12 @@ import { SKIN_CARE } from "./constant/category.js";
 
 const CATEGORIES = SKIN_CARE;
 
+function encodeProductId(productId) {
+    const base64Encoded = btoa(productId.toString()); 
+    const randomPadding = Math.random().toString(36).substring(2, 12); 
+    return btoa(base64Encoded + randomPadding); 
+}
+
 function createLoadingCard() {
     return `
         <div class="bg-white rounded-lg shadow-lg overflow-hidden animate-pulse">
@@ -26,10 +32,12 @@ function createProductCard(product) {
     const availableSize = product.sizes.find(size => size.available);
 
     if (!availableSize) return null;
+    const encodedId = encodeProductId(product.id);
+
 
     return `
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-            <a href="product-detail.html?id=${product.id}" class="block transform transition duration-300 ">
+            <a href="product-detail.html?id=${encodedId}" class="block transform transition duration-300 ">
                 <div class="relative">
                     <img src="data:${imageToUse.type};base64,${imageToUse.picByte}" 
                          alt="${product.name}" 

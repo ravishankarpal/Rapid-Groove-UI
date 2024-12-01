@@ -1,10 +1,15 @@
 import { API_URLS } from "./api-constants.js";
 
+function decodeProductId(encodedId) {
+    const decodedOnce = atob(encodedId); 
+    const originalId = decodedOnce.substring(0, decodedOnce.indexOf('=')); 
+    return atob(originalId); 
+}
 
-// Function to fetch product details from backend
+
 async function fetchProductDetails() {
     const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
+    const productId = decodeProductId(urlParams.get('id'));
     console.log("gjhk" +productId);
     if(productId){
         try {
