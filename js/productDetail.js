@@ -4,7 +4,7 @@
 async function fetchProductDetails() {
     try {
         const token = 'Bearer' + localStorage.getItem('userJwtToken');
-        const response = await fetch('http://localhost:8081/product/details/true/1?category=Serum', {
+        const response = await fetch('http://localhost:8081/product/details/1?category=Serum', {
             method: 'GET',
             headers: {
                 'Authorization': token,

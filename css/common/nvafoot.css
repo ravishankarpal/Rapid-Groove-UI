@@ -1,0 +1,14 @@
+#navbar-placeholder {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: white;
+}
+
+/* Footer Styling */
+#footer-placeholder {
+    background-color: #f9fafb;
+    text-align: center;
+    padding: 1rem 0;
+    border-top: 1px solid #e5e7eb;
+}
