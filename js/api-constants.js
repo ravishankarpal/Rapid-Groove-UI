@@ -18,7 +18,8 @@ const API_URLS = {
     PRODUCT_DETAILS : (isSingleProduct, productId, category = 'Serum') => 
         `${BASE_URL}/product/details/${isSingleProduct}/${productId}?category=${category}`,
     BACKGROUND_IMAGE :`${BASE_URL}/admin/product/images/bg2`,
-    CATEGORY_PRODUCTS: `${BASE_URL}/product/category-details`
+    CATEGORY_PRODUCTS: `${BASE_URL}/product/category-details`,
+    PRODUCT_DETAILS: (productId) =>`${BASE_URL}/product/details/${productId}`
  
 };
 

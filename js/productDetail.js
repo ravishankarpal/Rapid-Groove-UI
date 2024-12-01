@@ -1,27 +1,30 @@
+import { API_URLS } from "./api-constants.js";
 
 
 // Function to fetch product details from backend
 async function fetchProductDetails() {
-    try {
-        const token = 'Bearer' + localStorage.getItem('userJwtToken');
-        const response = await fetch('http://localhost:8081/product/details/1?category=Serum', {
-            method: 'GET',
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    console.log("gjhk" +productId);
+    if(productId){
+        try {
+            const response = await fetch(API_URLS.PRODUCT_DETAILS(productId), {
+                method: 'GET',
+                headers:API_URLS.HEADERS
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to fetch product details');
             }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch product details');
+    
+            const [productData] = await response.json();
+            renderProductDetails(productData);
+        } catch (error) {
+            console.error('Error fetching product details:', error);
+            displayErrorMessage('Unable to load product details. Please try again later.');
         }
-
-        const [productData] = await response.json();
-        renderProductDetails(productData);
-    } catch (error) {
-        console.error('Error fetching product details:', error);
-        displayErrorMessage('Unable to load product details. Please try again later.');
     }
+   
 }
 
 // Function to render product details
