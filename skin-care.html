@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Skin Care Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/common/nvafoot.css">
+    <style>
+       
+        button {
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            background-color: #2d3748;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <div id="navbar-placeholder"></div>
+
+    <!-- Hero Section -->
+    <div class="relative hero bg-gradient-to-br from-blue-50 via-purple-100 to-pink-50">
+        <img src="http://localhost:8081/admin/product/images/bg2" alt="Hero Background" class="absolute inset-0 w-full h-full object-cover opacity-50">
+        <div class="hero-overlay relative z-10 text-center text-gray-800 py-16">
+            <h1 class="text-5xl font-bold mb-4 font-[Playfair Display] leading-tight">
+                Discover Your Perfect<br>Skincare Routine
+            </h1>
+            <p class="text-xl mb-8 max-w-lg mx-auto">
+                Luxury skincare products crafted with science-backed ingredients for radiant, healthy skin.
+            </p>
+            <button
+                class="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-full hover:from-pink-600 hover:to-purple-600 transition duration-300 font-semibold">
+                Shop Now
+            </button>
+        </div>
+    </div>
+    <div class="container mx-auto px-4 py-16">
+        <div id="categories-container"></div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script type="module" src="/js/common/footerNav.js"></script>
+    <script type="module" src="js/skinCare.js"></script>
+</body>
+
+</html>
