@@ -19,8 +19,12 @@ const API_URLS = {
         `${BASE_URL}/product/details/${isSingleProduct}/${productId}?category=${category}`,
     BACKGROUND_IMAGE :`${BASE_URL}/admin/product/images/bg2`,
     CATEGORY_PRODUCTS: `${BASE_URL}/product/category-details`,
-    PRODUCT_DETAILS: (productId) =>`${BASE_URL}/product/details/${productId}`
- 
+    PRODUCT_DETAILS: (productId) =>`${BASE_URL}/product/details/${productId}`,
+    ADDRESS_DETAILS: `${BASE_URL}/rapid/user/address-details`,
+    SAVE_ADRESS: `${BASE_URL}/rapid/user/save/address`,
+    DELETE_ADDRESS: (id) =>`${BASE_URL}/rapid/user/delete-address/${id}`,
+    UPDATE_ADDRESS: (id) =>`${BASE_URL}/rapid/user/update-address/${id}`
+    
 };
 
 export { BASE_URL, API_URLS };

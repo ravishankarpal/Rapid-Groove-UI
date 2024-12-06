@@ -170,6 +170,42 @@ async function deleteItem(itemId) {
 }
 
 
+function storeSelectedItemsInLocalStorage() {
+    const selectedItemsToStore = cartData
+        .filter(item => selectedItems.has(item.id))
+        .map(item => ({
+            productId: item.product.id,
+            productName: item.product.name,
+            productImage: `data:image/png;base64,${item.product.productImages[0].picByte}`,
+            size: item.selectedSize.value,
+            originalPrice: item.selectedSize.price.original,
+            currentPrice: item.selectedSize.price.current,
+            quantity: item.quantity,
+            discountPercentage: item.selectedSize.price.discountPercentage,
+            deliveryTime: item.product.deliveryInfo.standardDeliveryTime,
+        }));
+
+    const cartSummary = {
+        subtotal: parseFloat(document.getElementById('subtotal').textContent.replace('₹', '')),
+        discount: parseFloat(document.getElementById('discount').textContent.replace('₹', '')),
+        deliveryFee: document.getElementById('shipping-cost').textContent === 'Free' ? 0 : 
+            parseFloat(document.getElementById('shipping-cost').textContent.replace('₹', '')),
+        total: parseFloat(document.getElementById('total-price').textContent.replace('₹', ''))
+    };
+
+    
+}
+
+
+
+document.getElementById('checkout-btn').addEventListener('click', function() {
+    if (this.disabled) return;
+    storeSelectedItemsInLocalStorage();
+    window.location.href = 'payment.html';
+});
+
+
+
 
 // Initialize cart on page load
 fetchCartData();

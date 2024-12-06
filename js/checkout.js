@@ -4,12 +4,112 @@ let addresses = [];
 let selectedAddressId = null;
 
 document.addEventListener('DOMContentLoaded', function () {
+    initializeCart();
     fetchAddresses();
     setupAddressForm();
+
 });
 
+function initializeCart() {
+    const cartItems = JSON.parse(localStorage.getItem('selectedCartItems')) || [];
+    const cartSummary =JSON.parse(localStorage.getItem('cartSummary')) || [];
+    renderCartItems(cartItems);
+    updateOrderSummary(cartSummary);
+}
 
 
+function renderCartItems(items) {
+    const container = document.getElementById('cartItemsContainer');
+    container.innerHTML = items.map(item => `
+        <div class="flex space-x-4 border-b pb-4">
+            <img src="${item.productImage}" alt="${item.productName}" class="w-24 h-24 object-cover rounded">
+            <div class="flex-grow">
+                <h3 class="font-medium">${item.productName}</h3>
+                <p class="text-gray-600">Size: ${item.size}</p>
+                <div class="flex items-center mt-2">
+                    <span class="font-bold">₹${item.currentPrice}</span>
+                    <span class="text-gray-500 line-through ml-2">₹${item.originalPrice}</span>
+                    <span class="text-green-600 ml-2">${item.discountPercentage}% off</span>
+                </div>
+                <p class="text-gray-600 mt-2">Qty: ${item.quantity}</p>
+                <p class="text-purple-600 mt-1">Arriving in ${item.deliveryTime}</p>
+            </div>
+        </div>
+       
+        
+    `).join('');
+}
+
+
+
+function updateOrderSummary(item) {
+    // const itemsTotal = items.reduce((sum, item) => sum + (item.originalPrice * item.quantity), 0);
+    // const discount = items.reduce((sum, item) => sum + ((item.originalPrice - item.currentPrice) * item.quantity), 0);
+    // const delivery = 49;
+
+    const container = document.getElementById('orderSummaryContainer');
+    container.innerHTML = `
+        <div class="flex justify-between">
+            <span class="text-gray-600">SubTotal Total</span>
+            <span>₹${item.subtotal}</span>
+        </div>
+        <div class="flex justify-between text-green-600">
+            <span>Discount</span>
+            <span>-₹${item.discount}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-600">Delivery Fee</span>
+            <span>₹${item.deliveryFee}</span>
+        </div>
+        <div class="border-t pt-3 mt-3">
+            <div class="flex justify-between font-semibold text-lg">
+                <span>Total</span>
+                <span class="text-purple-600">₹${item.total}</span>
+            </div>
+        </div>
+        <div class="bg-green-50 text-green-600 p-3 rounded-md text-sm mt-4">
+            You will save ₹${item.discount} on this order
+        </div>
+        <button onclick="processPayment()" class="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 transition-colors mt-4">
+            Pay Now
+        </button>
+        
+    `;
+}
+
+
+
+function showError(message) {
+    alert(message);
+}
+
+function showSuccess(message) {
+    alert(message);
+}
+
+
+
+
+
+
+
+
+function processPayment() {
+    const selectedAddress = document.querySelector('input[name="selected-address"]:checked');
+    const selectedPayment = document.querySelector('input[name="payment"]:checked');
+
+    if (!selectedAddress) {
+        alert('Please select a delivery address');
+        return;
+    }
+    if (!selectedPayment) {
+        alert('Please select a payment method');
+        return;
+    }
+
+    alert('Processing your order...');
+    // Add payment processing logic here
+}
 
 
 async function fetchAddresses() {
@@ -46,8 +146,8 @@ function updateSelectedAddressDisplay() {
         `;
     }
 }
- 
-function useSelectedAddress() {
+
+window.useSelectedAddress = function () {
     const selectedRadio = document.querySelector('input[name="selected-address"]:checked');
     if (selectedRadio) {
         const addressId = parseInt(selectedRadio.value);
@@ -75,7 +175,7 @@ window.closeAddressSelection = function () {
     document.getElementById('addressSelectionModal').classList.add('hidden');
 }
 
-window.openAddressModal = function() {
+window.openAddressModal = function () {
     document.getElementById('addressModal').classList.remove('hidden');
 }
 
@@ -83,20 +183,6 @@ window.closeAddressModal = function closeAddressModal() {
     document.getElementById('addressModal').classList.add('hidden');
     document.getElementById('addressForm').reset();
 }
-
-
-
-function showError(message) {
-    alert(message);
-}
-
-function showSuccess(message) {
-    alert(message);
-}
-
-
-
-
 
 
 function renderAddressList() {
@@ -117,7 +203,7 @@ function renderAddressList() {
                     </div>
                 </div>
                 ${address.id === selectedAddressId ?
-                '<div class="absolute top-4 right-4 text-purple-600">✓</div>' : ''}
+            '<div class="absolute top-4 right-4 text-purple-600">✓</div>' : ''}
             </label>
             
             <div class="flex justify-between mt-4 pt-4 border-t">
@@ -154,7 +240,7 @@ function renderAddressList() {
     `;
 }
 
-window.editAddress  = function(addressId) {
+window.editAddress = function (addressId) {
     const addressToEdit = addresses.find(addr => addr.id === addressId);
     if (addressToEdit) {
         // Populate the address form with existing details
@@ -164,12 +250,6 @@ window.editAddress  = function(addressId) {
         document.getElementById('city').value = addressToEdit.city;
         document.getElementById('state').value = addressToEdit.state;
         document.getElementById('pinCode').value = addressToEdit.pinCode;
-        const editMessage = document.querySelector('.text-lg.font-semibold');
-        console.log(editMessage);
-        if (editMessage) {
-            editMessage.textContent = 'Edit Address';
-        }
-
         // Store the current address ID to know which address we're editing
         window.currentEditAddressId = addressId;
 
@@ -178,50 +258,13 @@ window.editAddress  = function(addressId) {
     }
 }
 
-function deleteAddress(addressId) {
-    // Confirm deletion
-    if (confirm('Are you sure you want to delete this address?')) {
-        // Remove the address from local array
-        addresses = addresses.filter(addr => addr.id !== addressId);
-
-        // Update the address list display
-        renderAddressList();
-
-        // If the deleted address was the selected one, select the first address or reset
-        if (selectedAddressId === addressId) {
-            if (addresses.length > 0) {
-                selectedAddressId = addresses[0].id;
-                updateSelectedAddressDisplay();
-            } else {
-                selectedAddressId = null;
-                document.getElementById('selectedAddressDisplay').innerHTML = '';
-            }
-        }
-
-        // Send delete request to backend
-        fetch(`${API_URLS.ADDRESS_DETAILS}/${addressId}`, {
-            method: 'DELETE',
-            headers: API_URLS.HEADERS
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete address');
-            }
-            showSuccess('Address deleted successfully');
-        })
-        .catch(error => {
-            console.error('Error deleting address:', error);
-            showError('Failed to delete address');
-        });
-    }
-}
 
 // Modify the existing setupAddressForm to handle both adding and editing
 function setupAddressForm() {
     const form = document.getElementById('addressForm');
-    form.addEventListener('submit', async function(e) {
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
-        
+
         const formData = {
             name: document.getElementById('name').value,
             phoneNo: document.getElementById('phoneNo').value,
@@ -236,9 +279,12 @@ function setupAddressForm() {
             let successMessage;
 
             // Check if we're editing an existing address
+            console.log("Update existing", currentEditAddressId);
             if (window.currentEditAddressId) {
+                console.log("Update existing address", currentEditAddressId);
                 // Update existing address
-                response = await fetch(`${API_URLS.ADDRESS_DETAILS}/${window.currentEditAddressId}`, {
+                response = await fetch(API_URLS.UPDATE_ADDRESS(currentEditAddressId),{
+              //  response = await fetch(`${API_URLS.UPDATE_ADDRESS}/${window.currentEditAddressId}`, {
                     method: 'PUT',
                     headers: API_URLS.HEADERS,
                     body: JSON.stringify(formData)
@@ -246,6 +292,7 @@ function setupAddressForm() {
                 successMessage = 'Address updated successfully!';
             } else {
                 // Save new address
+                console.log("Save new address");
                 response = await fetch(API_URLS.SAVE_ADRESS, {
                     method: 'POST',
                     headers: API_URLS.HEADERS,
@@ -260,10 +307,10 @@ function setupAddressForm() {
 
             closeAddressModal();
             form.reset();
-            
+
             // Reset the edit address ID
             window.currentEditAddressId = null;
-            
+
             await fetchAddresses();
             showSuccess(successMessage);
         } catch (error) {
@@ -272,3 +319,32 @@ function setupAddressForm() {
         }
     });
 }
+
+window.deleteAddress =  async function(addressId) {
+    try {
+        console.log(API_URLS.DELETE_ADDRESS(addressId));
+        const response =  await fetch(API_URLS.DELETE_ADDRESS(addressId), {
+            method: 'DELETE',
+            headers: API_URLS.HEADERS
+        });
+        console.log(response);
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch addresses');
+        }
+        showSuccess('Address deleted successfully');
+        addresses = addresses.filter(addr => addr.id !== addressId);
+        // Update the selected address display
+        if (selectedAddressId === addressId) {
+            selectedAddressId = addresses.length > 0 ? addresses[0].id : null;
+            updateSelectedAddressDisplay();
+        }
+        // Re-render the address list
+        renderAddressList();
+
+    } catch (error) {
+        console.error('Error fetching addresses:', error);
+        showError('Failed to load addresses. Please try again later.');
+    }
+}
+
