@@ -21,6 +21,7 @@ function initializeCart() {
 function renderCartItems(items) {
     const container = document.getElementById('cartItemsContainer');
     container.innerHTML = items.map(item => `
+        <p class="text-purple-600 mt-1">Arriving in ${item.deliveryTime}</p>
         <div class="flex space-x-4 border-b pb-4">
             <img src="${item.productImage}" alt="${item.productName}" class="w-24 h-24 object-cover rounded">
             <div class="flex-grow">
@@ -32,7 +33,6 @@ function renderCartItems(items) {
                     <span class="text-green-600 ml-2">${item.discountPercentage}% off</span>
                 </div>
                 <p class="text-gray-600 mt-2">Qty: ${item.quantity}</p>
-                <p class="text-purple-600 mt-1">Arriving in ${item.deliveryTime}</p>
             </div>
         </div>
        
@@ -43,38 +43,19 @@ function renderCartItems(items) {
 
 
 function updateOrderSummary(item) {
-    // const itemsTotal = items.reduce((sum, item) => sum + (item.originalPrice * item.quantity), 0);
-    // const discount = items.reduce((sum, item) => sum + ((item.originalPrice - item.currentPrice) * item.quantity), 0);
-    // const delivery = 49;
+    const shippingCost= item.deliveryFee;
+    const discount = item.discount;
+    document.getElementById('subtotal').textContent = `₹${item.subtotal}`;
+    document.getElementById('discount').textContent = `₹${discount}`;
+    document.getElementById('shipping-cost').textContent = shippingCost === 0 ? 'Free' : `₹${shippingCost}`;
+    document.getElementById('total-price').textContent = `₹${item.total}`;
+    const message = document.getElementById('discount-message');
+    if(discount===0){
+      message.style.display= `none`;
+    }else{
+        message.textContent = `  You will save ₹${discount} on this order`;
+    }
 
-    const container = document.getElementById('orderSummaryContainer');
-    container.innerHTML = `
-        <div class="flex justify-between">
-            <span class="text-gray-600">SubTotal Total</span>
-            <span>₹${item.subtotal}</span>
-        </div>
-        <div class="flex justify-between text-green-600">
-            <span>Discount</span>
-            <span>-₹${item.discount}</span>
-        </div>
-        <div class="flex justify-between">
-            <span class="text-gray-600">Delivery Fee</span>
-            <span>₹${item.deliveryFee}</span>
-        </div>
-        <div class="border-t pt-3 mt-3">
-            <div class="flex justify-between font-semibold text-lg">
-                <span>Total</span>
-                <span class="text-purple-600">₹${item.total}</span>
-            </div>
-        </div>
-        <div class="bg-green-50 text-green-600 p-3 rounded-md text-sm mt-4">
-            You will save ₹${item.discount} on this order
-        </div>
-        <button onclick="processPayment()" class="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 transition-colors mt-4">
-            Pay Now
-        </button>
-        
-    `;
 }
 
 

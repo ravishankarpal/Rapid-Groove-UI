@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Page</title>
+   
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
@@ -56,7 +57,7 @@
                         <div class="mb-4">
                             <button onclick="openAddressModal()"
                                 class="w-full text-center border-2 border-dashed border-purple-600 text-purple-600 p-3 rounded-lg hover:bg-purple-50">
-                                + Add New Address
+                                Add New Address
                             </button>
                         </div>
                         <div id="addressListContainer" class="space-y-4 max-h-96 overflow-y-auto"></div>
@@ -132,10 +133,43 @@
             </div>
 
             <!-- Order Summary -->
-            <div class="bg-white p-6 rounded-lg shadow-sm h-fit">
+            <!-- <div class="bg-white p-6 rounded-lg shadow-sm h-fit">
                 <h2 class="text-lg font-semibold mb-4">Order Summary</h2>
                 <div id="orderSummaryContainer" class="space-y-3"></div>
+            </div> -->
+
+
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-3">Order Summary</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Subtotal</span>
+                        <span id="subtotal" class="font-semibold">₹0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Discount</span>
+                        <span id="discount" class="text-green-600">₹0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Delivery Fee</span>
+                        <span id="shipping-cost" class="text-gray-800">₹0</span>
+                    </div>
+                    <div class="border-t pt-4 flex justify-between items-center">
+                        <span class="text-lg font-bold text-gray-800">Total</span>
+                        <span id="total-price" class="text-2xl font-bold text-blue-500">₹0</span>
+                    </div>
+
+                    <div class="bg-green-50 text-green-600 p-3 rounded-md text-sm mt-4">
+                        <span id="discount-message"></span>
+                    </div>
+                </div>
+                <button onclick="window.location.href='payment.html'" id="checkout-btn" 
+                        class="w-full mt-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                    Order Now
+                </button>
             </div>
+
         </div>
     </div>
 
