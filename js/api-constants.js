@@ -23,7 +23,9 @@ const API_URLS = {
     ADDRESS_DETAILS: `${BASE_URL}/rapid/user/address-details`,
     SAVE_ADRESS: `${BASE_URL}/rapid/user/save/address`,
     DELETE_ADDRESS: (id) =>`${BASE_URL}/rapid/user/delete-address/${id}`,
-    UPDATE_ADDRESS: (id) =>`${BASE_URL}/rapid/user/update-address/${id}`
+    UPDATE_ADDRESS: (id) =>`${BASE_URL}/rapid/user/update-address/${id}`,
+    SEARCH_PRODUCTS: (key, page, size) => 
+        `${BASE_URL}/product/search-products?key=${encodeURIComponent(key)}&page=${page}&size=${size}`,
     
 };
 

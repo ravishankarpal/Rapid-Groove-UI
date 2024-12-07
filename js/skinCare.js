@@ -42,7 +42,7 @@ function createProductCard(product) {
                     <img src="data:${imageToUse.type};base64,${imageToUse.picByte}" 
                          alt="${product.name}" 
                          class="w-full h-48 object-cover">
-                    <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                    <span class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
                         ${availableSize.price.discountPercentage}% OFF
                     </span>
                 </div>

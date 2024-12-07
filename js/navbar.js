@@ -151,3 +151,83 @@ if (accountDropdownToggle && accountSubDropdown) {
         accountSubDropdown.classList.toggle('hidden'); 
     });
 }
+
+
+let searchTimeout;
+    
+searchInput.addEventListener('input', function(e) {
+    clearTimeout(searchTimeout);
+    const query = e.target.value.trim();
+    
+    if (query.length < 2) {
+        suggestionsList.innerHTML = '';
+        suggestionsList.classList.add('hidden');
+        return;
+    }
+
+    //searchTimeout = setTimeout(() => fetchSearchSuggestions(query), 300);
+});
+
+// async function fetchSearchSuggestions(query) {
+//     try {
+//         const token = localStorage.getItem('userJwtToken');
+//         console.log("encodeURIComponent", encodeURIComponent(query));
+//         console.log("query", query);
+//         const response = await fetch(`http://localhost:8081/product/search-products?key=${encodeURIComponent(query)}`, {
+//             headers: {
+//                 'Authorization': token ? `Bearer ${token}` : ''
+//             }
+//         });
+
+//         if (!response.ok) throw new Error('Search failed');
+
+//         const products = await response.json();
+//         displaySuggestions(products);
+//     } catch (error) {
+//         console.error('Search error:', error);
+//         suggestionsList.innerHTML = '<li class="text-red-500">Error fetching suggestions</li>';
+//     }
+// }
+
+function displaySuggestions(products) {
+    if (!products.length) {
+        suggestionsList.innerHTML = '<li class="text-gray-500">No products found</li>';
+        suggestionsList.classList.remove('hidden');
+        return;
+    }
+
+    suggestionsList.innerHTML = products
+        .map(product => `
+            <li class="hover:bg-gray-100" onclick="handleProductSelect('${product.name}')">
+                <div class="flex justify-between items-center">
+                    <span>${product.name}</span>
+                    <span class="text-gray-500">₹${product.price}</span>
+                </div>
+            </li>
+        `)
+        .join('');
+    
+    suggestionsList.classList.remove('hidden');
+}
+
+window.handleProductSelect = function(productName) {
+    searchInput.value = productName;
+    suggestionsList.classList.add('hidden');
+    window.location.href = `/search.html?query=${encodeURIComponent(productName)}`;
+};
+
+searchButton.addEventListener('click', function() {
+    const query = searchInput.value.trim();
+    if (query) {
+        window.location.href = `/search.html?query=${encodeURIComponent(query)}`;
+    }
+});
+
+searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        const query = this.value.trim();
+        if (query) {
+            window.location.href = `/search.html?query=${encodeURIComponent(query)}`;
+        }
+    }
+});
