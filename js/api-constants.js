@@ -12,6 +12,7 @@ const API_URLS = {
     CART_DETAILS:`${BASE_URL}/rapid/cart/get`,
     DELETE_CART_ITEM: (itemId) => `${BASE_URL}/rapid/cart/delete/${itemId}`,
     ADD_ITEM_TO_CART:`${BASE_URL}/rapid/cart/addItemToCart`,
+    ADD_ITEM_TO_CART_V2:`${BASE_URL}/rapid/cart/v2/addItemToCart`,
     UPDATE_CART_ITEM_QUANTITY:`${BASE_URL}/rapid/cart/update-quantity`,
     CHECKOUT:`${BASE_URL}/rapid/cart/checkout`,
     CHECKOUT_DETAILS:`${BASE_URL}/rapid/cart/checkoutdetails`,

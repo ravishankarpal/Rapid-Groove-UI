@@ -1,5 +1,6 @@
 import { API_URLS } from "./api-constants.js";
 
+import { addToCart } from "./common/add-to-cart.js";
 document.addEventListener('DOMContentLoaded', function() {
     const searchTitle = document.getElementById('searchTitle');
     const searchResults = document.getElementById('searchResults');
@@ -88,10 +89,12 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <span class="text-gray-500 line-through text-sm ml-2">₹${size.price.original}</span>
                                 ` : ''}
                             </div>
-                            <button onclick="addToCart('${product.id}', '${size.value}')" 
-                              class="w-auto bg-blue-500 text-white px-4 py-3 rounded-full hover:bg-blue-600 transition duration-300 text-sm mx-auto block">
-                                Add to Cart
-                            </button>
+                            <button 
+                          class="w-auto bg-blue-500 text-white px-4 py-3 rounded-full hover:bg-blue-600 transition duration-300 text-sm mx-auto block add-to-cart-btn" 
+                          data-product-id="${product.id}" 
+                          data-size="${size.value}">
+                            Add to Cart
+                        </button>
                         </div>
                     </div>
                 </div>
@@ -99,6 +102,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }).join('');
 
         searchResults.insertAdjacentHTML('beforeend', htmlToAdd);
+
+        
+document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', async function () {
+        const productId = this.getAttribute('data-product-id');
+        const size = this.getAttribute('data-size');
+        await addToCart(productId, size);
+    });
+});
+
     }
 
     function renderStarRating(rating) {
@@ -121,10 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return stars;
     }
 
-    window.addToCart = function(productId, size) {
-        alert(`Added product ${productId} (${size}) to cart`);
-    };
-
     const urlParams = new URLSearchParams(window.location.search);
     query = urlParams.get('query');
 
@@ -143,4 +152,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
 

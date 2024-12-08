@@ -10,7 +10,7 @@ function decodeProductId(encodedId) {
 async function fetchProductDetails() {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = decodeProductId(urlParams.get('id'));
-    console.log("gjhk" +productId);
+    
     if(productId){
         try {
             const response = await fetch(API_URLS.PRODUCT_DETAILS(productId), {
