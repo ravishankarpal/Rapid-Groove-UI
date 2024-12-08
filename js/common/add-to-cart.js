@@ -1,11 +1,10 @@
 import { API_URLS } from "../api-constants.js";
-
-
- export  async function addToCart(productId, selectedSize) {
+import { showToast } from "./toast.js"
+export async function addToCart(productId, selectedSize) {
     const payload = {
         productId,
         selectedSize,
-        quantity: 1, 
+        quantity: 1,
     };
 
     try {
@@ -17,16 +16,20 @@ import { API_URLS } from "../api-constants.js";
 
         if (response.ok) {
             console.log(response);
-            alert(`Item added to cart successfully!`);
-            window.location.href = 'cart.html';
+            showToast('Item added to cart successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = 'cart.html';
+            }, 3000);
 
-        }else{
+
+        } else {
+            showToast('Failed to add item to cart. Please try again.', 'error');
             throw new Error('Failed to add item to cart');
         }
 
-       
+
     } catch (error) {
-        console.error('Error adding item to cart:', error);
-        alert('Failed to add item to cart. Please try again.');
+
+        showToast('Failed to add item to cart. Please try again.', 'error');
     }
 }
