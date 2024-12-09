@@ -165,29 +165,8 @@ searchInput.addEventListener('input', function(e) {
         return;
     }
 
-    //searchTimeout = setTimeout(() => fetchSearchSuggestions(query), 300);
 });
 
-// async function fetchSearchSuggestions(query) {
-//     try {
-//         const token = localStorage.getItem('userJwtToken');
-//         console.log("encodeURIComponent", encodeURIComponent(query));
-//         console.log("query", query);
-//         const response = await fetch(`http://localhost:8081/product/search-products?key=${encodeURIComponent(query)}`, {
-//             headers: {
-//                 'Authorization': token ? `Bearer ${token}` : ''
-//             }
-//         });
-
-//         if (!response.ok) throw new Error('Search failed');
-
-//         const products = await response.json();
-//         displaySuggestions(products);
-//     } catch (error) {
-//         console.error('Search error:', error);
-//         suggestionsList.innerHTML = '<li class="text-red-500">Error fetching suggestions</li>';
-//     }
-// }
 
 function displaySuggestions(products) {
     if (!products.length) {

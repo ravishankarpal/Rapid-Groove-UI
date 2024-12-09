@@ -21,6 +21,7 @@ async function fetchCartData() {
         selectedItems = new Set(cartData.map(item => item.id));
 
         renderCart();
+        updateCartQuantity();
         updatePriceDetails();
         document.getElementById('checkout-btn').disabled = selectedItems.size === 0;
     } catch (error) {
@@ -52,7 +53,7 @@ function renderCart() {
                 Explore Now
             </button>
         </div>`;
-
+        updateCartQuantity();
         return;
     }
 
@@ -154,6 +155,7 @@ function changeQuantity(itemId, delta) {
     item.quantity = Math.max(1, item.quantity + delta);
     renderCart();
     updatePriceDetails();
+    updateCartQuantity();
 }
 
 async function deleteItem(itemId) {
@@ -167,6 +169,7 @@ async function deleteItem(itemId) {
         cartData = data.cartItemDetails;
         renderCart();
         updatePriceDetails();
+        updateCartQuantity()
     } catch (error) {
         console.error('Error:', error);
     }
@@ -209,6 +212,19 @@ document.getElementById('checkout-btn').addEventListener('click', function() {
     storeSelectedItemsInLocalStorage();
     window.location.href = 'checkout.html';
 });
+
+
+function updateCartQuantity() {
+    const cartQuantityElement = document.getElementById('cartQuantity');
+    console.log("cartQuantityElement", cartQuantityElement);
+    if (cartQuantityElement) {
+        const totalQuantity = cartData.reduce((sum, item) => sum + item.quantity, 0);
+        console.log("totalQuantity", totalQuantity);
+        cartQuantityElement.textContent = totalQuantity;
+        // Hide the badge if cart is empty
+        cartQuantityElement.style.display = totalQuantity === 0 ? 'none' : 'inline-block';
+    }
+}
 
 
 
