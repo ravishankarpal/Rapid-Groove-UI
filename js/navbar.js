@@ -210,3 +210,32 @@ searchInput.addEventListener('keypress', function(e) {
         }
     }
 });
+
+
+           
+// Mobile Search Elements
+const mobileSearchInput = document.getElementById('mobileSearchInput');
+const mobileSearchButton = document.getElementById('mobileSearchButton');
+
+function handleSearch(inputElement) {
+    const query = inputElement.value.trim();
+    if (query) {
+        window.location.href = `/search.html?query=${encodeURIComponent(query)}`;
+    } else {
+        alert('Please enter a search term.');
+    }
+}
+
+if (mobileSearchButton) {
+    mobileSearchButton.addEventListener('click', function () {
+        handleSearch(mobileSearchInput);
+    });
+}
+
+if (mobileSearchInput) {
+    mobileSearchInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            handleSearch(mobileSearchInput);
+        }
+    });
+}

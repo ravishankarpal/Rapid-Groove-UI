@@ -214,12 +214,10 @@ document.getElementById('checkout-btn').addEventListener('click', function() {
 });
 
 
-function updateCartQuantity() {
+export function updateCartQuantity() {
     const cartQuantityElement = document.getElementById('cartQuantity');
-    console.log("cartQuantityElement", cartQuantityElement);
     if (cartQuantityElement) {
         const totalQuantity = cartData.reduce((sum, item) => sum + item.quantity, 0);
-        console.log("totalQuantity", totalQuantity);
         cartQuantityElement.textContent = totalQuantity;
         // Hide the badge if cart is empty
         cartQuantityElement.style.display = totalQuantity === 0 ? 'none' : 'inline-block';
@@ -231,3 +229,4 @@ function updateCartQuantity() {
 
 // Initialize cart on page load
 fetchCartData();
+
