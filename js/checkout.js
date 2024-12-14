@@ -329,3 +329,65 @@ window.deleteAddress =  async function(addressId) {
     }
 }
 
+
+
+window.createOrder = async function () {
+    const selectedAddress = document.querySelector('input[name="selected-address"]:checked');
+    const selectedPayment = document.querySelector('input[name="payment"]:checked');
+    const cartItems = JSON.parse(localStorage.getItem('selectedCartItems')) || [];
+    const cartSummary = JSON.parse(localStorage.getItem('cartSummary')) || {};
+
+    if (!selectedAddress) {
+        alert('Please select a delivery address');
+        return;
+    }
+
+    if (!selectedPayment) {
+        alert('Please select a payment method');
+        return;
+    }
+
+    try {
+        const orderData = {
+            addressId: selectedAddress.value,
+            paymentMethod: selectedPayment.value,
+            items: cartItems.map(item => ({
+                productId: item.productId,
+                quantity: item.quantity,
+                price: item.currentPrice,
+                size: item.size // Include size in the payload
+            })),
+            summary: {
+                subtotal: cartSummary.subtotal,
+                discount: cartSummary.discount,
+                deliveryFee: cartSummary.deliveryFee,
+                total: cartSummary.total,
+            }
+        };
+        console.log(orderData);
+
+        const response = await fetch(API_URLS.ORDER_CREATE, {
+            method: 'POST',
+            headers: {
+                ...API_URLS.HEADERS,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create order');
+        }
+
+        const result = await response.json();
+        alert('Order created successfully!');
+        console.log('Order Result:', result);
+
+        // Optionally, redirect to a confirmation page
+        window.location.href = '/order-confirmation.html';
+    } catch (error) {
+        console.error('Error creating order:', error);
+        showError('Failed to create order. Please try again later.');
+    }
+}
+
