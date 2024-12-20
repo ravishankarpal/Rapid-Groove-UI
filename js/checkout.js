@@ -391,3 +391,46 @@ window.createOrder = async function () {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentMethods = document.querySelectorAll('input[name="payment"]');
+    const forms = {
+        card: document.getElementById('cardForm'),
+        netbanking: document.getElementById('netBankingForm'),
+        upi: document.getElementById('upiForm')
+    };
+
+   
+    function hideAllForms() {
+        Object.values(forms).forEach(form => {
+            form.classList.add('hidden');
+        });
+    }
+
+  
+    paymentMethods.forEach(method => {
+        method.addEventListener('change', function() {
+            hideAllForms();
+            if (forms[this.value]) {
+                forms[this.value].classList.remove('hidden');
+            }
+        });
+    });
+
+   
+    const cardNumber = document.querySelector('input[placeholder="1234 5678 9012 3456"]');
+    cardNumber.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/(\d{4})/g, '$1 ').trim();
+        e.target.value = value;
+    });
+
+
+    const expiryDate = document.querySelector('input[placeholder="MM/YY"]');
+    expiryDate.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 2) {
+            value = value.slice(0,2) + '/' + value.slice(2,4);
+        }
+        e.target.value = value;
+    });
+});
