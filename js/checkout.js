@@ -43,16 +43,16 @@ function renderCartItems(items) {
 
 
 function updateOrderSummary(item) {
-    const shippingCost= item.deliveryFee;
+    const shippingCost = item.deliveryFee;
     const discount = item.discount;
     document.getElementById('subtotal').textContent = `₹${item.subtotal}`;
     document.getElementById('discount').textContent = `₹${discount}`;
     document.getElementById('shipping-cost').textContent = shippingCost === 0 ? 'Free' : `₹${shippingCost}`;
     document.getElementById('total-price').textContent = `₹${item.total}`;
     const message = document.getElementById('discount-message');
-    if(discount===0){
-      message.style.display= `none`;
-    }else{
+    if (discount === 0) {
+        message.style.display = `none`;
+    } else {
         message.textContent = `  You will save ₹${discount} on this order`;
     }
 
@@ -258,22 +258,14 @@ function setupAddressForm() {
         try {
             let response;
             let successMessage;
-
-            // Check if we're editing an existing address
-            console.log("Update existing", currentEditAddressId);
-            if (window.currentEditAddressId) {
-                console.log("Update existing address", currentEditAddressId);
-                // Update existing address
-                response = await fetch(API_URLS.UPDATE_ADDRESS(currentEditAddressId),{
-              //  response = await fetch(`${API_URLS.UPDATE_ADDRESS}/${window.currentEditAddressId}`, {
+            if (window.currentEditAddressId != null) {
+                response = await fetch(API_URLS.UPDATE_ADDRESS(currentEditAddressId), {
                     method: 'PUT',
                     headers: API_URLS.HEADERS,
                     body: JSON.stringify(formData)
                 });
                 successMessage = 'Address updated successfully!';
             } else {
-                // Save new address
-                console.log("Save new address");
                 response = await fetch(API_URLS.SAVE_ADRESS, {
                     method: 'POST',
                     headers: API_URLS.HEADERS,
@@ -301,10 +293,10 @@ function setupAddressForm() {
     });
 }
 
-window.deleteAddress =  async function(addressId) {
+window.deleteAddress = async function (addressId) {
     try {
         console.log(API_URLS.DELETE_ADDRESS(addressId));
-        const response =  await fetch(API_URLS.DELETE_ADDRESS(addressId), {
+        const response = await fetch(API_URLS.DELETE_ADDRESS(addressId), {
             method: 'DELETE',
             headers: API_URLS.HEADERS
         });
@@ -330,68 +322,54 @@ window.deleteAddress =  async function(addressId) {
 }
 
 
-
 window.createOrder = async function () {
     const selectedAddress = document.querySelector('input[name="selected-address"]:checked');
     const selectedPayment = document.querySelector('input[name="payment"]:checked');
     const cartItems = JSON.parse(localStorage.getItem('selectedCartItems')) || [];
     const cartSummary = JSON.parse(localStorage.getItem('cartSummary')) || {};
 
-    if (!selectedAddress) {
-        alert('Please select a delivery address');
-        return;
-    }
-
-    if (!selectedPayment) {
-        alert('Please select a payment method');
+    if (!validateInputs(selectedAddress, selectedPayment)) {
         return;
     }
 
     try {
-        const orderData = {
-            addressId: selectedAddress.value,
-            paymentMethod: selectedPayment.value,
-            items: cartItems.map(item => ({
-                productId: item.productId,
-                quantity: item.quantity,
-                price: item.currentPrice,
-                size: item.size // Include size in the payload
-            })),
-            summary: {
-                subtotal: cartSummary.subtotal,
-                discount: cartSummary.discount,
-                deliveryFee: cartSummary.deliveryFee,
-                total: cartSummary.total,
-            }
-        };
-        console.log(orderData);
-
-        const response = await fetch(API_URLS.ORDER_CREATE, {
-            method: 'POST',
-            headers: {
-                ...API_URLS.HEADERS,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderData)
-        });
-
-        if (!response.ok) {
+        // Step 1: Create Order
+        const orderResponse = await createOrderRequest(cartItems, cartSummary, selectedAddress);
+        if (!orderResponse.ok) {
             throw new Error('Failed to create order');
         }
+        const orderResult = await orderResponse.json();
+        // Step 2: Process Payment
+        const paymentMethod = await buildPaymentPayload(selectedPayment);
+        const processPaymentResponse = await fetch(`${API_URLS.BASE_URL}/rapid/payment/process`, {
+            method: 'POST',
+            headers: API_URLS.HEADERS,
+            body: JSON.stringify({
+                payment_method: paymentMethod,
+                payment_session_id: orderResult.payment_session_id
+            })
+        });
 
-        const result = await response.json();
-        alert('Order created successfully!');
-        console.log('Order Result:', result);
+        if (!processPaymentResponse.ok) {
+            throw new Error('Payment processing failed');
+        }
 
-        // Optionally, redirect to a confirmation page
+        const paymentResult = await processPaymentResponse.json();
+        // Step 3: Handle Authentication if needed
+        if (paymentResult.requires_authentication) {
+            const authResult = await handlePaymentAuthentication(paymentResult.cf_payment_id);
+            if (authResult.authenticate_status !== 'SUCCESS') {
+                throw new Error('Payment authentication failed');
+            }
+        }
         window.location.href = '/order-confirmation.html';
     } catch (error) {
-        console.error('Error creating order:', error);
-        showError('Failed to create order. Please try again later.');
+        console.error('Payment process error:', error);
+        showError(`Payment failed: ${error.message}`);
     }
-}
+};
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const paymentMethods = document.querySelectorAll('input[name="payment"]');
     const forms = {
         card: document.getElementById('cardForm'),
@@ -399,16 +377,16 @@ document.addEventListener('DOMContentLoaded', function() {
         upi: document.getElementById('upiForm')
     };
 
-   
+
     function hideAllForms() {
         Object.values(forms).forEach(form => {
             form.classList.add('hidden');
         });
     }
 
-  
+
     paymentMethods.forEach(method => {
-        method.addEventListener('change', function() {
+        method.addEventListener('change', function () {
             hideAllForms();
             if (forms[this.value]) {
                 forms[this.value].classList.remove('hidden');
@@ -416,9 +394,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-   
+
     const cardNumber = document.querySelector('input[placeholder="1234 5678 9012 3456"]');
-    cardNumber.addEventListener('input', function(e) {
+    cardNumber.addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         value = value.replace(/(\d{4})/g, '$1 ').trim();
         e.target.value = value;
@@ -426,11 +404,139 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     const expiryDate = document.querySelector('input[placeholder="MM/YY"]');
-    expiryDate.addEventListener('input', function(e) {
+    expiryDate.addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 2) {
-            value = value.slice(0,2) + '/' + value.slice(2,4);
+            value = value.slice(0, 2) + '/' + value.slice(2, 4);
         }
         e.target.value = value;
     });
 });
+
+
+function validateInputs(selectedAddress, selectedPayment) {
+    if (!selectedAddress) {
+        showError('Please select a delivery address');
+        return false;
+    }
+    if (!selectedPayment) {
+        showError('Please select a payment method');
+        return false;
+    }
+    return true;
+}
+
+async function createOrderRequest(cartItems, cartSummary, selectedAddress) {
+    const orderData = {
+        cart_details: {
+            cart_items: cartItems.map(item => ({
+                item_id: item.productId,
+                item_name: item.productName,
+                item_description: item.description || "",
+                item_tags: [item.size],
+                item_original_unit_price: item.originalPrice,
+                item_discounted_unit_price: item.currentPrice,
+                item_currency: "INR",
+                item_quantity: item.quantity,
+                item_image_url: item.productImage
+            })),
+            cart_name: "product",
+            shipping_charge: cartSummary.deliveryFee || 0
+        },
+        customer_details: {
+            customer_id: localStorage.getItem('customerId'),
+            customer_email: localStorage.getItem('customerEmail'),
+            customer_phone: localStorage.getItem('customerPhone'),
+            customer_name: localStorage.getItem('customerName')
+        },
+        order_meta: {
+            return_url: window.location.origin + "/order-confirmation.html",
+            notify_url: window.location.origin + "/payment-webhook",
+            payment_methods: getPaymentMethod()
+        },
+        order_note: "Order from web checkout",
+        order_id: generateOrderId(),
+        order_amount: cartSummary.total,
+        order_currency: "INR"
+    };
+
+    return fetch(`${API_URLS.CREATE_ORDER}`, {
+        method: 'POST',
+        headers: API_URLS.HEADERS,
+        body: JSON.stringify(orderData)
+    });
+}
+
+
+
+function generateOrderId() {
+    return 'ORDER_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+
+function getPaymentMethod() {
+    const selectedPayment = document.querySelector('input[name="payment"]:checked');
+    const methodMap = {
+        'card': 'cc',
+        'upi': 'upi',
+        'netbanking': 'nb'
+    };
+    return methodMap[selectedPayment.value] || 'cc';
+}
+
+async function handlePaymentAuthentication(paymentId) {
+    const otp = await showOTPDialog();
+    const response = await fetch(`${API_URLS.AUTHENTICATE_PAYMENT(paymentId)}`, {
+        method: 'POST',
+        headers: API_URLS.HEADERS,
+        body: JSON.stringify({
+            action: "SUBMIT_OTP",
+            otp: otp
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error('Authentication failed');
+    }
+
+    return response.json();
+}
+
+
+function showError(message) {
+    alert(message);
+}
+
+async function showOTPDialog() {
+    return prompt('Please enter the OTP sent to your registered mobile number:');
+}
+
+
+
+async function buildPaymentPayload(selectedPayment) {
+    const paymentType = selectedPayment.value;
+
+    if (paymentType === 'card') {
+        return {
+            card: {
+                channel: "post",
+                card_number: document.querySelector('input[placeholder="1234 5678 9012 3456"]').value.replace(/\s/g, ''),
+                card_holder_name: document.getElementById('cardHolderName').value,
+                card_expiry_mm: document.querySelector('input[placeholder="MM/YY"]').value.split('/')[0],
+                card_expiry_yy: document.querySelector('input[placeholder="MM/YY"]').value.split('/')[1],
+                card_cvv: document.querySelector('input[placeholder="123"]').value
+            }
+        };
+    } else if (paymentType === 'upi') {
+        return {
+            upi: {
+                channel: "link",
+                upi_id: document.querySelector('input[placeholder="Enter UPI ID"]').value
+            }
+        };
+    }
+
+    throw new Error('Unsupported payment method');
+}
+
+

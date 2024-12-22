@@ -128,7 +128,7 @@
                         
                         <!-- Shop Now Button -->
                         <button class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
-                        onclick="window.location.href = 'payment.html';">
+                        onclick="window.location.href = 'checkout.html';">
                             Shop Now
                         </button>
                     </div>
@@ -217,32 +217,8 @@
 
 
     <script>
-        //  const products = [
-        //     { id: 1, name: 'Product A', image: '/images/product-a.jpg', description: 'Description A', specifications: 'Specifications A', reviews: 'Reviews A' },
-        //     { id: 2, name: 'Product B', image: '/images/product-b.jpg', description: 'Description B', specifications: 'Specifications B', reviews: 'Reviews B' },
-        //     { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
-        //     { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
-        //     { id: 1, name: 'Product A', image: '/images/product-a.jpg', description: 'Description A', specifications: 'Specifications A', reviews: 'Reviews A' },
-        //     { id: 2, name: 'Product B', image: '/images/product-b.jpg', description: 'Description B', specifications: 'Specifications B', reviews: 'Reviews B' },
-        //     { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
-        //     { id: 3, name: 'Product C', image: '/images/product-c.jpg', description: 'Description C', specifications: 'Specifications C', reviews: 'Reviews C' },
-        // ];
-
-        // Render Related Products
-        // const relatedProductsContainer = document.getElementById('related-products');
-        // products.forEach(product => {
-        //     const productCard = document.createElement('div');
-        //     productCard.className = 'bg-white rounded-xl shadow-lg p-4 text-center cursor-pointer hover:shadow-md';
-        //     productCard.innerHTML = `
-        //         <img src="${product.image}" class="w-full h-40 object-contain rounded-lg mb-2" alt="${product.name}">
-        //         <h3 class="text-lg font-semibold">${product.name}</h3>
-        //     `;
-        //     productCard.addEventListener('click', () => displayProductDetails(product));
-        //     relatedProductsContainer.appendChild(productCard);
-        // });
-
-
-        let mainImageSrc = '/api/placeholder/200/200'; // Store the main product image URL
+       
+        let mainImageSrc = '/api/placeholder/200/200';
         const productImage = document.getElementById('product-image');
         
         // Set initial main image

@@ -28,6 +28,9 @@ const API_URLS = {
     UPDATE_ADDRESS: (id) =>`${BASE_URL}/rapid/user/update-address/${id}`,
     SEARCH_PRODUCTS: (key, page, size) => 
         `${BASE_URL}/product/search-products?key=${encodeURIComponent(key)}&page=${page}&size=${size}`,
+    CREATE_ORDER:`${BASE_URL}/order/create-order`,
+    AUTHENTICATE_PAYMENT: (paymentId) =>`${BASE_URL}/rapid/payment/authenticate-payment/${paymentId}`,
+    PAYMENT_PROCESS:`${BASE_URL}/rapid/payment/process`,
     
 };
 
