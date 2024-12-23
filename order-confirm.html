@@ -3,27 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmed</title>
+    <title>Order Confirmation</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-10 rounded-xl shadow-2xl text-center max-w-md w-full">
-        <div class="mb-6">
-            
-            <i class="fas fa-check-circle text-green-500 text-6xl mx-auto mb-4"></i>
-            <h1 class="text-3xl font-bold text-gray-800 mb-4">Order Confirmed!</h1>
-            <p class="text-gray-600 mb-6"> Your order has been successfully processed.
-            </p>
-            <span class="text-yellow-500">&#x1F60D;</span>
-          
-        </div> 
+<body class="bg-gray-50">
+    <div class="max-w-3xl mx-auto p-6">
+        <div class="bg-white rounded-lg shadow-md p-8 mt-10">
+            <!-- Success Message -->
+            <div class="border-b pb-4">
+                <h1 class="text-2xl font-bold text-green-600">Order placed, thank you!</h1>
+                <p class="text-gray-600 mt-2">Confirmation will be sent to your email.</p>
+            </div>
 
-       
+            <!-- Shipping Address -->
+            <div class="py-4 border-b">
+                <h2 class="font-semibold text-lg mb-2">Shipping to:</h2>
+                <p id="shipping-address" class="text-gray-700"></p>
+            </div>
+
+            <!-- Delivery Date -->
+            <div class="py-4 border-b">
+                <h2 class="font-semibold text-lg">Delivery date:</h2>
+                <p class="text-gray-700 mt-1">Friday, 27 Dec</p>
+            </div>
+
+            <!-- Product Details -->
+            <div class="py-4">
+                <div class="flex gap-4 items-start">
+                    <div class="w-24 h-24 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                        <img id="product-image" class="w-full h-full object-cover" alt="Product">
+                    </div>
+                    <div class="flex-grow">
+                        <h3 id="product-name" class="font-medium text-gray-800"></h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Review Link -->
+            <div class="mt-6">
+                <a href="/orders" class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
+                    <span>Review or edit your recent orders</span>
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
     </div>
 
     <script>
-        
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const address = JSON.parse(decodeURIComponent(params.get('orderAddress')));
+                
+                // Display shipping address
+                document.getElementById('shipping-address').textContent = 
+                    `${address.name}, ${address.streetAddress}, ${address.city}, ${address.state}, ${address.pincode}, ${address.country}`;
+                
+                // Display product details
+                document.getElementById('product-name').textContent = params.get('orderProductName');
+                document.getElementById('product-image').src = params.get('orderProductImage');
+                
+            } catch (error) {
+                console.error('Error loading order details:', error);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded';
+                errorDiv.textContent = 'Error loading order details. Please try again later.';
+                document.querySelector('.max-w-3xl').prepend(errorDiv);
+            }
+        });
     </script>
 </body>
 </html>

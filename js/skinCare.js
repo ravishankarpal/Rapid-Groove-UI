@@ -1,5 +1,6 @@
 import { API_URLS } from "./api-constants.js";
 import { SKIN_CARE } from "./constant/category.js";
+import { addToCart } from "./common/add-to-cart.js";
 
 const CATEGORIES = SKIN_CARE;
 
@@ -60,9 +61,9 @@ function createProductCard(product) {
             </a>
             <div class="px-4 pb-4">
                 <button 
-                    onclick="window.location.href = 'cart.html?productId=${product.id}&size=${availableSize.size}'" 
-                    class="w-auto bg-blue-500 text-white px-4 py-3 rounded-full hover:bg-blue-600 transition duration-300 text-sm mx-auto block"
-                >
+                    class="w-auto bg-blue-500 text-white px-4 py-3 rounded-full hover:bg-blue-600 transition duration-300 text-sm mx-auto block add-to-cart-btn" 
+                    data-product-id="${product.id}" 
+                    data-size="${availableSize.value}">
                     Add to Cart
                 </button>
             </div>
@@ -108,6 +109,14 @@ async function fetchAndDisplayCategory(category) {
         console.error(`Error fetching ${category.name} products:`, error);
     }
 }
+
+document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', async function () {
+        const productId = this.getAttribute('data-product-id');
+        const size = this.getAttribute('data-size');
+        await addToCart(productId, size);
+    });
+});
 
 CATEGORIES.forEach(fetchAndDisplayCategory);
 

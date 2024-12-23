@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function initializeCart() {
     const cartItems = JSON.parse(localStorage.getItem('selectedCartItems')) || [];
-    const cartSummary =JSON.parse(localStorage.getItem('cartSummary')) || [];
+    const cartSummary = JSON.parse(localStorage.getItem('cartSummary')) || [];
     renderCartItems(cartItems);
     updateOrderSummary(cartSummary);
 }
@@ -66,30 +66,6 @@ function showError(message) {
 
 function showSuccess(message) {
     alert(message);
-}
-
-
-
-
-
-
-
-
-function processPayment() {
-    const selectedAddress = document.querySelector('input[name="selected-address"]:checked');
-    const selectedPayment = document.querySelector('input[name="payment"]:checked');
-
-    if (!selectedAddress) {
-        alert('Please select a delivery address');
-        return;
-    }
-    if (!selectedPayment) {
-        alert('Please select a payment method');
-        return;
-    }
-
-    alert('Processing your order...');
-    // Add payment processing logic here
 }
 
 
@@ -327,21 +303,25 @@ window.createOrder = async function () {
     const selectedPayment = document.querySelector('input[name="payment"]:checked');
     const cartItems = JSON.parse(localStorage.getItem('selectedCartItems')) || [];
     const cartSummary = JSON.parse(localStorage.getItem('cartSummary')) || {};
+    
 
+    console.log(addresses);
     if (!validateInputs(selectedAddress, selectedPayment)) {
         return;
     }
 
     try {
         // Step 1: Create Order
-        const orderResponse = await createOrderRequest(cartItems, cartSummary, selectedAddress);
+        const orderResponse = await createOrderRequest(cartItems, cartSummary);
         if (!orderResponse.ok) {
             throw new Error('Failed to create order');
         }
         const orderResult = await orderResponse.json();
         // Step 2: Process Payment
+        
         const paymentMethod = await buildPaymentPayload(selectedPayment);
-        const processPaymentResponse = await fetch(`${API_URLS.BASE_URL}/rapid/payment/process`, {
+        console.log("PAYMENT METHOD", paymentMethod);
+        const processPaymentResponse = await fetch(`${API_URLS.PAYMENT_PROCESS}`, {
             method: 'POST',
             headers: API_URLS.HEADERS,
             body: JSON.stringify({
@@ -356,13 +336,25 @@ window.createOrder = async function () {
 
         const paymentResult = await processPaymentResponse.json();
         // Step 3: Handle Authentication if needed
-        if (paymentResult.requires_authentication) {
+        if (paymentResult.cf_payment_id) {
             const authResult = await handlePaymentAuthentication(paymentResult.cf_payment_id);
-            if (authResult.authenticate_status !== 'SUCCESS') {
+            if (authResult.payment_message === 'payment successful') {
+                const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
+                const params = new URLSearchParams({
+                    orderProductName: cartItems.productName,
+                    orderProductImage: cartItems.productImage,
+                    orderAddress: encodeURIComponent(JSON.stringify(selectedAddress))
+                });
+                
+                window.location.href = `/order-confirm.html?${params.toString()}`;
+            }else{
                 throw new Error('Payment authentication failed');
             }
         }
-        window.location.href = '/order-confirmation.html';
+        else{
+            throw new Error('Error in payment processing'); 
+        }
+       
     } catch (error) {
         console.error('Payment process error:', error);
         showError(`Payment failed: ${error.message}`);
@@ -426,7 +418,12 @@ function validateInputs(selectedAddress, selectedPayment) {
     return true;
 }
 
-async function createOrderRequest(cartItems, cartSummary, selectedAddress) {
+async function createOrderRequest(cartItems, cartSummary) {
+
+    const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
+    if (!selectedAddress) {
+        return;
+    }
     const orderData = {
         cart_details: {
             cart_items: cartItems.map(item => ({
@@ -443,12 +440,13 @@ async function createOrderRequest(cartItems, cartSummary, selectedAddress) {
             cart_name: "product",
             shipping_charge: cartSummary.deliveryFee || 0
         },
+
         customer_details: {
-            customer_id: localStorage.getItem('customerId'),
-            customer_email: localStorage.getItem('customerEmail'),
-            customer_phone: localStorage.getItem('customerPhone'),
-            customer_name: localStorage.getItem('customerName')
+            customer_id: selectedAddress.id,
+            customer_phone: selectedAddress.phoneNo
         },
+
+
         order_meta: {
             return_url: window.location.origin + "/order-confirmation.html",
             notify_url: window.location.origin + "/payment-webhook",
@@ -476,6 +474,7 @@ function generateOrderId() {
 
 function getPaymentMethod() {
     const selectedPayment = document.querySelector('input[name="payment"]:checked');
+    console.log("getPaymentMethod", selectedPayment);
     const methodMap = {
         'card': 'cc',
         'upi': 'upi',
@@ -485,13 +484,13 @@ function getPaymentMethod() {
 }
 
 async function handlePaymentAuthentication(paymentId) {
-    const otp = await showOTPDialog();
+    //const otp = await showOTPDialog();
     const response = await fetch(`${API_URLS.AUTHENTICATE_PAYMENT(paymentId)}`, {
         method: 'POST',
         headers: API_URLS.HEADERS,
         body: JSON.stringify({
             action: "SUBMIT_OTP",
-            otp: otp
+            otp: 111000
         })
     });
 
@@ -503,9 +502,9 @@ async function handlePaymentAuthentication(paymentId) {
 }
 
 
-function showError(message) {
-    alert(message);
-}
+// function showError(message) {
+//     alert(message);
+// }
 
 async function showOTPDialog() {
     return prompt('Please enter the OTP sent to your registered mobile number:');
@@ -514,7 +513,9 @@ async function showOTPDialog() {
 
 
 async function buildPaymentPayload(selectedPayment) {
+    console.log("selectedPayment method in payload", selectedPayment);
     const paymentType = selectedPayment.value;
+    console.log("buildPaymentload",document.querySelector('input[placeholder="1234 5678 9012 3456"]'));
 
     if (paymentType === 'card') {
         return {

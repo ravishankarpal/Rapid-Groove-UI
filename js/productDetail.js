@@ -1,4 +1,6 @@
 import { API_URLS } from "./api-constants.js";
+import { addToCart } from "./common/add-to-cart.js";
+
 
 function decodeProductId(encodedId) {
     const decodedOnce = atob(encodedId); 
@@ -6,10 +8,13 @@ function decodeProductId(encodedId) {
     return atob(originalId); 
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+const productId = decodeProductId(urlParams.get('id'));
+let size;
 
 async function fetchProductDetails() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = decodeProductId(urlParams.get('id'));
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const productId = decodeProductId(urlParams.get('id'));
     
     if(productId){
         try {
@@ -65,6 +70,7 @@ function renderProductDetails(product) {
 
     // Pricing (using first size's price)
     const selectedSize = product.sizes[0];
+    size = selectedSize;
     document.getElementById('product-price').textContent = selectedSize.price.current.toFixed(2);
     document.getElementById('product-original-price').textContent = selectedSize.price.original.toFixed(2);
     document.getElementById('product-discount').textContent = `${selectedSize.price.discountPercentage}% OFF`;
@@ -253,3 +259,10 @@ function displayErrorMessage(message) {
     mainContainer.insertBefore(errorContainer, mainContainer.firstChild);
 }
 
+
+
+document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', async function () {
+        await addToCart(productId, size.value);
+    });
+});
