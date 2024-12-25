@@ -299,6 +299,22 @@ window.deleteAddress = async function (addressId) {
 
 
 window.createOrder = async function () {
+
+    const button = document.getElementById('checkout-btn');
+    const spinner = document.getElementById('spinner');
+    const buttonText = document.getElementById('button-text');
+    const setLoading = (loading) => {
+        if (loading) {
+            spinner.classList.remove('hidden');
+            buttonText.classList.add('hidden');
+            button.disabled = true;
+        } else {
+            spinner.classList.add('hidden');
+            buttonText.classList.remove('hidden');
+            button.disabled = false;
+        }
+    }
+
     const selectedAddress = document.querySelector('input[name="selected-address"]:checked');
     const selectedPayment = document.querySelector('input[name="payment"]:checked');
     const cartItems = JSON.parse(localStorage.getItem('selectedCartItems')) || [];
@@ -309,6 +325,8 @@ window.createOrder = async function () {
     if (!validateInputs(selectedAddress, selectedPayment)) {
         return;
     }
+
+    setLoading(true);
 
     try {
         // Step 1: Create Order
@@ -340,10 +358,19 @@ window.createOrder = async function () {
             const authResult = await handlePaymentAuthentication(paymentResult.cf_payment_id);
             if (authResult.payment_message === 'payment successful') {
                 const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
+                
+                const productDetails = cartItems.map(item => ({
+                    productName: item.productName,
+                    size: item.size
+                }));
+
                 const params = new URLSearchParams({
-                    orderProductName: cartItems.productName,
-                    orderProductImage: cartItems.productImage,
                     orderAddress: encodeURIComponent(JSON.stringify(selectedAddress))
+                });
+
+                productDetails.forEach((item, index) => {
+                    params.append(`productName${index}`, item.productName);
+                    params.append(`size${index}`, item.size);
                 });
                 
                 window.location.href = `/order-confirm.html?${params.toString()}`;
@@ -358,6 +385,7 @@ window.createOrder = async function () {
     } catch (error) {
         console.error('Payment process error:', error);
         showError(`Payment failed: ${error.message}`);
+        setLoading(false);
     }
 };
 

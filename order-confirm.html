@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmation</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-50">
     <div class="max-w-3xl mx-auto p-6">
         <div class="bg-white rounded-lg shadow-md p-8 mt-10">
@@ -29,13 +31,9 @@
 
             <!-- Product Details -->
             <div class="py-4">
-                <div class="flex gap-4 items-start">
-                    <div class="w-24 h-24 bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                        <img id="product-image" class="w-full h-full object-cover" alt="Product">
-                    </div>
-                    <div class="flex-grow">
-                        <h3 id="product-name" class="font-medium text-gray-800"></h3>
-                    </div>
+                <h2 class="font-semibold text-lg mb-4">Product Details:</h2>
+                <div id="product-list" class="space-y-4">
+                    <!-- Dynamically rendered product items will go here -->
                 </div>
             </div>
 
@@ -56,15 +54,38 @@
             try {
                 const params = new URLSearchParams(window.location.search);
                 const address = JSON.parse(decodeURIComponent(params.get('orderAddress')));
-                
+                const cartDetails = JSON.parse(decodeURIComponent(params.get('orderCartDetails')));
+
+                const productDetails = [];
+                let index = 0;
+                while (params.has(`productName${index}`) && params.has(`size${index}`)) {
+                    productDetails.push({
+                        productName: decodeURIComponent(params.get(`productName${index}`)),
+                        size: decodeURIComponent(params.get(`size${index}`))
+                    });
+                    index++;
+                }
+
                 // Display shipping address
-                document.getElementById('shipping-address').textContent = 
+                document.getElementById('shipping-address').textContent =
                     `${address.name}, ${address.streetAddress}, ${address.city}, ${address.state}, ${address.pincode}, ${address.country}`;
-                
+
+
+
                 // Display product details
-                document.getElementById('product-name').textContent = params.get('orderProductName');
-                document.getElementById('product-image').src = params.get('orderProductImage');
-                
+                const productList = document.getElementById('product-list');
+                productDetails.forEach(item => {
+                    const productItem = document.createElement('div');
+                    productItem.className = 'flex gap-4 items-start';
+                    productItem.innerHTML = `
+                    <div class="flex-grow">
+                        <h3 class="font-medium text-gray-800">${item.productName}</h3>
+                        <p class="text-gray-600">Size: ${item.size}</p>
+                    </div>
+                `;
+                    productList.appendChild(productItem);
+                });
+
             } catch (error) {
                 console.error('Error loading order details:', error);
                 const errorDiv = document.createElement('div');
@@ -75,4 +96,5 @@
         });
     </script>
 </body>
+
 </html>
