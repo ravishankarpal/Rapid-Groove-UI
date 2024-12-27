@@ -9,92 +9,80 @@
 </head>
 
 <body class="bg-gray-50">
-    <div class="max-w-3xl mx-auto p-6">
-        <div class="bg-white rounded-lg shadow-md p-8 mt-10">
-            <!-- Success Message -->
-            <div class="border-b pb-4">
-                <h1 class="text-2xl font-bold text-green-600">Order placed, thank you!</h1>
-                <p class="text-gray-600 mt-2">Confirmation will be sent to your email.</p>
-            </div>
+    <div id="navbar-placeholder"></div>
+    <main class="min-h-screen py-8">
+        <div class="max-w-3xl mx-auto px-4">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <!-- Success Header -->
+                <div class="bg-green-50 p-6 border-b border-green-100">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-green-700">Order placed, thank you!</h1>
+                            <p class="text-green-600 mt-1">Confirmation will be sent to your email.</p>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Shipping Address -->
-            <div class="py-4 border-b">
-                <h2 class="font-semibold text-lg mb-2">Shipping to:</h2>
-                <p id="shipping-address" class="text-gray-700"></p>
-            </div>
+                <!-- Order Details Grid -->
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Shipping Information -->
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h2 class="font-semibold text-lg text-gray-800 mb-2">Shipping to:</h2>
+                                <p id="shipping-address" class="text-gray-600"></p>
+                            </div>
 
-            <!-- Delivery Date -->
-            <div class="py-4 border-b">
-                <h2 class="font-semibold text-lg">Delivery date:</h2>
-                <p class="text-gray-700 mt-1">Friday, 27 Dec</p>
-            </div>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h2 class="font-semibold text-lg text-gray-800 mb-2">Delivery date:</h2>
+                                <div class="flex items-center space-x-2">
+                                    <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <p class="text-gray-700">Friday, 27 Dec</p>
+                                </div>
+                            </div>
+                        </div>
 
-            <!-- Product Details -->
-            <div class="py-4">
-                <h2 class="font-semibold text-lg mb-4">Product Details:</h2>
-                <div id="product-list" class="space-y-4">
-                    <!-- Dynamically rendered product items will go here -->
+                        <!-- Product Details -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h2 class="font-semibold text-lg text-gray-800 mb-4">Product Details:</h2>
+                            <div id="product-list" class="space-y-4">
+                                <!-- Products will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Actions -->
+                    <div class="mt-8 pt-6 border-t">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <a href="/order-details.html" class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center group">
+                                <span>Review or edit your recent orders</span>
+                                <svg class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                            <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Track Order
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Order Review Link -->
-            <div class="mt-6">
-                <a href="/orders" class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
-                    <span>Review or edit your recent orders</span>
-                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
         </div>
-    </div>
+    </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const params = new URLSearchParams(window.location.search);
-                const address = JSON.parse(decodeURIComponent(params.get('orderAddress')));
-                const cartDetails = JSON.parse(decodeURIComponent(params.get('orderCartDetails')));
+    <div id="footer-placeholder"></div>
 
-                const productDetails = [];
-                let index = 0;
-                while (params.has(`productName${index}`) && params.has(`size${index}`)) {
-                    productDetails.push({
-                        productName: decodeURIComponent(params.get(`productName${index}`)),
-                        size: decodeURIComponent(params.get(`size${index}`))
-                    });
-                    index++;
-                }
-
-                // Display shipping address
-                document.getElementById('shipping-address').textContent =
-                    `${address.name}, ${address.streetAddress}, ${address.city}, ${address.state}, ${address.pincode}, ${address.country}`;
-
-
-
-                // Display product details
-                const productList = document.getElementById('product-list');
-                productDetails.forEach(item => {
-                    const productItem = document.createElement('div');
-                    productItem.className = 'flex gap-4 items-start';
-                    productItem.innerHTML = `
-                    <div class="flex-grow">
-                        <h3 class="font-medium text-gray-800">${item.productName}</h3>
-                        <p class="text-gray-600">Size: ${item.size}</p>
-                    </div>
-                `;
-                    productList.appendChild(productItem);
-                });
-
-            } catch (error) {
-                console.error('Error loading order details:', error);
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded';
-                errorDiv.textContent = 'Error loading order details. Please try again later.';
-                document.querySelector('.max-w-3xl').prepend(errorDiv);
-            }
-        });
-    </script>
+    <script src="/js/common/footerNav.js"></script>
+    <script src="/js/order-confirm.js"></script>
 </body>
 
 </html>

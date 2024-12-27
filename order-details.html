@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Orders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50">
+    <div id="navbar-placeholder"></div>
+    <main class="min-h-screen py-8">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold text-gray-900">Your Orders</h1>
+            </div>
+
+            <div class="mb-6">
+                <div class="relative">
+                    <input type="text" id="searchOrders" placeholder="Search all orders"
+                        class="w-full md:w-96 pl-10 pr-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 mb-6 border-b pb-3">
+                <button class="font-medium text-blue-600">Orders</button>
+                <button class="text-gray-600 hover:text-gray-900">Buy Again</button>
+                <button class="text-gray-600 hover:text-gray-900">Not Yet Shipped</button>
+                <button class="text-gray-600 hover:text-gray-900">Cancelled Orders</button>
+            </div>
+
+            <div class="mb-4">
+                <select id="periodSelect" class="px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    <option value="3months">Past 3 Months</option>
+                    <option value="6months">Past 6 Months</option>
+                    <option value="1year">Past 1 Year</option>
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-lg font-medium" id="orderCount"></h2>
+            </div>
+
+            <div id="ordersContainer"></div>
+        </div>
+    </main>
+    <div id="footer-placeholder"></div>
+
+
+
+    <script src="/js/common/footerNav.js"></script>
+    <script type="module" src="/js/order-detail.js"></script>
+</body>
+
+</html>

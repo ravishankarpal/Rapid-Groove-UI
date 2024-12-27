@@ -319,7 +319,7 @@ window.createOrder = async function () {
     const selectedPayment = document.querySelector('input[name="payment"]:checked');
     const cartItems = JSON.parse(localStorage.getItem('selectedCartItems')) || [];
     const cartSummary = JSON.parse(localStorage.getItem('cartSummary')) || {};
-    
+
 
     console.log(addresses);
     if (!validateInputs(selectedAddress, selectedPayment)) {
@@ -336,7 +336,7 @@ window.createOrder = async function () {
         }
         const orderResult = await orderResponse.json();
         // Step 2: Process Payment
-        
+
         const paymentMethod = await buildPaymentPayload(selectedPayment);
         console.log("PAYMENT METHOD", paymentMethod);
         const processPaymentResponse = await fetch(`${API_URLS.PAYMENT_PROCESS}`, {
@@ -358,30 +358,45 @@ window.createOrder = async function () {
             const authResult = await handlePaymentAuthentication(paymentResult.cf_payment_id);
             if (authResult.payment_message === 'payment successful') {
                 const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
-                
-                const productDetails = cartItems.map(item => ({
-                    productName: item.productName,
-                    size: item.size
-                }));
 
-                const params = new URLSearchParams({
-                    orderAddress: encodeURIComponent(JSON.stringify(selectedAddress))
+                const productDetailsPromises = cartItems.map(async item => {
+                    const optimizedImage = await optimizeImage(item.productImage);
+                    return {
+                        productName: item.productName,
+                        size: item.size,
+                        image: optimizedImage
+                    };
                 });
 
-                productDetails.forEach((item, index) => {
-                    params.append(`productName${index}`, item.productName);
-                    params.append(`size${index}`, item.size);
-                });
-                
-                window.location.href = `/order-confirm.html?${params.toString()}`;
-            }else{
+
+                Promise.all(productDetailsPromises)
+                    .then(optimizedProducts => {
+                        const params = new URLSearchParams({
+                            orderAddress: encodeURIComponent(JSON.stringify(selectedAddress))
+                        });
+
+                        optimizedProducts.forEach((item, index) => {
+                            params.append(`productName${index}`, item.productName);
+                            params.append(`size${index}`, item.size);
+                            params.append(`image${index}`, item.image);
+                        });
+
+                        // Navigate after params are ready
+                        window.location.href = `/order-confirm.html?${params.toString()}`;
+                    })
+                    .catch(error => {
+                        console.error('Error optimizing images:', error);
+                        // Handle error appropriately
+                        alert('There was an error processing your order. Please try again.');
+                    });
+            } else {
                 throw new Error('Payment authentication failed');
             }
         }
-        else{
-            throw new Error('Error in payment processing'); 
+        else {
+            throw new Error('Error in payment processing');
         }
-       
+
     } catch (error) {
         console.error('Payment process error:', error);
         showError(`Payment failed: ${error.message}`);
@@ -543,7 +558,7 @@ async function showOTPDialog() {
 async function buildPaymentPayload(selectedPayment) {
     console.log("selectedPayment method in payload", selectedPayment);
     const paymentType = selectedPayment.value;
-    console.log("buildPaymentload",document.querySelector('input[placeholder="1234 5678 9012 3456"]'));
+    console.log("buildPaymentload", document.querySelector('input[placeholder="1234 5678 9012 3456"]'));
 
     if (paymentType === 'card') {
         return {
@@ -566,6 +581,42 @@ async function buildPaymentPayload(selectedPayment) {
     }
 
     throw new Error('Unsupported payment method');
+}
+
+
+
+function optimizeImage(base64String, maxWidth = 200) {
+    return new Promise((resolve, reject) => {
+        // Create an image element
+        const img = new Image();
+
+        // Handle load error
+        img.onerror = () => reject(new Error('Failed to load image'));
+
+        // Process image once loaded
+        img.onload = () => {
+            // Calculate new dimensions maintaining aspect ratio
+            const ratio = img.width / img.height;
+            const newWidth = Math.min(maxWidth, img.width);
+            const newHeight = newWidth / ratio;
+
+            // Create canvas for resizing
+            const canvas = document.createElement('canvas');
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+
+            // Draw resized image
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+            // Convert to optimized base64
+            const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.7); // Using JPEG format with 70% quality
+            resolve(optimizedBase64);
+        };
+
+        // Set source of image
+        img.src = base64String;
+    });
 }
 
 

@@ -31,6 +31,7 @@ const API_URLS = {
     CREATE_ORDER:`${BASE_URL}/order/create-order`,
     AUTHENTICATE_PAYMENT: (paymentId) =>`${BASE_URL}/rapid/payment/authenticate-payment/${paymentId}`,
     PAYMENT_PROCESS:`${BASE_URL}/rapid/payment/process`,
+    ORDER_DETAILS: (period)=>`${BASE_URL}/order/v2/details?period=${period}&page=0&size=10`
     
 };
 
