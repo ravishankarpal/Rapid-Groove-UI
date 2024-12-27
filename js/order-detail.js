@@ -49,7 +49,7 @@ const renderOrders = (data) => {
                                 <p class="font-medium"> ₹ ${order.totalAmount}</p>
                             </div>
                             <div class="relative group">
-                                <p class="text-sm text-gray-600 underline">Ship to</p>
+                                <p class="text-sm text-gray-600 underline">Ship To</p>
                                 <p class="font-medium">${order.shippingAddress.name}</p>
                                 <div class="absolute z-10 invisible group-hover:visible bg-white border rounded-lg shadow-lg p-4 w-64 mt-2">
                                     <p>${order.shippingAddress.streetAddress}</p>
