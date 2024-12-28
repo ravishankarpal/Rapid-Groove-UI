@@ -1,6 +1,5 @@
 import { API_URLS } from "./api-constants.js";
 
-
 const periodSelect = document.getElementById('periodSelect');
 const ordersContainer = document.getElementById('ordersContainer');
 const orderCount = document.getElementById('orderCount');
@@ -22,22 +21,24 @@ const fetchOrders = (period = '3months') => {
         .then((response) => response.json())
         .then((data) => {
             allOrders = data.content || [];
-            renderOrders(allOrders);
-            orderCount.textContent = `Total Orders: ${data.totalElements}`;
+            renderOrders(allOrders); 
+            orderCount.textContent = `Total Orders: ${allOrders.length}`; 
         })
         .catch((error) => {
             console.error('Error fetching orders:', error);
         });
 };
 
-const filterOrders = (status) => {
-    if (status === '') {
-        renderOrders(allOrders);
 
-    } else {
-        const filteredOrders = allOrders.filter((order) => order.orderStatus === status);
-        renderOrders(filteredOrders);
+const filterOrders = (status) => {
+    let filteredOrders = allOrders;
+
+    if (status !== '') {
+        filteredOrders = allOrders.filter((order) => order.orderStatus === status);
     }
+
+    renderOrders(filteredOrders); 
+    orderCount.textContent = `Total Orders: ${filteredOrders.length}`; 
 };
 
 
@@ -108,14 +109,16 @@ const renderOrders = (orders) => {
     }
 };
 
+// Add event listeners to tabs for filtering
 tabs.forEach((tab) => {
     tab.addEventListener('click', (event) => {
         tabs.forEach((t) => t.classList.remove('font-medium', 'text-blue-600'));
         event.target.classList.add('font-medium', 'text-blue-600');
 
         const orderStatus = event.target.getAttribute('data-status');
-        filterOrders(orderStatus);
+        filterOrders(orderStatus); // Filter orders by status
     });
 });
+
 
 fetchOrders();
