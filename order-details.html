@@ -29,11 +29,12 @@
             </div>
 
             <div class="flex flex-wrap gap-4 mb-6 border-b pb-3">
-                <button class="font-medium text-blue-600">Orders</button>
+                <button class="font-medium text-blue-600" data-status="">Orders</button>
+                <button class="text-gray-600 hover:text-gray-900" data-status="NOT_SHIPPED_YET">Not Yet Shipped</button>
+                <button class="text-gray-600 hover:text-gray-900" data-status="CANCELLED">Cancelled Orders</button>
                 <button class="text-gray-600 hover:text-gray-900">Buy Again</button>
-                <button class="text-gray-600 hover:text-gray-900">Not Yet Shipped</button>
-                <button class="text-gray-600 hover:text-gray-900">Cancelled Orders</button>
             </div>
+            
 
             <div class="mb-4">
                 <select id="periodSelect" class="px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
