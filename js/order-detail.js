@@ -85,10 +85,19 @@ const renderOrders = (orders) => {
                                     </h3>
                                 </div>
                                 <div class="flex flex-wrap gap-4">
-                                    <button class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-md shadow hover:scale-105 hover:shadow-lg transition-transform duration-200">Buy it again</button>
-                                    <button class="px-6 py-2 bg-gradient-to-r from-green-500 to-green-700 text-white rounded-md shadow hover:scale-105 hover:shadow-lg transition-transform duration-200">View your item</button>
-                                    <button class="px-6 py-2 bg-gradient-to-r from-yellow-500 to-yellow-700 text-white rounded-md shadow hover:scale-105 hover:shadow-lg transition-transform duration-200">Track package</button>
-                                    <button class="px-6 py-2 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-md shadow hover:scale-105 hover:shadow-lg transition-transform duration-200">Write a product review</button>
+                               <button class="group px-6 py-2 bg-gradient-to-r from-green-400 to-teal-500 text-white rounded-full shadow-md hover:shadow-lg inline-flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5"
+
+                                    onclick="window.location.href='product-detail.html?id=${encodedProductId}'">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform duration-700 group-hover:rotate-180" 
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    <span>Buy it again</span>
+                                </button>
+
+    
+                                    <button class="px-6 py-2 bg-gradient-to-r from-yellow-500 to-yellow-700 text-white rounded-full shadow-md hover:shadow-lg inline-flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5">Track package</button>
+                                    <button class="px-6 py-2 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-full shadow-md hover:shadow-lg inline-flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5">Write a product review</button>
                                 </div>
                             </div>
                         </div>
@@ -104,18 +113,19 @@ const renderOrders = (orders) => {
 
 
 
+
 // Add event listeners to tabs for filtering
 tabs.forEach((tab) => {
     tab.addEventListener('click', (event) => {
         // Remove the active state from all tabs
         tabs.forEach((t) => t.classList.remove('font-medium', 'text-blue-500'));
-        
+
         // Add the active state to the clicked tab
         event.target.classList.add('font-medium', 'text-blue-500');
-        
+
         // Get the order status from the clicked button's data-status attribute
         const orderStatus = event.target.getAttribute('data-status');
-        
+
         // Filter the orders based on the selected status
         filterOrders(orderStatus);
     });
