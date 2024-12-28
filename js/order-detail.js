@@ -10,7 +10,8 @@ function encodeProductId(productId) {
     return btoa(base64Encoded + randomPadding);
 }
 
-const tabs = document.querySelectorAll('.flex.flex-wrap button');
+const tabs = document.querySelectorAll('.flex.gap-4 button');
+
 let allOrders = [];
 
 const fetchOrders = async (period = '3months') => {
@@ -101,13 +102,21 @@ const renderOrders = (orders) => {
     }
 };
 
+
+
 // Add event listeners to tabs for filtering
 tabs.forEach((tab) => {
     tab.addEventListener('click', (event) => {
+        // Remove the active state from all tabs
         tabs.forEach((t) => t.classList.remove('font-medium', 'text-blue-500'));
+        
+        // Add the active state to the clicked tab
         event.target.classList.add('font-medium', 'text-blue-500');
-
+        
+        // Get the order status from the clicked button's data-status attribute
         const orderStatus = event.target.getAttribute('data-status');
+        
+        // Filter the orders based on the selected status
         filterOrders(orderStatus);
     });
 });
