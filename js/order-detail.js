@@ -88,7 +88,7 @@ const renderOrderDetails = (order) => {
 async function initializeOrderDetails() {
     const params = new URLSearchParams(window.location.search);
     const orderID = params.get('orderID');
-    console.log("order id", orderID);
+    
 
     if (!orderID) {
         console.error('No orderID found in the URL');

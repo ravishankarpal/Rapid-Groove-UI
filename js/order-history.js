@@ -1,8 +1,10 @@
 import { API_URLS } from "./api-constants.js";
+import { storeImage } from "./common/image-utils.js";
 
 const periodSelect = document.getElementById('periodSelect');
 const ordersContainer = document.getElementById('ordersContainer');
 const orderCount = document.getElementById('orderCount');
+const imgkey= '1234';
 
 function encodeProductId(productId) {
     const base64Encoded = btoa(productId.toString());
@@ -32,6 +34,7 @@ const fetchOrders = async (period = '3months') => {
 const filterOrders = (status) => {
     const filteredOrders = status ? allOrders.filter(order => order.orderStatus === status) : allOrders;
     renderOrders(filteredOrders);
+    storeImage(filteredOrders[0].items[0].image);
     orderCount.textContent = `Total Orders: ${filteredOrders.length}`;
 };
 
@@ -40,7 +43,9 @@ const renderOrders = (orders) => {
     if (orders.length > 0) {
         orders.forEach((order) => {
             const encodedProductId = encodeProductId(order.items[0].productId);
-
+            
+            //   storeImage(orders[0].items[0].image);
+            
             const timelineHTML = order.trackingInfo?.deliveryTimeline.map(timeline => {
                 const isDelivered = timeline.status.toLowerCase() === 'delivered';
                 return `
@@ -136,8 +141,14 @@ const renderOrders = (orders) => {
                                     class="px-6 py-2 bg-gradient-to-r from-yellow-500 to-yellow-700 text-white rounded-full shadow-md hover:shadow-lg inline-flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5">
                                     Track package
                                 </button>
-                                    <button class="px-6 py-2 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-full shadow-md hover:shadow-lg inline-flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5">Write a product review</button>
-                                </div>
+<button 
+    onclick="window.location.href='review-your-purchase.html?id=${encodedProductId}&product=${order.items[0].productName}&img=${imgkey}'"
+    class="px-6 py-2 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-full shadow-md hover:shadow-lg inline-flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+    </svg>
+    <span>Write a product review</span>
+</button>                                </div>
                             </div>
                         </div>
                     </div>
@@ -195,5 +206,18 @@ tabs.forEach((tab) => {
         filterOrders(orderStatus);
     });
 });
+
+const imageMap = new Map();
+function encodeImageBytes(byteString) {
+    const base64 = btoa(byteString);
+    const base64url = base64
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+    
+    return base64url.slice(0, 15);
+}
+
+
 
 fetchOrders();

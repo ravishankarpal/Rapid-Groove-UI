@@ -32,7 +32,11 @@ const API_URLS = {
     AUTHENTICATE_PAYMENT: (paymentId) =>`${BASE_URL}/rapid/payment/authenticate-payment/${paymentId}`,
     PAYMENT_PROCESS:`${BASE_URL}/rapid/payment/process`,
     ORDER_DETAILS: (period)=>`${BASE_URL}/order/v2/details?period=${period}&page=0&size=10`,
-    ORDER_DETAILS_BY_ID:(id)=>`${BASE_URL}/order/details/${id}`
+    ORDER_DETAILS_BY_ID:(id)=>`${BASE_URL}/order/details/${id}`,
+    INVOICE:(order_id)=>`${BASE_URL}/order/invoice/${order_id}`,
+    RATE_AND_REVIEW:`${BASE_URL}/product/customer/products/rate-review`,
+
+
 
    
     
