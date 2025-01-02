@@ -1,5 +1,6 @@
 import { API_URLS } from "./api-constants.js";
 import { addToCart } from "./common/add-to-cart.js";
+import { encodeProductId } from "./common/product-util.js";
 
 
 function decodeProductId(encodedId) {
@@ -7,6 +8,8 @@ function decodeProductId(encodedId) {
     const originalId = decodedOnce.substring(0, decodedOnce.indexOf('=')); 
     return atob(originalId); 
 }
+
+//const encodedProductId = encodeProductId()
 
 const urlParams = new URLSearchParams(window.location.search);
 const productId = decodeProductId(urlParams.get('id'));
@@ -157,24 +160,56 @@ function generateStarRating(rating) {
 // Render Related Products
 function renderRelatedProducts(relatedProducts) {
     const relatedProductsContainer = document.getElementById('related-products');
-    relatedProductsContainer.innerHTML = ''; // Clear existing related products
+    relatedProductsContainer.innerHTML = '';
 
     relatedProducts.forEach(product => {
         const primaryImage = product.productImages.find(img => img.primaryImage) || product.productImages[0];
         const productCard = document.createElement('div');
-        productCard.className = 'bg-white rounded-xl shadow-lg p-4 text-center cursor-pointer hover:shadow-md';
+        productCard.className = 'product-card-main min-w-full bg-white rounded-md shadow-sm overflow-hidden';
+        
         productCard.innerHTML = `
-            <img src="data:${primaryImage.type};base64,${primaryImage.picByte}" 
-                 class="w-full h-40 object-contain rounded-lg mb-2" 
-                 alt="${product.name}">
-            <h3 class="text-lg font-semibold">${product.name}</h3>
-            <p class="text-blue-600 font-bold">₹${product.productSize.price.current.toFixed(2)}</p>
+            <a href="product-detail.html?id=${encodeProductId(product.id)}" class="block">
+                <div class="relative">
+                    <img src="data:${primaryImage.type};base64,${primaryImage.picByte}" 
+                         alt="${product.name}" 
+                         class="w-full h-36 object-cover">
+                    <span class="absolute top-1 right-1 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                        ${product.productSize.price.discountPercentage}% OFF
+                    </span>
+                </div>
+                <div class="p-2">
+                    <h2 class="text-sm font-bold mb-1 truncate">${product.name}</h2>
+                    <p class="text-xs text-gray-600 mb-1 truncate">${product.subtitle || ''}</p>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-semibold text-gray-900">
+                            ₹ ${product.productSize.price.current.toFixed(2)}
+                            <span class="text-xs text-gray-500 line-through ml-1">₹ ${product.productSize.price.original.toFixed(2)}</span>
+                        </span>
+                    </div>
+                </div>
+            </a>
+            <div class="px-2 pb-2">
+                <button 
+                    class="w-full bg-blue-500 text-white px-2 py-1.5 rounded-md hover:bg-blue-600 transition duration-300 text-xs add-to-cart-btn"
+                    data-product-id="${product.id}" 
+                    data-size="${product.productSize.value}">
+                    Add to Cart
+                </button>
+            </div>
         `;
         relatedProductsContainer.appendChild(productCard);
+
+
+        const addToCartBtn = productCard.querySelector('.add-to-cart-btn');
+        addToCartBtn.addEventListener('click', async function() {
+            const productId = this.dataset.productId;
+            const size = this.dataset.size;
+             await addToCart(productId, size);
+        });
     });
 }
 
-// Quantity Handling
 document.getElementById('decrease-quantity').addEventListener('click', () => {
     const quantitySpan = document.getElementById('quantity');
     let quantity = parseInt(quantitySpan.textContent);
