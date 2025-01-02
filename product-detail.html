@@ -18,37 +18,16 @@
             <div class="md:col-span-2 grid grid-cols-1 gap-4">
                 <div class="md:col-span-2 grid grid-cols-12 gap-4">
                     <!-- Side view images -->
-                    <div class="col-span-2 grid grid-cols-1 gap-3">
-                        <div class="bg-white rounded-lg shadow-md p-2 cursor-pointer hover:border-2 hover:border-blue-500"
-                            onmouseover="showImage('/api/placeholder/200/200')" onmouseout="showMainImage()"
-                            onclick="setMainImage('/api/placeholder/200/200')">
-                            <img src="/api/placeholder/200/200" alt="View 1"
-                                class="w-full aspect-square object-cover rounded">
-                        </div>
-                        <div class="bg-white rounded-lg shadow-md p-2 cursor-pointer hover:border-2 hover:border-blue-500"
-                            onmouseover="showImage('/api/placeholder/200/200')" onmouseout="showMainImage()"
-                            onclick="setMainImage('/api/placeholder/200/200')">
-                            <img src="/api/placeholder/200/200" alt="View 2"
-                                class="w-full aspect-square object-cover rounded">
-                        </div>
-                        <div class="bg-white rounded-lg shadow-md p-2 cursor-pointer hover:border-2 hover:border-blue-500"
-                            onmouseover="showImage('/api/placeholder/200/200')" onmouseout="showMainImage()"
-                            onclick="setMainImage('/api/placeholder/200/200')">
-                            <img src="/api/placeholder/200/200" alt="View 3"
-                                class="w-full aspect-square object-cover rounded">
-                        </div>
-                        <div class="bg-white rounded-lg shadow-md p-2 cursor-pointer hover:border-2 hover:border-blue-500"
-                            onmouseover="showImage('/api/placeholder/200/200')" onmouseout="showMainImage()"
-                            onclick="setMainImage('/api/placeholder/200/200')">
-                            <img src="/api/placeholder/200/200" alt="View 4"
-                                class="w-full aspect-square object-cover rounded">
+                    <div class="col-span-2 grid grid-cols-1 gap-3" id="side-images">
+                        <!-- Template for side images - will be cloned and populated -->
+                        <div class="bg-white rounded-lg shadow-md p-2 cursor-pointer hover:border-2 hover:border-blue-500">
+                            <img class="w-full aspect-square object-cover rounded" alt="View">
                         </div>
                     </div>
 
                     <!-- Main image display -->
                     <div class="col-span-10 bg-white rounded-xl shadow-lg p-4 flex items-center justify-center">
-                        <img id="product-image" class="w-full max-h-[500px] object-contain rounded-lg"
-                            alt="Product Image">
+                        <img id="product-image" class="w-full max-h-[500px] object-contain rounded-lg" alt="Product Image">
                     </div>
                 </div>
 
@@ -209,7 +188,7 @@
 
     <script>
        
-        let mainImageSrc = '/api/placeholder/200/200';
+        let mainImageSrc = '';
         const productImage = document.getElementById('product-image');
         
         // Set initial main image

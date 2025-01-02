@@ -50,9 +50,8 @@ function renderProductDetails(product) {
 
     // Product Images
     const primaryImage = product.productImages.find(img => img.primaryImage);
-    mainImageSrc = primaryImage
-        ? `data:${primaryImage.type};base64,${primaryImage.picByte}`
-        : '/api/placeholder/200/200';
+    mainImageSrc = `data:${primaryImage.type};base64,${primaryImage.picByte}`;
+
     document.getElementById('product-image').src = mainImageSrc;
 
     // Side Images
