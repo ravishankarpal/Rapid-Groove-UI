@@ -4,9 +4,9 @@ import { encodeProductId } from "./common/product-util.js";
 
 
 function decodeProductId(encodedId) {
-    const decodedOnce = atob(encodedId); 
-    const originalId = decodedOnce.substring(0, decodedOnce.indexOf('=')); 
-    return atob(originalId); 
+    const decodedOnce = atob(encodedId);
+    const originalId = decodedOnce.substring(0, decodedOnce.indexOf('='));
+    return atob(originalId);
 }
 
 //const encodedProductId = encodeProductId()
@@ -18,18 +18,18 @@ let size;
 async function fetchProductDetails() {
     // const urlParams = new URLSearchParams(window.location.search);
     // const productId = decodeProductId(urlParams.get('id'));
-    
-    if(productId){
+
+    if (productId) {
         try {
             const response = await fetch(API_URLS.PRODUCT_DETAILS(productId), {
                 method: 'GET',
-                headers:API_URLS.HEADERS
+                headers: API_URLS.HEADERS
             });
-    
+
             if (!response.ok) {
                 throw new Error('Failed to fetch product details');
             }
-    
+
             const [productData] = await response.json();
             renderProductDetails(productData);
         } catch (error) {
@@ -37,7 +37,7 @@ async function fetchProductDetails() {
             displayErrorMessage('Unable to load product details. Please try again later.');
         }
     }
-   
+
 }
 
 // Function to render product details
@@ -50,8 +50,8 @@ function renderProductDetails(product) {
 
     // Product Images
     const primaryImage = product.productImages.find(img => img.primaryImage);
-    mainImageSrc = primaryImage 
-        ? `data:${primaryImage.type};base64,${primaryImage.picByte}` 
+    mainImageSrc = primaryImage
+        ? `data:${primaryImage.type};base64,${primaryImage.picByte}`
         : '/api/placeholder/200/200';
     document.getElementById('product-image').src = mainImageSrc;
 
@@ -65,11 +65,11 @@ function renderProductDetails(product) {
         const img = imageElement.querySelector('img');
         img.src = `data:${image.type};base64,${image.picByte}`;
         img.alt = `View ${index + 1}`;
-        
+
         imageElement.setAttribute('onmouseover', `showImage('data:${image.type};base64,${image.picByte}')`);
         imageElement.setAttribute('onmouseout', 'showMainImage()');
         imageElement.setAttribute('onclick', `setMainImage('data:${image.type};base64,${image.picByte}')`);
-        
+
         sideImagesContainer.appendChild(imageElement);
     });
 
@@ -92,8 +92,8 @@ function renderProductDetails(product) {
     product.sizes.forEach(size => {
         const sizeButton = document.createElement('button');
         sizeButton.textContent = size.value;
-        sizeButton.className = `px-3 py-2 rounded-md ${size.available 
-            ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' 
+        sizeButton.className = `px-3 py-2 rounded-md ${size.available
+            ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
             : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`;
         sizeButton.disabled = !size.available;
         sizeButton.addEventListener('click', () => updateSizeSelection(size));
@@ -142,7 +142,7 @@ function updateSizeSelection(selectedSize) {
     document.getElementById('product-price').textContent = selectedSize.price.current.toFixed(2);
     document.getElementById('product-original-price').textContent = selectedSize.price.original.toFixed(2);
     document.getElementById('product-discount').textContent = `${selectedSize.price.discountPercentage}% OFF`;
-    
+
     const quantity = parseInt(document.getElementById('quantity').textContent);
     const totalPrice = (selectedSize.price.current * quantity).toFixed(2);
     document.getElementById('total-price').textContent = totalPrice;
@@ -152,8 +152,8 @@ function updateSizeSelection(selectedSize) {
 function generateStarRating(rating) {
     let starHTML = '';
     for (let i = 1; i <= 5; i++) {
-        starHTML += i <= rating 
-            ? '<i class="fas fa-star"></i>' 
+        starHTML += i <= rating
+            ? '<i class="fas fa-star"></i>'
             : '<i class="far fa-star"></i>';
     }
     return starHTML;
@@ -168,7 +168,7 @@ function renderRelatedProducts(relatedProducts) {
         const primaryImage = product.productImages.find(img => img.primaryImage) || product.productImages[0];
         const productCard = document.createElement('div');
         productCard.className = 'product-card-main min-w-full bg-white rounded-md shadow-sm overflow-hidden';
-        
+
         productCard.innerHTML = `
             <a href="product-detail.html?id=${encodeProductId(product.id)}" class="block">
                 <div class="relative">
@@ -204,23 +204,23 @@ function renderRelatedProducts(relatedProducts) {
 
 
         const addToCartBtn = productCard.querySelector('.add-to-cart-btn');
-        addToCartBtn.addEventListener('click', async function() {
-              // Save original button content
-              const originalContent = this.innerHTML;
-              this.innerHTML = loadingSpinner;
-              this.disabled = true;
+        addToCartBtn.addEventListener('click', async function () {
+            // Save original button content
+            const originalContent = this.innerHTML;
+            this.innerHTML = loadingSpinner;
+            this.disabled = true;
             const productId = this.dataset.productId;
             const size = this.dataset.size;
             try {
                 await addToCart(productId, size);
-                
+
             } catch (error) {
-                
+
                 this.innerHTML = originalContent;
                 this.disabled = false;
-               
+
             }
-            
+
         });
     });
 }
@@ -267,7 +267,7 @@ function checkPincode(deliveryInfo) {
                     Please enter a pincode.
                 </span>
             `;
-            return; 
+            return;
         }
 
 
@@ -279,7 +279,7 @@ function checkPincode(deliveryInfo) {
                     Please enter a valid 6-digit pincode.
                 </span>
             `;
-            return; 
+            return;
         }
 
         if (pincodeInput === deliveryInfo.pinCode && deliveryInfo.expressDeliveryAvailable) {
@@ -311,7 +311,7 @@ function displayErrorMessage(message) {
     const errorContainer = document.createElement('div');
     errorContainer.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative';
     errorContainer.textContent = message;
-    
+
     const mainContainer = document.querySelector('.container');
     mainContainer.insertBefore(errorContainer, mainContainer.firstChild);
 }
@@ -324,7 +324,7 @@ document.querySelectorAll('.add-to-cart-btn').forEach(button => {
         this.innerHTML = loadingSpinner;
         this.disabled = true;
         await addToCart(productId, size.value);
-        
+
         this.innerHTML = originalContent;
         this.disabled = false;
     });
