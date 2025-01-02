@@ -19,6 +19,13 @@ async function fetchProductDetails() {
     // const urlParams = new URLSearchParams(window.location.search);
     // const productId = decodeProductId(urlParams.get('id'));
 
+    const spinner = document.getElementById('loading-spinner');
+    const mainContent = document.querySelector('.container');
+    
+    // Hide main content and show spinner while loading
+    mainContent.classList.add('opacity-0');
+    spinner.classList.remove('hidden');
+
     if (productId) {
         try {
             const response = await fetch(API_URLS.PRODUCT_DETAILS(productId), {
@@ -32,9 +39,13 @@ async function fetchProductDetails() {
 
             const [productData] = await response.json();
             renderProductDetails(productData);
+            spinner.classList.add('hidden');
+            mainContent.classList.remove('opacity-0');
         } catch (error) {
             console.error('Error fetching product details:', error);
             displayErrorMessage('Unable to load product details. Please try again later.');
+            spinner.classList.add('hidden');
+            mainContent.classList.remove('opacity-0');
         }
     }
 
@@ -307,6 +318,9 @@ document.addEventListener('DOMContentLoaded', fetchProductDetails);
 
 // Error message display function
 function displayErrorMessage(message) {
+    const spinner = document.getElementById('loading-spinner');
+    spinner.classList.add('hidden');
+    
     const errorContainer = document.createElement('div');
     errorContainer.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative';
     errorContainer.textContent = message;

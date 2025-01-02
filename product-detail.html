@@ -11,7 +11,13 @@
 </head>
 
 <body class="bg-gray-50">
+   
     <div id="navbar-placeholder"></div>
+    <div id="loading-spinner" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-50/90">
+        <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <span class="mt-4 text-xl font-semibold text-gray-700">Loading...</span>
+        <p class="mt-2 text-gray-500">Please wait while we fetch the product details</p>
+    </div>
     <div class="container mx-auto px-4 py-10 max-w-6xl">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Image Gallery Grid -->
