@@ -41,6 +41,8 @@ async function fetchProductDetails() {
 }
 
 // Function to render product details
+const loadingSpinner = `<div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>`;
+
 function renderProductDetails(product) {
     // Product Name and Subtitle
     document.getElementById('product-name').textContent = product.name;
@@ -203,9 +205,22 @@ function renderRelatedProducts(relatedProducts) {
 
         const addToCartBtn = productCard.querySelector('.add-to-cart-btn');
         addToCartBtn.addEventListener('click', async function() {
+              // Save original button content
+              const originalContent = this.innerHTML;
+              this.innerHTML = loadingSpinner;
+              this.disabled = true;
             const productId = this.dataset.productId;
             const size = this.dataset.size;
-             await addToCart(productId, size);
+            try {
+                await addToCart(productId, size);
+                
+            } catch (error) {
+                
+                this.innerHTML = originalContent;
+                this.disabled = false;
+               
+            }
+            
         });
     });
 }
@@ -238,6 +253,10 @@ function updateTotalPrice() {
 // Pincode Delivery Check
 function checkPincode(deliveryInfo) {
     document.getElementById('check-button').addEventListener('click', function () {
+        const originalContent = this.innerHTML;
+        this.innerHTML = loadingSpinner;
+        this.disabled = true;
+
         const pincodeInput = document.getElementById('pincode-input').value.trim();
         const deliveryMessage = document.getElementById('delivery-message');
 
@@ -278,6 +297,9 @@ function checkPincode(deliveryInfo) {
                 </span>
             `;
         }
+
+        this.innerHTML = originalContent;
+        this.disabled = false;
     });
 }
 
@@ -298,6 +320,12 @@ function displayErrorMessage(message) {
 
 document.querySelectorAll('.add-to-cart-btn').forEach(button => {
     button.addEventListener('click', async function () {
+        const originalContent = this.innerHTML;
+        this.innerHTML = loadingSpinner;
+        this.disabled = true;
         await addToCart(productId, size.value);
+        
+        this.innerHTML = originalContent;
+        this.disabled = false;
     });
 });
