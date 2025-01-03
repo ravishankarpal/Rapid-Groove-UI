@@ -17,8 +17,8 @@ async function fetchCheckoutDetails() {
         method: 'POST',
         headers: API_URLS.HEADERS,
         body: JSON.stringify({
-            productId: getSelectedProductIds(),
-            productSize: getSelectedProductSizes()
+            productId: getSelectedProductData().productId,
+            productSize: getSelectedProductData().size
         })
     });
 
@@ -30,17 +30,22 @@ async function fetchCheckoutDetails() {
 }
 
 
-function getSelectedProductIds() {
-    // Implement according to how you track selected products
-    // This is just an example
-    return [3, 4]; // Replace with actual logic to get selected product IDs
+function getSelectedProductData() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productsString = urlParams.get('products');
+    if(productsString){
+     const productsData = JSON.parse(decodeURIComponent(productsString));
+     console.log(productsData);
+     const productIds = productsData.map(product => product.productId);
+     const productSizes = productsData.map(product => product.size);
+     return {
+        productId: productIds,
+        size: productSizes
+    };
+        
+    }
 }
 
-function getSelectedProductSizes() {
-    // Implement according to how you track selected sizes
-    // This is just an example
-    return ["50ml", "50ml"]; // Replace with actual logic to get selected sizes
-}
 
 async function initializeCart() {
     const cartDetails = await fetchCheckoutDetails();
@@ -48,91 +53,6 @@ async function initializeCart() {
     updateOrderSummary(cartDetails.cartSummaryResponse);
 }
 
-
-// function renderCartItems(items) {
-//     const container = document.getElementById('cartItemsContainer');
-//     container.innerHTML = items.map(item => `
-//         <p class="text-purple-600 mt-1">Arriving in ${item.deliveryTime}</p>
-//         <div class="flex space-x-4 border-b pb-4">
-//          <img src="data:image/png;base64,${item.productImage}" 
-//                  alt="${item.productName}" 
-//                  class="w-24 h-24 object-cover rounded">
-//             <div class="flex-grow">
-//                 <h3 class="font-medium">${item.productName}</h3>
-//                 <p class="text-gray-600">Size: ${item.size}</p>
-//                 <div class="flex items-center mt-2">
-//                     <span class="font-bold">₹${item.currentPrice}</span>
-//                     <span class="text-gray-500 line-through ml-2">₹${item.originalPrice}</span>
-//                     <span class="text-green-600 ml-2">${item.discountPercentage}% off</span>
-//                 </div>
-//                 <p class="text-gray-600 mt-2">Qty: ${item.quantity}</p>
-//             </div>
-//         </div>
-       
-        
-//     `).join('');
-// }
-
-
-// function renderCartItems(items) {
-//     const container = document.getElementById('cartItemsContainer');
-//     container.innerHTML = `
-//         <div class="space-y-6">
-//             ${items.map(item => `
-//                 <div class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow duration-200">
-//                     <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-//                         <!-- Image Section -->
-//                         <div class="relative">
-//                             <img src="data:image/png;base64,${item.productImage}" 
-//                                 alt="${item.productName}" 
-//                                 class="w-24 h-24 object-cover rounded-lg">
-//                             ${item.discountPercentage > 0 ? `
-//                                 <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-//                                     ${item.discountPercentage}% OFF
-//                                 </span>
-//                             ` : ''}
-//                         </div>
-                        
-//                         <!-- Product Details Section -->
-//                         <div class="flex-grow space-y-2">
-//                             <div class="flex justify-between items-start">
-//                                 <h3 class="font-medium text-lg text-gray-800">${item.productName}</h3>
-//                                 <div class="text-right">
-//                                     <div class="flex items-center gap-2">
-//                                         <span class="font-bold text-lg text-gray-900">₹${item.currentPrice}</span>
-//                                         ${item.discountPercentage > 0 ? `
-//                                             <span class="text-gray-400 line-through text-sm">₹${item.originalPrice}</span>
-//                                         ` : ''}
-//                                     </div>
-//                                 </div>
-//                             </div>
-                            
-//                             <!-- Product Attributes -->
-//                             <div class="flex flex-wrap gap-4 text-sm text-gray-600">
-//                                 <div class="flex items-center gap-1">
-//                                     <span class="font-medium">Size:</span>
-//                                     <span>${item.size}</span>
-//                                 </div>
-//                                 <div class="flex items-center gap-1">
-//                                     <span class="font-medium">Quantity:</span>
-//                                     <span>${item.quantity}</span>
-//                                 </div>
-//                             </div>
-                            
-//                             <!-- Delivery Info -->
-//                             <div class="flex items-center gap-2 text-sm">
-//                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-//                                 </svg>
-//                                 <span class="text-purple-600">Arriving in ${item.deliveryTime}</span>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             `).join('')}
-//         </div>
-//     `;
-// }
 
 
 function renderCartItems(items) {

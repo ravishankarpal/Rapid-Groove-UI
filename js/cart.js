@@ -180,6 +180,7 @@ async function deleteItem(itemId) {
 
 
 async function saveCartDataToBackend() {
+    
     const itemRequests = cartData
         .filter(item => selectedItems.has(item.id))
         .map(item => ({
@@ -221,22 +222,36 @@ async function saveCartDataToBackend() {
         productId: id,
         size: responseData.productSize[index]
     }));
-    const queryParams = new URLSearchParams({
-        products: encodeURIComponent(JSON.stringify(productsData))
-    });
-    return `checkout.html?${queryParams.toString()}`;
+    const productsString = JSON.stringify(productsData);
+    console.log(productsString);
+    return `checkout.html?products=${encodeURIComponent(productsString)}`;
 
 }
 
 
-
+const loadingSpinner = `<div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>`;
 document.getElementById('checkout-btn').addEventListener('click', async function() {
     if (this.disabled) return;
+
+    const originalContent = this.innerHTML;
+
+    // Show the spinner and disable the button
+    this.innerHTML = loadingSpinner;
+    this.disabled = true;
+    
+    
     try {
-        const redirectUrl = await saveCartDataToBackend();        window.location.href = 'checkout.html';
+        // Call the backend function
+        const redirectUrl = await saveCartDataToBackend();
+
+        console.log('Redirect URL:', redirectUrl); // Debug log
+        window.location.replace(redirectUrl); // Redirect the user
     } catch (error) {
-        console.error('Failed to save cart data:', error);
-        // Handle error appropriately (show error message to user, etc.)
+        console.error('Error during checkout:', error);
+    } finally {
+        // Re-enable the button and restore original content
+        this.innerHTML = originalContent;
+        this.disabled = false;
     }
 });
 
