@@ -2,6 +2,7 @@ import { API_URLS } from "./api-constants.js";
 
 let addresses = [];
 let selectedAddressId = null;
+let cartDetails = null;
 
 document.addEventListener('DOMContentLoaded', function () {
     initializeCart();
@@ -48,7 +49,7 @@ function getSelectedProductData() {
 
 
 async function initializeCart() {
-    const cartDetails = await fetchCheckoutDetails();
+    cartDetails = await fetchCheckoutDetails();
     renderCartItems(cartDetails.itemResponses);
     updateOrderSummary(cartDetails.cartSummaryResponse);
 }
@@ -393,8 +394,8 @@ window.createOrder = async function () {
 
     const selectedAddress = document.querySelector('input[name="selected-address"]:checked');
     const selectedPayment = document.querySelector('input[name="payment"]:checked');
-    const cartItems = JSON.parse(localStorage.getItem('selectedCartItems')) || [];
-    const cartSummary = JSON.parse(localStorage.getItem('cartSummary')) || {};
+    const cartItems = cartDetails.itemResponses || [];
+    const cartSummary = cartDetails.cartSummaryResponse || {};
 
 
     console.log(addresses);
@@ -403,6 +404,7 @@ window.createOrder = async function () {
     }
 
     setLoading(true);
+   
 
     try {
         // Step 1: Create Order
