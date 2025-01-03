@@ -438,29 +438,28 @@ window.createOrder = async function () {
                 const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
 
                 const productDetailsPromises = cartItems.map(async item => {
-                    const optimizedImage = await optimizeImage(item.productImage);
+                    //const optimizedImage = await optimizeImage(item.productImage);
                     return {
                         productName: item.productName,
                         size: item.size,
-                        image: optimizedImage
+                        image: item.productImage
                     };
                 });
 
 
                 Promise.all(productDetailsPromises)
                     .then(optimizedProducts => {
-                        const params = new URLSearchParams({
-                            orderAddress: encodeURIComponent(JSON.stringify(selectedAddress))
-                        });
+                        const orderData = {
+                            orderAddress: selectedAddress,
+                            products: optimizedProducts
+                        };
 
-                        optimizedProducts.forEach((item, index) => {
-                            params.append(`productName${index}`, item.productName);
-                            params.append(`size${index}`, item.size);
-                            params.append(`image${index}`, item.image);
-                        });
+                        console.log('orderData', orderData);
+                        localStorage.setItem('orderData', JSON.stringify(orderData));
+
 
                         // Navigate after params are ready
-                        window.location.href = `/order-confirm.html?${params.toString()}`;
+                        window.location.href = `/order-confirm.html`;
                     })
                     .catch(error => {
                         console.error('Error optimizing images:', error);
@@ -559,7 +558,7 @@ async function createOrderRequest(cartItems, cartSummary) {
                 item_image_url: item.productImage
             })),
             cart_name: "product",
-            shipping_charge: cartSummary.deliveryFee || 0
+            ...(cartSummary.deliveryFee > 0 && { shipping_charge: cartSummary.deliveryFee })
         },
 
         customer_details: {
