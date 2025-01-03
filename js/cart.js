@@ -179,22 +179,19 @@ async function deleteItem(itemId) {
 }
 
 
-function storeSelectedItemsInLocalStorage() {
-    const selectedItemsToStore = cartData
+async function saveCartDataToBackend() {
+    const itemRequests = cartData
         .filter(item => selectedItems.has(item.id))
         .map(item => ({
             productId: item.product.id,
-            productName: item.product.name,
-            productImage: `data:image/png;base64,${item.product.productImages[0].picByte}`,
             size: item.selectedSize.value,
             originalPrice: item.selectedSize.price.original,
             currentPrice: item.selectedSize.price.current,
             quantity: item.quantity,
-            discountPercentage: item.selectedSize.price.discountPercentage,
-            deliveryTime: item.product.deliveryInfo.standardDeliveryTime,
+            discountPercentage: item.selectedSize.price.discountPercentage
         }));
 
-    const cartSummary = {
+    const cartSummaryRequest = {
         subtotal: parseFloat(document.getElementById('subtotal').textContent.replace('₹', '')),
         discount: parseFloat(document.getElementById('discount').textContent.replace('₹', '')),
         deliveryFee: document.getElementById('shipping-cost').textContent === 'Free' ? 0 : 
@@ -202,15 +199,45 @@ function storeSelectedItemsInLocalStorage() {
         total: parseFloat(document.getElementById('total-price').textContent.replace('₹', ''))
     };
 
-    
+    // Prepare the request payload
+    const payload = {
+        itemRequests,
+        cartSummaryRequest
+    };
+
+    // Make the API call
+    const response = await fetch(API_URLS.SAVE_CHECKOUT, {
+        method: 'POST',
+        headers: API_URLS.HEADERS,
+        body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const responseData = await response.json();
+
+    const productsData = responseData.productId.map((id, index) => ({
+        productId: id,
+        size: responseData.productSize[index]
+    }));
+    const queryParams = new URLSearchParams({
+        products: encodeURIComponent(JSON.stringify(productsData))
+    });
+    return `checkout.html?${queryParams.toString()}`;
+
 }
 
 
 
-document.getElementById('checkout-btn').addEventListener('click', function() {
+document.getElementById('checkout-btn').addEventListener('click', async function() {
     if (this.disabled) return;
-    storeSelectedItemsInLocalStorage();
-    window.location.href = 'checkout.html';
+    try {
+        const redirectUrl = await saveCartDataToBackend();        window.location.href = 'checkout.html';
+    } catch (error) {
+        console.error('Failed to save cart data:', error);
+        // Handle error appropriately (show error message to user, etc.)
+    }
 });
 
 
