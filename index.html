@@ -6,11 +6,13 @@
     <title>Your E-commerce Project</title>
     <link href="dist/output.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/common/nvafoot.css">
+    
 </head>
 <body>
-    <div id="navbar"></div>
+    <div id="navbar-placeholder"></div>
     <div id="home"></div>
-    <div id="footer"></div> <!-- Placeholder for footer -->
+    <div id="footer-placeholder"></div> <!-- Placeholder for footer -->
 
     <script>
     // Function to load and execute scripts
@@ -29,7 +31,7 @@
             // Load navbar
             const navResponse = await fetch('./src/components/navbar.html');
             const navData = await navResponse.text();
-            document.getElementById('navbar').innerHTML = navData;
+            document.getElementById('navbar-placeholder').innerHTML = navData;
 
             // Load home
             const homeResponse = await fetch('./src/components/home.html');
@@ -39,10 +41,10 @@
             // Load footer
             const footerResponse = await fetch('./src/components/footer.html');
             const footerData = await footerResponse.text();
-            document.getElementById('footer').innerHTML = footerData;
+            document.getElementById('footer-placeholder').innerHTML = footerData;
 
             // Execute scripts in the navbar for dropdowns
-            const scripts = document.getElementById('navbar').getElementsByTagName('script');
+            const scripts = document.getElementById('navbar-placeholder').getElementsByTagName('script');
             for (let script of scripts) {
                 if (script.src) {
                     await loadScripts(script.src);

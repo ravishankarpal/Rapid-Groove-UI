@@ -3,41 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Modern Responsive Footer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Custom scroll bar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
 </head>
-<body>
-    
-    <footer class="bg-gray-800 text-white py-6 mt-8">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h3 class="text-lg font-semibold">About Us</h3>
-                    <p class="mt-2">We provide high-quality skincare and beauty products.</p>
+<body class="bg-gray-100">
+    <footer class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 text-white py-12 px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            <!-- Brand Section -->
+            <div class="md:col-span-1 lg:col-span-2">
+                <div class="flex items-center mb-6">
+                    <img src="https://via.placeholder.com/50" alt="Logo" class="w-12 h-12 mr-4 rounded-full">
+                    <h2 class="text-2xl font-bold tracking-wide">LuxeSkin</h2>
                 </div>
-                <div>
-                    <h3 class="text-lg font-semibold">Quick Links</h3>
-                    <ul class="mt-2 space-y-1">
-                        <li><a href="#" class="hover:underline">Support</a></li>
-                        <li><a href="#" class="hover:underline">Company</a></li>
-                        <li><a href="#" class="hover:underline">Contact</a></li>
-                        <li><a href="#" class="hover:underline">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold">Follow Us</h3>
-                    <div class="mt-2 flex space-x-4">
-                        <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook-f"></i> Facebook</a>
-                        <a href="#" class="hover:text-blue-400"><i class="fab fa-twitter"></i> Twitter</a>
-                        <a href="#" class="hover:text-blue-400"><i class="fab fa-instagram"></i> Instagram</a>
-                    </div>
+                <p class="text-gray-300 mb-4 pr-4">
+                    Elevating skincare through innovative science and luxurious formulations. Your journey to radiant skin starts here.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-white hover:text-blue-400 transition duration-300">
+                        <i class="fab fa-facebook-f text-xl"></i>
+                    </a>
+                    <a href="#" class="text-white hover:text-pink-400 transition duration-300">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-white hover:text-blue-400 transition duration-300">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-white hover:text-red-400 transition duration-300">
+                        <i class="fab fa-youtube text-xl"></i>
+                    </a>
                 </div>
             </div>
-            <div class="mt-6 border-t border-gray-700 pt-4 text-center">
-                <p>&copy; 2024 Rapid Groove. All rights reserved.</p>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Home</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Shop</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Products</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">About Us</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Customer Support -->
+            <div>
+                <h3 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Customer Support</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">FAQ</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Shipping</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Returns</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Track Order</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Help Center</a></li>
+                </ul>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="md:col-span-2 lg:col-span-1">
+                <h3 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Subscribe to Our Newsletter</h3>
+                <p class="text-gray-300 mb-4">Get exclusive updates, promotions, and skincare tips!</p>
+                <div class="flex">
+                    <input 
+                        type="email" 
+                        id="newsletter-email" 
+                        placeholder="Enter your email" 
+                        class="w-full px-4 py-2 rounded-l-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                    <button 
+                        id="newsletter-submit" 
+                        class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition duration-300"
+                    >
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <p id="newsletter-message" class="text-sm mt-2 text-gray-400"></p>
             </div>
         </div>
-    </footer>
-    
 
+        <!-- Copyright and Legal -->
+        <div class="mt-12 pt-8 border-t border-gray-800 text-center">
+            <p class="text-gray-400 text-sm">
+                &copy; 2024 Rapid Groove. All Rights Reserved. 
+                <a href="#" class="hover:text-white ml-4">Privacy Policy</a> | 
+                <a href="#" class="hover:text-white ml-4">Terms of Service</a>
+            </p>
+        </div>
+    </footer>
+    <script src="/js/footer.js"></script>
 </body>
 </html>

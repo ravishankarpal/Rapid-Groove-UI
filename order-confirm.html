@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+    <div id="navbar-placeholder"></div>
+    <main class="min-h-screen py-10">
+        <div class="max-w-4xl mx-auto px-6">
+            <!-- Confirmation Header -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <div class="flex items-center space-x-4">
+                    <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-green-700">Order Confirmed!</h1>
+                        <p class="text-gray-600">A confirmation email has been sent to your inbox.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Shipping Information -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="font-semibold text-lg text-gray-800 mb-4">Shipping Information</h2>
+                    <div id="shipping-address" class="space-y-2 text-gray-600">
+                        <!-- Address will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Product Details -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="font-semibold text-lg text-gray-800 mb-4">Products</h2>
+                    <div id="product-list" class="flex gap-6 overflow-x-auto">
+                        <!-- Product items will be populated by JavaScript -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Order Actions -->
+            <div class="mt-10 mb-10 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <a href="javascript:void(0);" class="text-blue-600 hover:underline font-medium" onclick="redirectToOrderDetails()">
+                    Review or edit your recent orders
+                </a>
+                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                    onclick="trackOrder()">
+                    Track Order
+                </button>
+            </div>
+        </div>
+        <div id="footer-placeholder"></div>
+    </main>
+    <script src="/js/common/footerNav.js"></script>
+    <script src="/js/order-confirm.js"></script>
+</body>
+
+</html>

@@ -7,30 +7,12 @@
     <title>Homepage</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
-    <style>
-        .swiper {
-            width: 100%;
-            height: 80vh;
-        }
+    <link rel="stylesheet" href="/css/common/home.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 
-        .swiper-slide {
-            background-size: cover;
-            background-position: center;
-        }
-
-        .swiper-button-next,
-        .swiper-button-prev {
-            color: white;
-        }
-
-        .swiper-pagination-bullet {
-            background: white;
-        }
-    </style>
 </head>
 
 <body>
-
     <div class="home-container">
         <!-- Hero Section with Swiper -->
         <section class="hero">
@@ -46,36 +28,28 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Slide 2 -->
+
                     <div class="swiper-slide" style="background-image: url('http://localhost:8081/admin/product/images/bg2');">
                         <div class="flex justify-center items-center h-full bg-black bg-opacity-50">
                             <div class="text-center text-white px-4">
-                                <h1 class="text-5xl font-bold md:text-6xl">Premium Beauty Products</h1>
-                                <p class="mt-4 text-lg md:text-xl">Experience luxury skincare at its finest.</p>
-                                <a href="#products" class="mt-8 inline-block px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">Explore Now</a>
+                                <h1 class="text-5xl font-bold md:text-6xl">Welcome to Rapid Groove</h1>
+                                <p class="mt-4 text-lg md:text-xl">Discover the best in skincare, makeup, and more.</p>
+                                <a href="#products" class="mt-8 inline-block px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">Shop Now</a>
                             </div>
                         </div>
                     </div>
-                    <!-- Slide 3 -->
-                    <div class="swiper-slide" style="background-image: url('http://localhost:8081/admin/product/images/home1');">
-                        <div class="flex justify-center items-center h-full bg-black bg-opacity-50">
-                            <div class="text-center text-white px-4">
-                                <h1 class="text-5xl font-bold md:text-6xl">Special Offers</h1>
-                                <p class="mt-4 text-lg md:text-xl">Limited time deals on selected products.</p>
-                                <a href="#products" class="mt-8 inline-block px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">Shop Deals</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Slide 4 -->
+
+
                     <div class="swiper-slide" style="background-image: url('http://localhost:8081/admin/product/images/bg3');">
                         <div class="flex justify-center items-center h-full bg-black bg-opacity-50">
                             <div class="text-center text-white px-4">
-                                <h1 class="text-5xl font-bold md:text-6xl">Experience the luxury of scents crafted for the discerning</h1>
-                                <p class="mt-4 text-lg md:text-xl">Elevate your senses with every spray.</p>
-                                <a href="#products" class="mt-8 inline-block px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">Shop Deals</a>
+                                <h1 class="text-5xl font-bold md:text-6xl">Welcome to Rapid Groove</h1>
+                                <p class="mt-4 text-lg md:text-xl">Discover the best in skincare, makeup, and more.</p>
+                                <a href="#products" class="mt-8 inline-block px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">Shop Now</a>
                             </div>
                         </div>
                     </div>
+                    <!-- Other slides remain the same -->
                 </div>
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-prev"></div>
@@ -87,73 +61,22 @@
         <section id="products" class="py-16 bg-gray-100">
             <div class="container mx-auto px-4">
                 <h2 class="text-3xl font-bold text-center">Featured Products</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8" id="product-grid">
-                    <!-- Product cards will be injected here -->
+                <!-- <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-8" id="product-grid">
+                    
+                </div> -->
+
+                <div class="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2" id="product-grid">
+                    <!-- Product cards will be inserted here -->
+                </div>
+
+                <div id="loading" class="loading">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+                    <p class="mt-2 text-gray-600">Loading more products...</p>
                 </div>
             </div>
         </section>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
-    <script>
-        const swiper = new Swiper('.swiper', {
-            loop: true,
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
-
-        // Function to fetch product details
-        function fetchProductDetails(productId) {
-            return fetch(`http://localhost:8081/product/getProductDetails/yes/${productId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json());
-        }
-
-        // Fetch all product details for three products
-        Promise.all([fetchProductDetails(9), fetchProductDetails(10), fetchProductDetails(11),
-        fetchProductDetails(12),fetchProductDetails(13),fetchProductDetails(14)
-        ])
-            .then(productArrays => {
-                const productGrid = document.getElementById('product-grid');
-
-                productArrays.forEach(products => {
-                    if (Array.isArray(products) && products.length > 0) {
-                        const product = products[0]; // Get the first product from the response array
-
-                        // Prepare the image using the base64 encoded string
-                        const imageBase64 = product.productImages[0].picByte;
-                        const imageUrl = `data:${product.productImages[0].type};base64,${imageBase64}`;
-
-                        // Inject the product details into the grid
-                        const productCard = document.createElement('div');
-                        productCard.classList.add('bg-white', 'shadow-md', 'rounded-lg', 'p-4');
-                        productCard.innerHTML = `
-                            <img src="${imageUrl}" alt="${product.productName}" class="w-full h-48 object-cover rounded-t-lg">
-                            <h3 class="text-xl font-semibold mt-4">${product.productName}</h3>
-                            <p class="mt-2 text-gray-600">${product.productDescription}</p>
-                            <p class="mt-4 font-bold">INR ${product.productActualPrice}</p>
-                        `;
-                        productGrid.appendChild(productCard);
-                    }
-                });
-            })
-            .catch(error => console.error('Error fetching product details:', error));
-    </script>
-
+<script type="module" src="/js/home.js"></script>
 </body>
-
 </html>

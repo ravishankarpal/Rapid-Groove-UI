@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Arrivals | Fashion Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- Mobile Navigation -->
+    <nav class="bg-purple-600 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center flex-shrink-0">
+                    <a href="#" class="text-xl md:text-2xl font-bold text-white">
+                        <i class="fas fa-shopping-bag mr-2 text-pink-300"></i>Fashion Hub
+                    </a>
+                </div>
+
+                <!-- Search Bar - Desktop -->
+                <div class="hidden md:flex flex-1 max-w-md mx-6">
+                    <div class="relative w-full">
+                        <input type="text" 
+                               id="search-input"
+                               placeholder="Search products..." 
+                               class="w-full px-4 py-2 rounded-md text-gray-800 bg-white border-none focus:ring-2 focus:ring-pink-300 focus:outline-none">
+                        <div class="absolute right-3 top-2.5 text-gray-400">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <div class="md:hidden flex items-center space-x-4">
+                    <button class="text-white focus:outline-none">
+                        <i class="fas fa-search text-xl"></i>
+                    </button>
+                    <button id="mobile-menu-toggle" class="text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="text-white hover:text-pink-200 transition">Home</a>
+                    <a href="#" class="text-white hover:text-pink-200 transition">New Arrivals</a>
+                    <a href="#" class="text-white hover:text-pink-200 transition">Categories</a>
+                    <div class="relative">
+                        <i class="fas fa-shopping-cart text-white cursor-pointer"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-2">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-purple-700">
+            <!-- Mobile Search Bar -->
+            <div class="p-4">
+                <div class="relative">
+                    <input type="text" 
+                           id="mobile-search-input"
+                           placeholder="Search products..." 
+                           class="w-full px-4 py-2 rounded-md text-gray-800 bg-white border-none focus:ring-2 focus:ring-pink-300 focus:outline-none">
+                    <div class="absolute right-3 top-2.5 text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="text-white hover:bg-purple-800 block px-3 py-2 rounded-md">Home</a>
+                <a href="#" class="text-white hover:bg-purple-800 block px-3 py-2 rounded-md">New Arrivals</a>
+                <a href="#" class="text-white hover:bg-purple-800 block px-3 py-2 rounded-md">Categories</a>
+                <div class="flex items-center justify-between px-3 py-2 text-white">
+                    <span>Cart</span>
+                    <span id="mobile-cart-count" class="bg-pink-500 text-white text-xs rounded-full px-2">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-16 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">New Arrivals</h1>
+        <p class="text-lg md:text-xl">Discover the Latest Fashion Trends</p>
+    </header>
+
+    <!-- Filters Section -->
+    <div class="max-w-7xl mx-auto my-8 px-4">
+        <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 w-full">
+                <select id="category-filter" class="w-full md:w-auto px-4 py-2 border rounded-md">
+                    <option value="">All Categories</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="shoes">Shoes</option>
+                </select>
+                <select id="price-filter" class="w-full md:w-auto px-4 py-2 border rounded-md">
+                    <option value="">Price Range</option>
+                    <option value="low">$0 - $50</option>
+                    <option value="medium">$50 - $100</option>
+                    <option value="high">$100+</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rest of the code remains the same... -->
+
+    <script>
+        // Update the search functionality to work with both search inputs
+        const mobileSearchInput = document.getElementById('mobile-search-input');
+        
+        // Sync the search inputs
+        searchInput.addEventListener('input', () => {
+            mobileSearchInput.value = searchInput.value;
+            filterProducts();
+        });
+        
+        mobileSearchInput.addEventListener('input', () => {
+            searchInput.value = mobileSearchInput.value;
+            filterProducts();
+        });
+
+        // Rest of the JavaScript code remains the same...
+    </script>
+</body>
+</html>

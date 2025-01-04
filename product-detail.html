@@ -5,142 +5,224 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script type="module" src="/js/productDetail.js"></script>
-    <script src="/js/common/message.js"></script>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: rgb(211, 211, 211);
-        }
-
-        /* .product-image {
-            max-height: 500px;
-            object-fit: cover;
-        } */
-
-
-        .product-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: contain; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-        }
-
-
-        .rating {
-            display: flex;
-            align-items: center;
-        }
-
-        .rating i {
-            color: gold;
-            margin-right: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
-<body>
-    <!-- Navbar placeholder -->
+<body class="bg-gray-50">
+   
     <div id="navbar-placeholder"></div>
+    <div id="loading-spinner" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-50/90">
+        <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <span class="mt-4 text-xl font-semibold text-gray-700">Loading...</span>
+        <p class="mt-2 text-gray-500">Please wait while we fetch the product details</p>
+    </div>
+    <div class="container mx-auto px-4 py-10 max-w-6xl">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Image Gallery Grid -->
+            <div class="md:col-span-2 grid grid-cols-1 gap-4">
+                <div class="md:col-span-2 grid grid-cols-12 gap-4">
+                    <!-- Side view images -->
+                    <div class="col-span-2 grid grid-cols-1 gap-3" id="side-images">
+                        <!-- Template for side images - will be cloned and populated -->
+                        <div class="bg-white rounded-lg shadow-md p-2 cursor-pointer hover:border-2 hover:border-blue-500">
+                            <img class="w-full aspect-square object-cover rounded" alt="View">
+                        </div>
+                    </div>
 
-    <!-- <div id="statusMessage" class="hidden mb-6 p-4 rounded-lg"></div> -->
-
-    <div id="statusMessage" class="fixed top-5 right-5 space-y-3 z-50"></div>
-
-
-    <div class="container mx-auto px-4 py-16">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Product Image -->
-            <div>
-                <img id="product-image" class="w-full h-full product-image rounded-lg shadow-md" alt="Product Image">
-            </div>
-
-            <!-- Product Details -->
-            <div>
-                <h1 id="product-name" class="text-3xl font-bold mb-2"></h1>
-                <h2 class="text-xl font-semibold mb-1" id="product-subtitle"></h2>
-                <div class="rating mb-2">
-                    <i class="fas fa-star"></i>
-                    <span id="product-rating" class="font-semibold"></span>
-                    <span id="product-ratings-count" class="text-gray-600"></span>
-                    <span class="mx-1">|</span>
-                    <span id="product-reviews-count" class="text-gray-600"></span>
-                </div>
-
-                <div class="text-2xl font-semibold mb-4">
-                    MRP: ₹<span id="product-original-price" class="text-gray-500 line-through"></span>
-                    <span class="text-red-600">₹ <span id="product-price" class="font-bold"></span></span>
-                    <span id="product-discount" class="text-sm text-green-600"></span>
-                </div>
-               
-                
-               <!-- Tax-Information -->
-
-               <p id="tax-info" class="text-sm text-gray-600 mb-4"></p>
-
-               <div id="tax-amount" class="text-sm text-gray-600 mb-4"> ₹ </div>
-
-                <p class="text-sm text-gray-600 mb-4"></p>
-                <p id="promotion" class="text-sm text-blue-600 mb-4"></p>
-
-                <!-- Size Options -->
-                <div id="size-options" class="mb-4">
-                    <label class="block mb-2 font-semibold">Choose Size:</label>
-                    <div class="flex space-x-4">
-                        <!-- Dynamic buttons will be added here -->
+                    <!-- Main image display -->
+                    <div class="col-span-10 bg-white rounded-xl shadow-lg p-4 flex items-center justify-center">
+                        <img id="product-image" class="w-full max-h-[500px] object-contain rounded-lg" alt="Product Image">
                     </div>
                 </div>
 
-                <!-- Quantity and Price -->
-                <div id="quantity-section" class="mb-4">
-                    <label class="block mb-2 font-semibold">Quantity:</label>
-                    <div class="flex items-center space-x-4">
-                        <button id="decrease-quantity" class="border px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300">-</button>
-                        <span id="quantity" class="text-xl">1</span> <!-- Default quantity is 1 -->
-                        <button id="increase-quantity" class="border px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300">+</button>
+            </div>
+
+            <!-- Product Details Grid -->
+            <div class="md:col-span-1 space-y-6">
+                <!-- Product Info Grid -->
+                <div class="bg-white rounded-xl shadow-lg p-6 grid grid-cols-1 gap-4">
+                    <!-- Product Name and Subtitle -->
+                    <div>
+                        <h1 id="product-name" class="text-2xl font-bold text-gray-900 mb-2"></h1>
+                        <h2 id="product-subtitle" class="text-lg text-gray-600"></h2>
+                    </div>
+
+                    <!-- Rating Grid -->
+                    <div class="grid grid-cols-3 items-center">
+                        <div class="flex items-center text-yellow-500">
+                            <i class="fas fa-star mr-2"></i>
+                            <span id="product-rating" class="font-semibold"></span>
+                        </div>
+                        <span id="product-ratings-count" class="text-gray-600 text-center"></span>
+                        <span id="product-reviews-count" class="text-gray-600 text-right"></span>
+                    </div>
+
+                    <!-- Pricing Grid -->
+                    <div class="grid grid-cols-3 items-center">
+                        <span class="text-2xl font-bold text-blue-600 col-span-2">
+                            ₹ <span id="product-price"></span>
+                        </span>
+                        <div class="text-right">
+                            <span id="product-original-price" class="text-gray-400 line-through mr-2"></span>
+                            <span id="product-discount"
+                                class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-sm"></span>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Size and Quantity Grid -->
+                <div class="bg-white rounded-xl shadow-lg p-6 grid grid-cols-1 gap-4">
+                    <!-- Size Selection -->
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Choose Size</label>
+                        <div id="size-options" class="grid grid-cols-4 gap-2">
+                            <!-- Dynamic size buttons will be added here -->
+                        </div>
+                    </div>
 
-                <!-- Total Price -->
-                <div class="text-2xl font-semibold mb-4">
-                    Total Price: ₹<span id="total-price" class="font-bold"></span>
+                    <!-- Quantity Selector -->
+                    <div class="grid grid-cols-2 items-center">
+                        <label class="text-sm font-medium text-gray-700">Quantity</label>
+                        <div class="flex justify-end items-center border rounded-md">
+                            <button id="decrease-quantity" class="px-3 py-1 bg-gray-100 hover:bg-gray-200">-</button>
+                            <span id="quantity" class="px-4 py-1">1</span>
+                            <button id="increase-quantity" class="px-3 py-1 bg-gray-100 hover:bg-gray-200">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Total Price -->
+                    <div class="grid grid-cols-2">
+                        <span class="font-medium text-gray-700">Total Price</span>
+                        <span class="text-xl font-bold text-right">
+                            ₹ <span id="total-price"></span>
+                        </span>
+                    </div>
                 </div>
 
-                <!-- Add to Bag Button -->
-                 <div id="cartCount">
-                <button class="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition duration-300 mb-4">
-                    Add to Bag
-                </button>
-            </div>
+                <!-- Action and Delivery Grid -->
+                <div class="bg-white rounded-xl shadow-lg p-6 grid grid-cols-1 gap-4">
 
-                <!-- Delivery Options -->
-                
-                <div class="mt-6">
-                    <h3 class="font-semibold">Delivery Options</h3>
-                    <p class="text-gray-600">Enter your pincode to check delivery options</p>
-                    <input type="text" class="border rounded-md p-2 mt-2" placeholder="Enter Pincode" id="pincode-input" required>
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onclick="checkPincode()">
-                        Check
-                    </button>
-                
-                    <!-- Delivery Message Section -->
-                    <div id="delivery-message" class="mt-4"></div>
+                    <div class="grid grid-cols-2 gap-4">
+
+                        <button
+                            class="w-auto bg-blue-500 text-white px-4 py-3 rounded-full hover:bg-blue-600 transition duration-300 text-sm mx-auto block add-to-cart-btn">
+                            Add to Cart
+                        </button>
+
+                        <!-- Shop Now Button -->
+                        <button class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
+                            onclick="window.location.href = 'checkout.html';">
+                            Shop Now
+                        </button>
+                    </div>
+
+
+                    <!-- Delivery Checker -->
+                    <div class="grid grid-cols-1 gap-2">
+                        <label class="text-sm font-medium text-gray-700">Check Delivery</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <input type="number" id="pincode-input" placeholder="Pincode" required
+                                class="col-span-2 px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                            <button id="check-button" class="bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                                Check
+                            </button>
+                        </div>
+                        <div id="delivery-message" class="text-sm mt-2"></div>
+                    </div>
                 </div>
-                
-
             </div>
         </div>
+
+        <!-- Additional Information Sections -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+            <!-- Product Description -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Product Description</h3>
+                <p id="product-description" class="text-gray-600">
+                    Detailed product information will be displayed here.
+                </p>
+            </div>
+
+            <!-- Specifications -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Specifications</h3>
+                <ul id="product-specifications" class="space-y-2 text-gray-600">
+                    <li>Specification 1</li>
+                    <li>Specification 2</li>
+                    <li>Specification 3</li>
+                </ul>
+            </div>
+
+            <!-- Reviews -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Customer Reviews</h3>
+                <div id="product-reviews" class="space-y-4">
+                    <div class="border-b pb-3">
+                        <div class="flex justify-between">
+                            <span class="font-medium">John Doe</span>
+                            <div class="text-yellow-500">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mt-2">Great product, would recommend!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-10">
+            <h2 class="text-xl font-semibold mb-4">More Products in this Category</h2>
+            <div id="related-products" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Dynamic product thumbnails will be added here -->
+            </div>
+        </div>
+        
     </div>
 
-    <div id="statusMessage" class="hidden mb-6 p-4 rounded-lg"></div>
-
-    <!-- Footer placeholder -->
     <div id="footer-placeholder"></div>
 
+    
+
+    <!-- Scripts -->
+
+
+    <script>
+       
+        let mainImageSrc = '';
+        const productImage = document.getElementById('product-image');
+        
+        // Set initial main image
+        productImage.src = mainImageSrc;
+
+        // Function to temporarily show a different image on hover
+        function showImage(imageSrc) {
+            productImage.src = imageSrc;
+        }
+
+        // Function to restore the main image when hover ends
+        function showMainImage() {
+            productImage.src = mainImageSrc;
+        }
+
+        // Function to set a new main image when clicked
+        function setMainImage(imageSrc) {
+            mainImageSrc = imageSrc;
+            productImage.src = mainImageSrc;
+        }
+
+
+
+    </script>
+    <!-- <script src="/js/common/footerNav.js"></script> -->
+    <script type="module" src="/js/productDetail.js"></script>
+    <script src="/js/common/message.js"></script>
+    <script src="/js/common/footerNav.js"></script>
 </body>
 
 </html>
