@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const displayError = (message) => {
         const errorDiv = document.createElement('div');
@@ -11,12 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span>${message}</span>
             </div>
         `;
-        document.querySelector('.max-w-3xl').prepend(errorDiv);
+        document.querySelector('.max-w-4xl').prepend(errorDiv);
     };
 
-    // Function to ensure proper image data format
     const formatImageData = (imageData) => {
-        if (!imageData) return '';
+        if (!imageData) return 'https://via.placeholder.com/150?text=No+Image';
         if (imageData.startsWith('data:image')) return imageData;
         return `data:image/jpeg;base64,${imageData}`;
     };
@@ -24,13 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const compressedData = urlParams.get('d');
-
-        if (!compressedData) {
-            throw new Error('No order data found in URL parameters.');
-        }
+        if (!compressedData) throw new Error('No order data found in URL parameters.');
 
         const decompressedData = LZString.decompressFromEncodedURIComponent(compressedData);
         const orderData = JSON.parse(decompressedData);
+        console.log(orderData);
 
         const orderAddress = orderData.a;
         const products = orderData.p.map(item => ({
@@ -39,64 +35,40 @@ document.addEventListener('DOMContentLoaded', () => {
             image: item.i
         }));
 
+        // Populate shipping address
         const addressElement = document.getElementById('shipping-address');
         if (addressElement) {
             addressElement.innerHTML = `
-                <div class="space-y-1">
-                    <p class="font-medium">${orderAddress.name}</p>
-                    <p>${orderAddress.streetAddress}</p>
-                    <p>${orderAddress.city}, ${orderAddress.state} ${orderAddress.pinCode}</p>
-                </div>
+                <p class="font-medium">${orderAddress.name}</p>
+                <p>${orderAddress.streetAddress}</p>
+                <p>${orderAddress.city}, ${orderAddress.state} ${orderAddress.pinCode}</p>
             `;
         }
 
+        // Populate product list
         const productList = document.getElementById('product-list');
         if (productList) {
             products.forEach(item => {
                 const productItem = document.createElement('div');
-                productItem.className = 'flex gap-4 items-start p-4 border-b border-gray-200';
+                productItem.className = 'flex gap-4 items-center';
 
                 const formattedImageSrc = formatImageData(item.image);
-                const imageHtml = formattedImageSrc ? `
-                    <div class="relative w-24 h-24 flex-shrink-0 bg-white">
+                productItem.innerHTML = `
+                    <div class="w-24 h-24 flex-shrink-0">
                         <img src="${formattedImageSrc}" 
                             alt="${item.productName}" 
-                            class="w-full h-full object-cover rounded-lg ">
+                            class="w-full h-full object-cover rounded-lg bg-white">
                     </div>
-                ` : '';
-
-                productItem.innerHTML = `
-                    <div class="flex items-center gap-4 w-full">
-                        ${imageHtml}
-                        <div class="flex-grow">
-                            <h3 class="font-medium text-gray-800">${item.productName}</h3>
-                            <p class="text-gray-600 mt-1">Size: ${item.size}</p>
-                        </div>
+                    <div>
+                        <h3 class="font-medium text-gray-800">${item.productName}</h3>
+                        <p class="text-gray-600 mt-1">Size: ${item.size}</p>
                     </div>
                 `;
                 productList.appendChild(productItem);
             });
         }
-
     } catch (error) {
         console.error('Error loading order details:', error);
         displayError('Error loading order details. Please try again later.');
     }
 });
-
-function getOrderData() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const compressed = urlParams.get('d');
-
-    if (compressed) {
-        try {
-            const decompressed = LZString.decompressFromEncodedURIComponent(compressed);
-            return JSON.parse(decompressed);
-        } catch (error) {
-            console.error('Error decompressing data:', error);
-            return null;
-        }
-    }
-    return null;
-}
-

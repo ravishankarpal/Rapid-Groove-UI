@@ -9,71 +9,57 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-100">
     <div id="navbar-placeholder"></div>
-    <main class="min-h-screen py-8">
-        <div class="max-w-3xl mx-auto px-4">
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                <!-- Success Header -->
-                <div class="bg-green-50 p-6 border-b border-green-100">
-                    <div class="flex items-center space-x-3">
-                        <div class="flex-shrink-0">
-                            <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
-                                <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div>
-                            <h1 class="text-2xl font-bold text-green-700">Order placed, thank you!</h1>
-                            <p class="text-green-600 mt-1">Confirmation will be sent to your email.</p>
-                        </div>
+    <main class="min-h-screen py-10">
+        <div class="max-w-4xl mx-auto px-6">
+            <!-- Confirmation Header -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <div class="flex items-center space-x-4">
+                    <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
                     </div>
-                </div>
-
-                <!-- Order Details Grid -->
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Shipping Information -->
-                        <div class="space-y-4">
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h2 class="font-semibold text-lg text-gray-800 mb-2">Shipping to:</h2>
-                                <p id="shipping-address" class="text-gray-600"></p>
-                            </div>
-
-                           
-                        </div>
-
-                        <!-- Product Details -->
-                        <div class="bg-gray-50 rounded-lg p-4">
-                            <h2 class="font-semibold text-lg text-gray-800 mb-4">Product Details:</h2>
-                            <div id="product-list" class="space-y-4">
-                                <!-- Products will be populated by JavaScript -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Order Actions -->
-                    <div class="mt-8 pt-6 border-t">
-                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                            <a href="/order-details.html" class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center group">
-                                <span>Review or edit your recent orders</span>
-                                <svg class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                            <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                Track Order
-                            </button>
-                        </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-green-700">Order Confirmed!</h1>
+                        <p class="text-gray-600">A confirmation email has been sent to your inbox.</p>
                     </div>
                 </div>
             </div>
+
+            <!-- Order Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Shipping Information -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="font-semibold text-lg text-gray-800 mb-4">Shipping Information</h2>
+                    <div id="shipping-address" class="space-y-2 text-gray-600">
+                        <!-- Address will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Product Details -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="font-semibold text-lg text-gray-800 mb-4">Products</h2>
+                    <div id="product-list" class="flex gap-6 overflow-x-auto">
+                        <!-- Product items will be populated by JavaScript -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Order Actions -->
+            <div class="mt-10 mb-10 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <a href="/order-details.html" class="text-blue-600 hover:underline font-medium">
+                    Review or edit your recent orders
+                </a>
+                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                    Track Order
+                </button>
+            </div>
         </div>
+        <div id="footer-placeholder"></div>
     </main>
-
-    <div id="footer-placeholder"></div>
-
     <script src="/js/common/footerNav.js"></script>
     <script src="/js/order-confirm.js"></script>
 </body>
