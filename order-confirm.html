@@ -47,18 +47,25 @@
                 </div>
 
             </div>
-           
+
 
             <!-- Order Actions -->
-            <div class="mt-10 mb-10 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <a href="javascript:void(0);" class="text-blue-600 hover:underline font-medium" onclick="redirectToOrderDetails()">
+            <div class="mt-10 mb-10 flex flex-col sm:flex-row justify-between items-center gap-4 text-center">
+                <a href="javascript:void(0);" class="text-blue-600 hover:underline font-medium"
+                    onclick="redirectToOrderDetails()">
                     Review or edit your recent orders
                 </a>
-                <div id="tracking-section">
-                <button id="trackOrderButton" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+               
+            </div>
+            <div id="tracking-section" class="mt-10 mb-10 flex flex-col sm:flex-row justify-between items-center gap-4 text-center">
+                <button id="trackOrderButton"
+                    class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
                     Track Order
                 </button>
-            </div>
+                <!-- <a href="javascript:void(0);" class="text-blue-600 hover:underline font-medium"
+                id="trackOrderButton">
+                Track Order
+                </a> -->
             </div>
         </div>
         <div id="footer-placeholder"></div>
@@ -70,7 +77,7 @@
     <script src="/js/common/footerNav.js"></script>
     <script type="module" src="js/common/tracking.js"></script>
     <script type="module" src="/js/order-confirm.js"></script>
-   
+
 </body>
 
 </html>
