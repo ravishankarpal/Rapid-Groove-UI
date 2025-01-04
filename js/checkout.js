@@ -1,5 +1,6 @@
 import { API_URLS } from "./api-constants.js";
 
+
 let addresses = [];
 let selectedAddressId = null;
 let cartDetails = null;
@@ -34,16 +35,16 @@ async function fetchCheckoutDetails() {
 function getSelectedProductData() {
     const urlParams = new URLSearchParams(window.location.search);
     const productsString = urlParams.get('products');
-    if(productsString){
-     const productsData = JSON.parse(decodeURIComponent(productsString));
-     console.log(productsData);
-     const productIds = productsData.map(product => product.productId);
-     const productSizes = productsData.map(product => product.size);
-     return {
-        productId: productIds,
-        size: productSizes
-    };
-        
+    if (productsString) {
+        const productsData = JSON.parse(decodeURIComponent(productsString));
+        console.log(productsData);
+        const productIds = productsData.map(product => product.productId);
+        const productSizes = productsData.map(product => product.size);
+        return {
+            productId: productIds,
+            size: productSizes
+        };
+
     }
 }
 
@@ -404,7 +405,7 @@ window.createOrder = async function () {
     }
 
     setLoading(true);
-   
+
 
     try {
         // Step 1: Create Order
@@ -434,36 +435,45 @@ window.createOrder = async function () {
         // Step 3: Handle Authentication if needed
         if (paymentResult.cf_payment_id) {
             const authResult = await handlePaymentAuthentication(paymentResult.cf_payment_id);
+            // Modified order processing code
             if (authResult.payment_message === 'payment successful') {
                 const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
 
                 const productDetailsPromises = cartItems.map(async item => {
-                    //const optimizedImage = await optimizeImage(item.productImage);
-                    return {
-                        productName: item.productName,
-                        size: item.size,
-                        image: item.productImage
-                    };
+                    try {
+                        const compressedImage = await compressImage(item.productImage);
+                        console.log('compressedImage ', compressedImage);
+                        return {
+                            p: item.productName, // Shortened key names to reduce URL length
+                            s: item.size,
+                            i: compressedImage || ''
+                        };
+                    } catch (error) {
+                        return {
+                            p: item.productName,
+                            s: item.size,
+                            i: '' // Use empty string for failed images
+                        };
+                    }
                 });
-
 
                 Promise.all(productDetailsPromises)
                     .then(optimizedProducts => {
                         const orderData = {
-                            orderAddress: selectedAddress,
-                            products: optimizedProducts
+                            a: selectedAddress, // Shortened key names
+                            p: optimizedProducts
                         };
 
-                        console.log('orderData', orderData);
-                        localStorage.setItem('orderData', JSON.stringify(orderData));
+                        // Compress the entire orderData using LZString
+                        const compressed = LZString.compressToEncodedURIComponent(
+                            JSON.stringify(orderData)
+                        );
 
-
-                        // Navigate after params are ready
-                        window.location.href = `/order-confirm.html`;
+                        // Append to URL with a shorter parameter name
+                        window.location.href = `/order-confirm.html?d=${compressed}`;
                     })
                     .catch(error => {
-                        console.error('Error optimizing images:', error);
-                        // Handle error appropriately
+                        console.error('Error processing order:', error);
                         alert('There was an error processing your order. Please try again.');
                     });
             } else {
@@ -662,38 +672,103 @@ async function buildPaymentPayload(selectedPayment) {
 
 
 
-function optimizeImage(base64String, maxWidth = 200) {
+// function compressImage(imageUrl) {
+//     return new Promise((resolve, reject) => {
+//         const img = new Image();
+//         img.crossOrigin = "Anonymous";  // Handle CORS issues
+        
+//         img.onload = () => {
+//             const canvas = document.createElement('canvas');
+//             const ctx = canvas.getContext('2d');
+            
+//             // Calculate new dimensions (reducing size)
+//             const maxWidth = 200;  // Set maximum width
+//             const maxHeight = 200; // Set maximum height
+//             let width = img.width;
+//             let height = img.height;
+            
+//             if (width > height) {
+//                 if (width > maxWidth) {
+//                     height *= maxWidth / width;
+//                     width = maxWidth;
+//                 }
+//             } else {
+//                 if (height > maxHeight) {
+//                     width *= maxHeight / height;
+//                     height = maxHeight;
+//                 }
+//             }
+            
+//             canvas.width = width;
+//             canvas.height = height;
+            
+//             // Draw and compress
+//             ctx.drawImage(img, 0, 0, width, height);
+            
+//             // Convert to base64 with reduced quality
+//             const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5); // Adjust quality (0.5 = 50%)
+//             resolve(compressedBase64);
+//         };
+        
+//         img.onerror = () => reject(new Error('Failed to load image'));
+//         img.src = imageUrl;
+//     });
+// }
+
+function compressImage(imageData) {
+    // If no image data provided, return empty string
+    if (!imageData || imageData === 'null') {
+        return Promise.resolve('');
+    }
+
     return new Promise((resolve, reject) => {
-        // Create an image element
         const img = new Image();
+        img.crossOrigin = "Anonymous";
 
-        // Handle load error
-        img.onerror = () => reject(new Error('Failed to load image'));
-
-        // Process image once loaded
         img.onload = () => {
-            // Calculate new dimensions maintaining aspect ratio
-            const ratio = img.width / img.height;
-            const newWidth = Math.min(maxWidth, img.width);
-            const newHeight = newWidth / ratio;
-
-            // Create canvas for resizing
             const canvas = document.createElement('canvas');
-            canvas.width = newWidth;
-            canvas.height = newHeight;
-
-            // Draw resized image
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, newWidth, newHeight);
-
-            // Convert to optimized base64
-            const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.7); // Using JPEG format with 70% quality
-            resolve(optimizedBase64);
+            
+            // Calculate new dimensions (reducing size)
+            const maxWidth = 200;
+            const maxHeight = 200;
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > height) {
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
+                }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Draw and compress
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Convert to base64 with reduced quality
+            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5);
+            resolve(compressedBase64);
         };
+        
+        img.onerror = () => resolve('');
 
-        // Set source of image
-        img.src = base64String;
+        // Check if imageData is already base64
+        if (imageData.startsWith('data:image')) {
+            img.src = imageData;
+        } else if (/^[A-Za-z0-9+/=]+$/.test(imageData)) {
+            // If it's raw base64 data, add the data URL prefix
+            img.src = `data:image/jpeg;base64,${imageData}`;
+        } else {
+            // Treat as URL
+            img.src = imageData;
+        }
     });
 }
-
-
