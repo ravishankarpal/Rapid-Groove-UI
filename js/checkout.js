@@ -414,6 +414,7 @@ window.createOrder = async function () {
             throw new Error('Failed to create order');
         }
         const orderResult = await orderResponse.json();
+        console.log("order id is ", orderResult.order_id);
         // Step 2: Process Payment
 
         const paymentMethod = await buildPaymentPayload(selectedPayment);
@@ -461,7 +462,8 @@ window.createOrder = async function () {
                     .then(optimizedProducts => {
                         const orderData = {
                             a: selectedAddress, // Shortened key names
-                            p: optimizedProducts
+                            p: optimizedProducts,
+                            o:orderResult.order_id
                         };
 
                         // Compress the entire orderData using LZString
@@ -632,10 +634,6 @@ async function handlePaymentAuthentication(paymentId) {
 }
 
 
-// function showError(message) {
-//     alert(message);
-// }
-
 async function showOTPDialog() {
     return prompt('Please enter the OTP sent to your registered mobile number:');
 }
@@ -671,49 +669,6 @@ async function buildPaymentPayload(selectedPayment) {
 }
 
 
-
-// function compressImage(imageUrl) {
-//     return new Promise((resolve, reject) => {
-//         const img = new Image();
-//         img.crossOrigin = "Anonymous";  // Handle CORS issues
-        
-//         img.onload = () => {
-//             const canvas = document.createElement('canvas');
-//             const ctx = canvas.getContext('2d');
-            
-//             // Calculate new dimensions (reducing size)
-//             const maxWidth = 200;  // Set maximum width
-//             const maxHeight = 200; // Set maximum height
-//             let width = img.width;
-//             let height = img.height;
-            
-//             if (width > height) {
-//                 if (width > maxWidth) {
-//                     height *= maxWidth / width;
-//                     width = maxWidth;
-//                 }
-//             } else {
-//                 if (height > maxHeight) {
-//                     width *= maxHeight / height;
-//                     height = maxHeight;
-//                 }
-//             }
-            
-//             canvas.width = width;
-//             canvas.height = height;
-            
-//             // Draw and compress
-//             ctx.drawImage(img, 0, 0, width, height);
-            
-//             // Convert to base64 with reduced quality
-//             const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5); // Adjust quality (0.5 = 50%)
-//             resolve(compressedBase64);
-//         };
-        
-//         img.onerror = () => reject(new Error('Failed to load image'));
-//         img.src = imageUrl;
-//     });
-// }
 
 function compressImage(imageData) {
     // If no image data provided, return empty string

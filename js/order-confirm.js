@@ -1,3 +1,4 @@
+let orderId = null;
 document.addEventListener('DOMContentLoaded', () => {
     const displayError = (message) => {
         const errorDiv = document.createElement('div');
@@ -29,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(orderData);
 
         const orderAddress = orderData.a;
+        orderId= orderData.o;
+        console.log("order id is... ",orderId);
         const products = orderData.p.map(item => ({
             productName: item.p,
             size: item.s,
@@ -72,3 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
         displayError('Error loading order details. Please try again later.');
     }
 });
+
+function redirectToOrderDetails() {
+    console.log(orderId);
+    window.location.href = `/order-details.html?orderId=${orderId}`;
+}
+
+function trackOrder(){
+    
+}

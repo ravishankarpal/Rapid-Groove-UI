@@ -87,7 +87,7 @@ const renderOrderDetails = (order) => {
 
 async function initializeOrderDetails() {
     const params = new URLSearchParams(window.location.search);
-    const orderID = params.get('orderID');
+    const orderID = params.get('orderId');
     
 
     if (!orderID) {
