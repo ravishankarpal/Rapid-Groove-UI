@@ -47,22 +47,30 @@
                 </div>
 
             </div>
+           
 
             <!-- Order Actions -->
             <div class="mt-10 mb-10 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <a href="javascript:void(0);" class="text-blue-600 hover:underline font-medium" onclick="redirectToOrderDetails()">
                     Review or edit your recent orders
                 </a>
-                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
-                    onclick="trackOrder()">
+                <div id="tracking-section">
+                <button id="trackOrderButton" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
                     Track Order
                 </button>
+            </div>
             </div>
         </div>
         <div id="footer-placeholder"></div>
     </main>
+
+    <!-- <div id="popup-container">
+        <object type="text/html" data="/src/components/tracking-popup.html" width="100%" height="100%"></object>
+    </div> -->
     <script src="/js/common/footerNav.js"></script>
-    <script src="/js/order-confirm.js"></script>
+    <script type="module" src="js/common/tracking.js"></script>
+    <script type="module" src="/js/order-confirm.js"></script>
+   
 </body>
 
 </html>
