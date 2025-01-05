@@ -54,6 +54,16 @@ function formatDate(timestamp) {
   });
 }
 
+
+function formatReturnDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+      month: 'long',  
+      day: 'numeric',
+      year: 'numeric' 
+  });
+}
+
 function showError(container, message) {
   container.innerHTML = `
       <div class="bg-white rounded-xl shadow-lg p-8">
@@ -84,6 +94,10 @@ export async function renderTrackingDetails(trackingDetails, containerId = 'trac
   await loadTemplate(containerId);
 
   try {
+
+   const returnWindowElement = document.getElementById('returnWindow');
+
+    returnWindowElement.innerHTML = `Return Window closed on<br><strong>${formatReturnDate(trackingDetails.returnWindowClosedOn)}</strong>`;
 
     document.getElementById('carrier').textContent = trackingDetails.carrier;
     document.getElementById('trackingNumber').textContent = trackingDetails.trackingNumber;
