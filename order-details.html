@@ -43,10 +43,11 @@
                 </div>
 
                 <!-- Order Items -->
-                <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6">
-                    <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Order Items</h2>
-                    <div id="orderItems" class="space-y-4">
-                        <!-- Order items will be inserted here -->
+                 <!-- Product Details -->
+                 <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="font-semibold text-lg text-gray-800 mb-4 text-center">Order Details</h2>
+                    <div id="order-list" class="flex gap-6 overflow-x-auto">
+                        <!-- Product items will be populated by JavaScript -->
                     </div>
                 </div>
             </div>
@@ -89,6 +90,16 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div id="tracking-section" class="mt-10 mb-10 flex flex-col sm:flex-row justify-between items-center gap-4 text-center">
+            <button id="trackOrderButton"
+                class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                Track Order
+            </button>
+            <!-- <a href="javascript:void(0);" class="text-blue-600 hover:underline font-medium"
+            id="trackOrderButton">
+            Track Order
+            </a> -->
         </div>
     </div>
 

@@ -1,3 +1,5 @@
+import { loadTrackingDetails } from "./common/tracking.js";
+
 let orderId = null;
 document.addEventListener('DOMContentLoaded', () => {
     const displayError = (message) => {
@@ -74,6 +76,24 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error loading order details:', error);
         displayError('Error loading order details. Please try again later.');
     }
+
+
+     const trackOrderButton = document.getElementById("trackOrderButton");
+   
+
+    trackOrderButton.addEventListener("click", function () {
+        loadTrackingDetails(orderId, 'tracking-section');
+    });
+
+    const redirectToOrderDetails = document.getElementById("redirectToOrderDetails");
+   
+
+    redirectToOrderDetails.addEventListener("click", function () {
+        window.location.href = `/order-details.html?orderId=${orderId}`;
+    });
+
+
+    
 });
 
 function redirectToOrderDetails() {
@@ -81,6 +101,4 @@ function redirectToOrderDetails() {
     window.location.href = `/order-details.html?orderId=${orderId}`;
 }
 
-function trackOrder(){
-    
-}
+// order-details.js

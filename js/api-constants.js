@@ -36,7 +36,8 @@ const API_URLS = {
     INVOICE:(order_id)=>`${BASE_URL}/order/invoice/${order_id}`,
     RATE_AND_REVIEW:`${BASE_URL}/product/customer/products/rate-review`,
     SAVE_CHECKOUT:`${BASE_URL}/rapid/cart/save/checkout`,
-    CHECKOUT_DETAILS:`${BASE_URL}/rapid/cart/checkout/details`
+    CHECKOUT_DETAILS:`${BASE_URL}/rapid/cart/checkout/details`,
+    TRACK_ORDER:(order_id)=>`${BASE_URL}/order/track/order/${order_id}`
 
 
 
