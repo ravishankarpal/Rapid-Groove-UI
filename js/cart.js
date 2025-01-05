@@ -1,5 +1,4 @@
-
-import { API_URLS } from "./api-constants.js";
+import {API_URLS} from "./api-constants.js";
 
 window.toggleSelection = toggleSelection;
 window.changeQuantity = changeQuantity;
@@ -259,10 +258,11 @@ document.getElementById('checkout-btn').addEventListener('click', async function
 export function updateCartQuantity() {
     const cartQuantityElement = document.getElementById('cartQuantity');
     if (cartQuantityElement) {
+        localStorage.removeItem('cartQuantity');
         const totalQuantity = cartData.reduce((sum, item) => sum + item.quantity, 0);
         cartQuantityElement.textContent = totalQuantity;
-        // Hide the badge if cart is empty
         cartQuantityElement.style.display = totalQuantity === 0 ? 'none' : 'inline-block';
+        localStorage.setItem('cartQuantity',totalQuantity);
     }
 }
 
