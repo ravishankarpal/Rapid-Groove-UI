@@ -26,6 +26,17 @@
         });
     }
 
+    function updateCartQuantity() {
+        const cartQuantityElement = document.getElementById('cartQuantity');
+        const totalQuantity = localStorage.getItem('cartQuantity') || '0';
+        if (cartQuantityElement) {
+            cartQuantityElement.textContent = totalQuantity;
+            cartQuantityElement.style.display = totalQuantity === '0' ? 'none' : 'inline-block';
+        } else {
+            console.error('cartQuantityElement not found in the DOM');
+        }
+    }
+
     async function loadContent() {
         try {
             // Load navbar
@@ -62,6 +73,7 @@
                     eval(script.innerHTML);
                 }
             }
+            updateCartQuantity();
         } catch (error) {
             console.error('Error loading content:', error);
         }
