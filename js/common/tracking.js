@@ -1,3 +1,5 @@
+let trackingDetails = null;
+
 function createTimelineItem(event, index, isActive, isPast) {
     return `
       <div class="relative">
@@ -66,38 +68,50 @@ function createTimelineItem(event, index, isActive, isPast) {
   
   export async function loadTrackingDetails(orderId, containerId = 'tracking-section') {
     const container = document.getElementById(containerId);
-    
+    const templateResponse = await fetch('/src/components/tracking-popup.html');
+
     try {
       // Load HTML template
-      const templateResponse = await fetch('/src/components/tracking-popup.html');
+      
       if (!templateResponse.ok) throw new Error('Failed to load tracking template');
       container.innerHTML = await templateResponse.text();
-  
-      // Fetch tracking data
       const response = await fetch(`http://localhost:8081/order/track/order/${orderId}`);
       if (!response.ok) throw new Error('Failed to fetch tracking details');
-      const data = await response.json();
-  
-      // Update basic information
-      document.getElementById('displayOrderId').textContent = data.orderId;
-      document.getElementById('carrier').textContent = data.carrier;
-      document.getElementById('trackingNumber').textContent = data.trackingNumber;
-      document.getElementById('currentStatus').textContent = data.status;
-  
-      // Generate timeline
-      const timeline = document.getElementById('timeline');
-      timeline.innerHTML = '';
-  
-      const currentIndex = data.timelines.findIndex(event => event.currentStatus === data.status);
-      
-      data.timelines.forEach((event, index) => {
-        const isActive = index === currentIndex;
-        const isPast = index < currentIndex;
-        timeline.insertAdjacentHTML('beforeend', createTimelineItem(event, index, isActive, isPast));
-      });
+      trackingDetails = await response.json();
+      renderTrackingDetails(trackingDetails, containerId);
   
     } catch (error) {
       console.error('Error:', error);
       showError(container, 'Error loading tracking details. Please try again later.');
     }
+  }
+
+  export async function renderTrackingDetails(trackingDetails, containerId = 'tracking-section'){
+    const container = document.getElementById(containerId);
+    const templateResponse = await fetch('/src/components/tracking-popup.html');
+    console.log(templateResponse);
+    container.innerHTML = await templateResponse.text();
+
+    try {
+   
+      document.getElementById('carrier').textContent = trackingDetails.carrier;
+      document.getElementById('trackingNumber').textContent = trackingDetails.trackingNumber;
+      document.getElementById('currentStatus').textContent = trackingDetails.status;
+  
+      // Generate timeline
+      const timeline = document.getElementById('timeline');
+      timeline.innerHTML = '';
+  
+      const currentIndex = trackingDetails.timelines.findIndex(event => event.currentStatus === trackingDetails.status);
+      
+      trackingDetails.timelines.forEach((event, index) => {
+        const isActive = index === currentIndex;
+        const isPast = index < currentIndex;
+        timeline.insertAdjacentHTML('beforeend', createTimelineItem(event, index, isActive, isPast));
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      showError(container, 'Error loading tracking details. Please try again later.');
+    }
+
   }

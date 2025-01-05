@@ -1,4 +1,7 @@
 import { API_URLS } from "./api-constants.js";
+import { loadTrackingDetails, renderTrackingDetails } from "./common/tracking.js";
+
+let orderData = null;
 
 const formatDate = (dateString) => {
     const options = {
@@ -134,7 +137,7 @@ async function initializeOrderDetails() {
     }
     try {
         const response = await fetch(API_URLS.ORDER_DETAILS_BY_ID(orderID));
-        const orderData = await response.json();
+         orderData = await response.json();
         renderOrderDetails(orderData);
     } catch (error) {
         console.error('Error fetching order details:', error);
@@ -142,3 +145,9 @@ async function initializeOrderDetails() {
 }
 
 document.addEventListener('DOMContentLoaded', initializeOrderDetails);
+document.addEventListener('DOMContentLoaded', () => {
+    const trackOrderButton = document.getElementById("trackOrderButton");
+     trackOrderButton.addEventListener("click", function () {
+        renderTrackingDetails(orderData.trackingInfo, 'tracking-section');
+        });
+});

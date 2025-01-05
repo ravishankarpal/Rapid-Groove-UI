@@ -78,11 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // const trackOrderButton = document.getElementById("trackOrderButton");
+     const trackOrderButton = document.getElementById("trackOrderButton");
    
 
     trackOrderButton.addEventListener("click", function () {
         loadTrackingDetails(orderId, 'tracking-section');
+    });
+
+    const redirectToOrderDetails = document.getElementById("redirectToOrderDetails");
+   
+
+    redirectToOrderDetails.addEventListener("click", function () {
+        window.location.href = `/order-details.html?orderId=${orderId}`;
     });
 
 
