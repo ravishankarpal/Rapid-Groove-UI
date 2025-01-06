@@ -239,3 +239,18 @@ if (mobileSearchInput) {
         }
     });
 }
+
+export function showLogin(){
+    const categoriesD = document.querySelector('.dropdown');
+const categoriesM = categoriesDropdown ? categoriesDropdown.querySelector('.dropdown-menu') : null;
+
+if (categoriesD && categoriesM) {
+    categoriesD.addEventListener('mouseover', () => {
+        categoriesMenu.classList.remove('hidden');
+    });
+
+    categoriesD.addEventListener('mouseleave', () => {
+        categoriesM.classList.add('hidden');
+    });
+}
+}

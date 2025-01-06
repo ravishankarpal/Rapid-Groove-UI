@@ -1,4 +1,5 @@
 import { API_URLS } from "./api-constants.js";
+import { handleSessionExpired } from "./common/auth-utils.js";
 import { loadTrackingDetails, renderTrackingDetails } from "./common/tracking.js";
 
 let orderData = null;
@@ -138,6 +139,9 @@ async function initializeOrderDetails() {
     try {
         const response = await fetch(API_URLS.ORDER_DETAILS_BY_ID(orderID));
          orderData = await response.json();
+         if (handleSessionExpired(orderData)) {
+            return;
+        }
         renderOrderDetails(orderData);
     } catch (error) {
         console.error('Error fetching order details:', error);
