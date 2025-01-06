@@ -1,4 +1,5 @@
 import {API_URLS} from "./api-constants.js";
+import { sessionExpire } from "./common/session.js";
 
 window.toggleSelection = toggleSelection;
 window.changeQuantity = changeQuantity;
@@ -13,8 +14,14 @@ async function fetchCartData() {
             method: 'GET',
             headers: API_URLS.HEADERS
         });
-        if (!response.ok) throw new Error('Failed to fetch cart data');
+      
         const data = await response.json();
+        sessionExpire(data.code);
+        if(!response.ok){
+            throw new Error('Failed to fetch cart data');
+        }
+       
+        
         cartData = data.cartItemDetails;
 
         selectedItems = new Set(cartData.map(item => item.id));
