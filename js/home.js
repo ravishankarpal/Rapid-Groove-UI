@@ -29,12 +29,12 @@ let hasMore = true;
 async function fetchProducts(page) {
     //const url = API_URLS.HOME_PRODUCT_DETAILS(page,100);
     const url = `http://localhost:8081/product/all/details?page-number=${page}&size=100`;
-    const token = localStorage.getItem('userJwtToken')
+   // const token = localStorage.getItem('userJwtToken')
     try {
         const response = await fetch(url, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            // headers: {
+            //     'Authorization': `Bearer ${token}`
+            // }
         });
         const data = await response.json();
         return data;

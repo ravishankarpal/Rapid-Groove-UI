@@ -1,3 +1,4 @@
+
 const form = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
@@ -6,16 +7,9 @@ const spinner = document.getElementById('spinner');
 const buttonText = document.getElementById('buttonText');
 const alert = document.getElementById('alert');
 const alertMessage = document.getElementById('alert-message');
+const toggleIcon = document.getElementById('toggleIcon');
 
-// Toggle password visibility
-// togglePassword.addEventListener('click', () => {
-//     console.log('Toggle password visibility clicked');
-//     const type = passwordInput.type === 'password' ? 'text' : 'password';
-//     passwordInput.type = type;
-//     togglePassword.querySelector('i').classList.toggle('fa-eye');
-//     togglePassword.querySelector('i').classList.toggle('fa-eye-slash');
-// });
-
+// Password toggle functionality
 togglePassword.addEventListener('click', () => {
     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
     passwordInput.setAttribute('type', type);
@@ -30,7 +24,7 @@ togglePassword.addEventListener('click', () => {
     }
 });
 
-// Show alert function
+// Alert functions
 function showAlert(message) {
     alertMessage.textContent = message;
     alert.classList.add('show');
@@ -39,7 +33,6 @@ function showAlert(message) {
     }, 5000);
 }
 
-// Close alert function
 function closeAlert() {
     alert.classList.remove('show');
 }
@@ -69,46 +62,41 @@ form.addEventListener('submit', async (event) => {
         }
 
         const data = await response.json();
+        
+        // Clean up expired sessions first
+        SessionManager.cleanupSessions();
 
-        // Store user data
-        localStorage.setItem('userName', data.user.name);
-        localStorage.setItem('userEmail', data.user.email);
-        localStorage.setItem('userJwtToken', data.jwtToken);
+        // Create new session
+        const sessionData = SessionManager.createSession(data);
+        console.log("console data", sessionData);
+
+        // Handle remember me functionality
+        const rememberMe = document.getElementById('remember-me');
+        if (rememberMe.checked) {
+            SessionManager.setRememberedEmail(emailInput.value);
+        } else {
+            SessionManager.removeRememberedEmail(emailInput.value);
+        }
 
         // Redirect based on role
-        const userRole = data.user.role[0].roleName.toLowerCase();
-        window.location.href = userRole === 'admin' ? '/admin.html' : '/index.html';
+        window.location.href = sessionData.role.toLowerCase() === 'admin' 
+            ? '/admin.html' 
+            : '/index.html';
 
     } catch (error) {
-        // Show error
         showAlert(error.message);
         form.classList.add('shake');
         setTimeout(() => form.classList.remove('shake'), 820);
     } finally {
-        // Reset loading state
         spinner.style.display = 'none';
         buttonText.textContent = 'Sign in';
     }
 });
 
-// Add input validation
-emailInput.addEventListener('input', () => {
-    const isValid = emailInput.checkValidity();
-    emailInput.classList.toggle('border-red-500', !isValid);
-});
-
-// Remember me functionality
-const rememberMe = document.getElementById('remember-me');
-if (localStorage.getItem('rememberedEmail')) {
-    emailInput.value = localStorage.getItem('rememberedEmail');
-    rememberMe.checked = true;
+// Initialize remember me functionality
+const rememberedEmails = SessionManager.getRememberedEmails();
+if (rememberedEmails.length > 0) {
+    emailInput.value = rememberedEmails[rememberedEmails.length - 1];
+    document.getElementById('remember-me').checked = true;
 }
-
-rememberMe.addEventListener('change', () => {
-    if (rememberMe.checked) {
-        localStorage.setItem('rememberedEmail', emailInput.value);
-    } else {
-        localStorage.removeItem('rememberedEmail');
-    }
-});
 

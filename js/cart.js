@@ -10,6 +10,8 @@ let selectedItems = new Set();
 
 async function fetchCartData() {
     try {
+        console.log("currentSession ", SessionManager.getCurrentSession());
+
         const response = await fetch(API_URLS.CART_DETAILS, {
             method: 'GET',
             headers: API_URLS.HEADERS
