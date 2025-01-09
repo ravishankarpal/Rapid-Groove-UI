@@ -1,6 +1,8 @@
-const user = localStorage.getItem('userName');
-const email = localStorage.getItem('userEmail');
-const token = localStorage.getItem('userJwtToken');
+// navigation.js
+
+
+
+// DOM Elements - Desktop
 const userGreeting = document.getElementById('userGreeting');
 const userName = document.getElementById('userName');
 const userEmail = document.getElementById('userEmail');
@@ -9,8 +11,11 @@ const guestMenu = document.getElementById('guestMenu');
 const loggedInMenu = document.getElementById('loggedInMenu');
 const accountMenu = document.getElementById('accountMenu');
 const accountButton = document.getElementById('accountButton');
+const searchInput = document.getElementById('searchInput');
+const searchButton = document.getElementById('searchButton');
+const suggestionsList = document.getElementById('suggestionsList');
 
-// Mobile elements
+// DOM Elements - Mobile
 const mobileUserInfo = document.getElementById('mobileUserInfo');
 const mobileUserName = document.getElementById('mobileUserName');
 const mobileUserEmail = document.getElementById('mobileUserEmail');
@@ -18,63 +23,70 @@ const mobileGuestMenu = document.getElementById('mobileGuestMenu');
 const mobileLoggedInMenu = document.getElementById('mobileLoggedInMenu');
 const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
 const mobileMenu = document.getElementById('mobile-menu');
+const mobileSearchInput = document.getElementById('mobileSearchInput');
+const mobileSearchButton = document.getElementById('mobileSearchButton');
 
-function updateUIForLoggedInUser() {
+function updateUIForLoggedInUser(sessionData) {
     // Desktop UI
-    // userName.textContent = `Hello, ${user}`;
-
-        userEmail.textContent = email;
-        userGreeting.textContent = `Hello, ${user}`;
-        userInfo.classList.remove('hidden');
-        loggedInMenu.classList.remove('hidden');
-        guestMenu.classList.add('hidden');
-
+    if (userGreeting) userGreeting.textContent = `Hello, ${sessionData.name}`;
+    if (userEmail) userEmail.textContent = sessionData.email;
+    if (userInfo) userInfo.classList.remove('hidden');
+    if (loggedInMenu) loggedInMenu.classList.remove('hidden');
+    if (guestMenu) guestMenu.classList.add('hidden');
 
     // Mobile UI
-   
-    mobileUserName.textContent = `Hello, ${user}`;
-    mobileUserEmail.textContent = email;
-    mobileUserInfo.classList.remove('hidden');
-    mobileLoggedInMenu.classList.remove('hidden');
-    mobileGuestMenu.classList.add('hidden');
-    
+    if (mobileUserName) mobileUserName.textContent = `Hello, ${sessionData.name}`;
+    if (mobileUserEmail) mobileUserEmail.textContent = sessionData.email;
+    if (mobileUserInfo) mobileUserInfo.classList.remove('hidden');
+    if (mobileLoggedInMenu) mobileLoggedInMenu.classList.remove('hidden');
+    if (mobileGuestMenu) mobileGuestMenu.classList.add('hidden');
 }
 
 function updateUIForGuestUser() {
     // Desktop UI
-    userGreeting.textContent = 'Account';
-    userInfo.classList.add('hidden');
-    loggedInMenu.classList.add('hidden');
-    guestMenu.classList.remove('hidden');
+    if (userGreeting) userGreeting.textContent = 'Account';
+    if (userInfo) userInfo.classList.add('hidden');
+    if (loggedInMenu) loggedInMenu.classList.add('hidden');
+    if (guestMenu) guestMenu.classList.remove('hidden');
 
     // Mobile UI
-    mobileUserInfo.classList.add('hidden');
-    mobileLoggedInMenu.classList.add('hidden');
-    mobileGuestMenu.classList.remove('hidden');
+    if (mobileUserInfo) mobileUserInfo.classList.add('hidden');
+    if (mobileLoggedInMenu) mobileLoggedInMenu.classList.add('hidden');
+    if (mobileGuestMenu) mobileGuestMenu.classList.remove('hidden');
 }
 
 // Check authentication state on load
-if (token && user) {
-    updateUIForLoggedInUser();
-} else {
-    updateUIForGuestUser();
+function checkAuthState() {
+    SessionManager.cleanupSessions();
+    const currentSession = SessionManager.getCurrentSession();
+    
+    if (currentSession) {
+        updateUIForLoggedInUser(currentSession);
+    } else {
+        updateUIForGuestUser();
+    }
 }
 
-// Account dropdown toggle
-accountButton.addEventListener('mouseover', () => {
-    accountMenu.classList.remove('hidden');
-});
+// Initial auth check
+checkAuthState();
 
-accountMenu.addEventListener('mouseleave', () => {
-    accountMenu.classList.add('hidden');
-});
+// Account dropdown toggle
+if (accountButton) {
+    accountButton.addEventListener('mouseover', () => {
+        if (accountMenu) accountMenu.classList.remove('hidden');
+    });
+}
+
+if (accountMenu) {
+    accountMenu.addEventListener('mouseleave', () => {
+        accountMenu.classList.add('hidden');
+    });
+}
 
 // Logout functionality
-function handleLogout(e) {
+async function handleLogout(e) {
     e.preventDefault();
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userJwtToken');
+    SessionManager.cleanupSessions();
     updateUIForGuestUser();
     window.location.href = '/login.html';
 }
@@ -84,8 +96,9 @@ const mobileLogoutButton = document.getElementById('mobileLogoutButton');
 if (logoutButton) logoutButton.addEventListener('click', handleLogout);
 if (mobileLogoutButton) mobileLogoutButton.addEventListener('click', handleLogout);
 
+// Categories dropdown
 const categoriesDropdown = document.querySelector('.dropdown');
-const categoriesMenu = categoriesDropdown ? categoriesDropdown.querySelector('.dropdown-menu') : null;
+const categoriesMenu = categoriesDropdown?.querySelector('.dropdown-menu');
 
 if (categoriesDropdown && categoriesMenu) {
     categoriesDropdown.addEventListener('mouseover', () => {
@@ -97,40 +110,25 @@ if (categoriesDropdown && categoriesMenu) {
     });
 }
 
-
-mobileMenuToggle.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-});
-
-
-
-
-
-if (logoutButton) {
-    logoutButton.addEventListener('click', function (e) {
-        e.preventDefault();
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userJwtToken');
-        updateUIForGuestUser();
-        window.location.href = '/login.html';
+// Mobile menu toggle
+if (mobileMenuToggle && mobileMenu) {
+    mobileMenuToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
     });
 }
 
-
+// Mobile categories submenu
 const mobileCategoriesToggle = document.querySelector('#mobile-menu a[href="#"]');
 const mobileCategoriesSubmenu = document.querySelector('#mobile-menu div[class*="px-4"]');
 
 if (mobileCategoriesToggle && mobileCategoriesSubmenu) {
     mobileCategoriesSubmenu.classList.add('hidden');
 
-    mobileCategoriesToggle.addEventListener('click', function(e) {
-        e.preventDefault(); 
+    mobileCategoriesToggle.addEventListener('click', (e) => {
+        e.preventDefault();
         mobileCategoriesSubmenu.classList.toggle('hidden');
-    
-        this.classList.toggle('active');
+        mobileCategoriesToggle.classList.toggle('active');
     });
-
 
     const categoryItems = mobileCategoriesSubmenu.querySelectorAll('a');
     categoryItems.forEach(item => {
@@ -141,34 +139,27 @@ if (mobileCategoriesToggle && mobileCategoriesSubmenu) {
     });
 }
 
+// Search functionality
+let searchTimeout;
 
-
-const accountDropdownToggle = document.querySelector('.accountDropDown');
-const accountSubDropdown = document.querySelector('.accountsubDropDown');
-if (accountDropdownToggle && accountSubDropdown) {
-    accountDropdownToggle.addEventListener('click', (e) => {
-        e.preventDefault(); 
-        accountSubDropdown.classList.toggle('hidden'); 
-    });
+async function fetchSearchSuggestions(query) {
+    try {
+        const response = await fetch(
+            API_URLS.SEARCH_PRODUCTS(query, 0, 5),
+            { headers: API_URLS.HEADERS() }
+        );
+        if (!response.ok) throw new Error('Search failed');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Search error:', error);
+        return [];
+    }
 }
 
-
-let searchTimeout;
-    
-searchInput.addEventListener('input', function(e) {
-    clearTimeout(searchTimeout);
-    const query = e.target.value.trim();
-    
-    if (query.length < 2) {
-        suggestionsList.innerHTML = '';
-        suggestionsList.classList.add('hidden');
-        return;
-    }
-
-});
-
-
 function displaySuggestions(products) {
+    if (!suggestionsList) return;
+
     if (!products.length) {
         suggestionsList.innerHTML = '<li class="text-gray-500">No products found</li>';
         suggestionsList.classList.remove('hidden');
@@ -177,7 +168,7 @@ function displaySuggestions(products) {
 
     suggestionsList.innerHTML = products
         .map(product => `
-            <li class="hover:bg-gray-100" onclick="handleProductSelect('${product.name}')">
+            <li class="hover:bg-gray-100 p-2 cursor-pointer" onclick="handleProductSelect('${product.name}')">
                 <div class="flex justify-between items-center">
                     <span>${product.name}</span>
                     <span class="text-gray-500">₹${product.price}</span>
@@ -189,53 +180,66 @@ function displaySuggestions(products) {
     suggestionsList.classList.remove('hidden');
 }
 
+// Search input handler
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const query = e.target.value.trim();
+        
+        if (query.length < 2) {
+            if (suggestionsList) {
+                suggestionsList.innerHTML = '';
+                suggestionsList.classList.add('hidden');
+            }
+            return;
+        }
+
+        searchTimeout = setTimeout(async () => {
+            const products = await fetchSearchSuggestions(query);
+            displaySuggestions(products);
+        }, 300);
+    });
+}
+
+// Search selection handler
 window.handleProductSelect = function(productName) {
-    searchInput.value = productName;
-    suggestionsList.classList.add('hidden');
+    if (searchInput) searchInput.value = productName;
+    if (suggestionsList) suggestionsList.classList.add('hidden');
     window.location.href = `/search.html?query=${encodeURIComponent(productName)}`;
 };
 
-searchButton.addEventListener('click', function() {
-    const query = searchInput.value.trim();
-    if (query) {
-        window.location.href = `/search.html?query=${encodeURIComponent(query)}`;
-    }
-});
-
-searchInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        const query = this.value.trim();
-        if (query) {
-            window.location.href = `/search.html?query=${encodeURIComponent(query)}`;
-        }
-    }
-});
-
-
-           
-// Mobile Search Elements
-const mobileSearchInput = document.getElementById('mobileSearchInput');
-const mobileSearchButton = document.getElementById('mobileSearchButton');
-
+// Search button click handler
 function handleSearch(inputElement) {
     const query = inputElement.value.trim();
     if (query) {
         window.location.href = `/search.html?query=${encodeURIComponent(query)}`;
-    } else {
-        alert('Please enter a search term.');
     }
 }
 
-if (mobileSearchButton) {
-    mobileSearchButton.addEventListener('click', function () {
-        handleSearch(mobileSearchInput);
+if (searchButton) {
+    searchButton.addEventListener('click', () => handleSearch(searchInput));
+}
+
+if (searchInput) {
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSearch(searchInput);
+        }
     });
 }
 
+// Mobile search handlers
+if (mobileSearchButton) {
+    mobileSearchButton.addEventListener('click', () => handleSearch(mobileSearchInput));
+}
+
 if (mobileSearchInput) {
-    mobileSearchInput.addEventListener('keypress', function (e) {
+    mobileSearchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             handleSearch(mobileSearchInput);
         }
     });
 }
+
+// Export if needed
+//export { checkAuthState, updateUIForLoggedInUser, updateUIForGuestUser };

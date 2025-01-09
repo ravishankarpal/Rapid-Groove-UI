@@ -1,9 +1,11 @@
 const BASE_URL = 'http://localhost:8081';
 
-const API_URLS = {
 
+   
+const currentSession = SessionManager.getCurrentSession();
+const API_URLS = {
     HEADERS: {
-        'Authorization': `Bearer ${localStorage.getItem('userJwtToken')}`,
+        'Authorization': currentSession ? `Bearer ${currentSession.jwtToken}` : '',
         'Content-Type': 'application/json'
     },
     HOME_PRODUCT_DETAILS: (page, number) => `${BASE_URL}/product/all/details?page-number=${page}&size=${number}`,
