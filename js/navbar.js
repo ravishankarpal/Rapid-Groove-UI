@@ -70,7 +70,7 @@ accountMenu.addEventListener('mouseleave', () => {
 });
 
 // Logout functionality
-function handleLogout(e) {
+export function handleLogout(e) {
     e.preventDefault();
     localStorage.removeItem('userName');
     localStorage.removeItem('userEmail');

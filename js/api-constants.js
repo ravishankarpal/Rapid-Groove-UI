@@ -1,11 +1,13 @@
 const BASE_URL = 'http://localhost:8081';
 
+
 const API_URLS = {
 
     HEADERS: {
         'Authorization': `Bearer ${localStorage.getItem('userJwtToken')}`,
         'Content-Type': 'application/json'
     },
+    LOGIN:`${BASE_URL}/authenticate`,
     HOME_PRODUCT_DETAILS: (page, number) => `${BASE_URL}/product/all/details?page-number=${page}&size=${number}`,
     CHECK_DELIVERY: (pinCode) => `${BASE_URL}/rapid/user/check/delivery/${pinCode}`,
     GET_PRODUCT_DETAILS: (productId) => `${BASE_URL}/product/getProductDetails/yes/${productId}`,
