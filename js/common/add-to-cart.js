@@ -16,7 +16,10 @@ export async function addToCart(productId, selectedSize) {
 
         if (response.ok) {
             console.log(response);
-            showToast('Item added to cart successfully!', 'success');
+             showToast('Item added to cart successfully!', 'success');
+            
+
+            
             setTimeout(() => {
                 window.location.href = 'cart.html';
             }, 3000);

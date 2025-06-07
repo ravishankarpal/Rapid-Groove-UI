@@ -27,6 +27,10 @@ const mobileSearchInput = document.getElementById('mobileSearchInput');
 const mobileSearchButton = document.getElementById('mobileSearchButton');
 
 function updateUIForLoggedInUser(sessionData) {
+    console.log("session data....", sessionData);
+    console.log("userGreeting data....", userGreeting);
+
+
     // Desktop UI
     if (userGreeting) userGreeting.textContent = `Hello, ${sessionData.name}`;
     if (userEmail) userEmail.textContent = sessionData.email;
@@ -45,25 +49,58 @@ function updateUIForLoggedInUser(sessionData) {
 function updateUIForGuestUser() {
     // Desktop UI
     if (userGreeting) userGreeting.textContent = 'Account';
-    if (userInfo) userInfo.classList.add('hidden');
+    console.log("user info...", userInfo);
+    if (userInfo) {
+        userInfo.classList.add('hidden');
+        if (userName) userName.textContent = '';
+        if (userEmail) userEmail.textContent = '';
+    }
     if (loggedInMenu) loggedInMenu.classList.add('hidden');
     if (guestMenu) guestMenu.classList.remove('hidden');
+    if (accountMenu) accountMenu.classList.add('hidden');
 
     // Mobile UI
-    if (mobileUserInfo) mobileUserInfo.classList.add('hidden');
+    if (mobileUserInfo) {
+        mobileUserInfo.classList.add('hidden');
+        if (mobileUserName) mobileUserName.textContent = '';
+        if (mobileUserEmail) mobileUserEmail.textContent = '';
+    }
     if (mobileLoggedInMenu) mobileLoggedInMenu.classList.add('hidden');
     if (mobileGuestMenu) mobileGuestMenu.classList.remove('hidden');
+    
+    // Also reset any other user-specific elements
+    const cartQuantity = document.getElementById('cartQuantity');
+    if (cartQuantity) cartQuantity.textContent = '0';
 }
 
 // Check authentication state on load
 function checkAuthState() {
+    // Clean up expired sessions first
     SessionManager.cleanupSessions();
-    const currentSession = SessionManager.getCurrentSession();
     
-    if (currentSession) {
+    // Get current session and verify it's valid
+    const currentSession = SessionManager.getCurrentSession();
+    const isValidSession = currentSession && currentSession.jwtToken;
+
+    console.log("currentSession.....", currentSession);
+    console.log("isValidSession.....", isValidSession);
+    
+    // Check if we're on the login page
+    const isLoginPage = window.location.pathname.includes('login.html');
+    
+    if (isValidSession && !isLoginPage) {
+        // Valid session and not on login page - show logged in state
         updateUIForLoggedInUser(currentSession);
     } else {
+        // Either invalid session or on login page - show guest state
         updateUIForGuestUser();
+        
+        // If we have an invalid session, clean it up
+        if (!isValidSession) {
+            SessionManager.cleanupSessions();
+            localStorage.removeItem('userSession');
+            sessionStorage.clear();
+        }
     }
 }
 
@@ -87,7 +124,11 @@ if (accountMenu) {
 async function handleLogout(e) {
     e.preventDefault();
     SessionManager.cleanupSessions();
-    updateUIForGuestUser();
+    const currentSession = SessionManager.getCurrentSession();
+    
+    localStorage.removeItem(`user_${currentSession.email}_session`);
+    sessionStorage.clear(); // Clear any session storage
+    
     window.location.href = '/login.html';
 }
 

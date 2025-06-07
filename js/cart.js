@@ -9,9 +9,15 @@ let cartData = [];
 let selectedItems = new Set();
 
 async function fetchCartData() {
-    try {
-        console.log("currentSession ", SessionManager.getCurrentSession());
+    try { 
+        const currentSession = SessionManager.getCurrentSession();
+        const isValidSession = currentSession && currentSession.jwtToken;
 
+       if (!isValidSession) {
+        // If no valid session, show empty cart without making API call
+        emptyCart();
+        return;
+    }
         const response = await fetch(API_URLS.CART_DETAILS, {
             method: 'GET',
             headers: API_URLS.HEADERS
@@ -35,28 +41,11 @@ async function fetchCartData() {
 function renderCart() {
     const cartItemsContainer = document.getElementById('cart-items');
     cartItemsContainer.innerHTML = '';
-
-    if (!cartData || cartData.length === 0) {
-        const orderSummary = document.querySelector('.bg-white.rounded-xl.shadow-lg.p-6');
-        orderSummary.style.display = 'none';
-
-        cartItemsContainer.innerHTML = `
-        <div class="flex flex-col items-center justify-center h-[80vh] bg-gray-100">
-            <div class="text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l1.38-6.56a1 1 0 00-.97-1.19H6.21M7 13L5.5 19h13M7 13l-1.5 6M12 5v1m0 4v1m-2-6h4"></path>
-                </svg>
-            </div>
-            <h2 class="text-2xl font-semibold text-gray-800 mb-2">Your Cart is Empty</h2>
-            <p class="text-gray-600 mb-6 text-center">Looks like you haven't added anything to your cart yet.</p>
-            <button 
-                class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg text-lg font-medium hover:opacity-90 transition"
-                onclick="window.location.href='index.html'">
-                Explore Now
-            </button>
-        </div>`;
+    if(!cartData || cartData.length === 0){
+        emptyCart();
         updateCartQuantity();
         return;
+        
     }
 
     cartData.forEach(item => {
@@ -266,6 +255,30 @@ export function updateCartQuantity() {
         // Hide the badge if cart is empty
         cartQuantityElement.style.display = totalQuantity === 0 ? 'none' : 'inline-block';
     }
+}
+
+function emptyCart(){
+    const cartItemsContainer = document.getElementById('cart-items');
+    cartItemsContainer.innerHTML = '';
+    const orderSummary = document.querySelector('.bg-white.rounded-xl.shadow-lg.p-6');
+        orderSummary.style.display = 'none';
+
+        cartItemsContainer.innerHTML = `
+        <div class="flex flex-col items-center justify-center h-[80vh] bg-gray-100">
+            <div class="text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l1.38-6.56a1 1 0 00-.97-1.19H6.21M7 13L5.5 19h13M7 13l-1.5 6M12 5v1m0 4v1m-2-6h4"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">Your Cart is Empty</h2>
+            <p class="text-gray-600 mb-6 text-center">Looks like you haven't added anything to your cart yet.</p>
+            <button 
+                class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg text-lg font-medium hover:opacity-90 transition"
+                onclick="window.location.href='index.html'">
+                Explore Now
+            </button>
+        </div>`;
+
 }
 
 

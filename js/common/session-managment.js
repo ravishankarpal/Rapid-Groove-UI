@@ -83,6 +83,11 @@ window.SessionManager = {
 
     checkTokenExpiration: () => {
         const currentSession = SessionManager.getCurrentSession();
+        const isValidSession = currentSession && currentSession.jwtToken;
+        if(!isValidSession){
+            console.log("NO user");
+            return null;
+        }
         const currentTime = new Date().getTime();
         const expirationTime = new Date(currentSession.expireTime).getTime();
         console.log(expirationTime);
@@ -94,7 +99,7 @@ window.SessionManager = {
         // const currentTime = new Date().getTime();
         // const expirationTime = new Date(currentSession.expireTime).getTime();
         
-        if (1736429373000 >= expirationTime) {
+        if (currentTime >= expirationTime) {
             showToast("Token Expire",'error',8000);
             setTimeout(() => {
                 SessionManager.handleLogout();
@@ -113,6 +118,8 @@ window.SessionManager = {
                 localStorage.removeItem(
                     SessionManager.generateStorageKey(session.email, 'session')
                 );
+
+                localStorage.removeItem(`user_${_session.email}_session`);
             }
         });
     },
