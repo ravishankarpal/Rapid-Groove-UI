@@ -1,3 +1,5 @@
+let cartData = [];
+
 function encodeProductId(productId) {
     const base64Encoded = btoa(productId.toString()); 
     const randomPadding = Math.random().toString(36).substring(2, 12); 
@@ -218,20 +220,26 @@ function handleScroll() {
         });
 
         if (response.ok) {
-            console.log(response);
-             showToast('Item added to cart successfully!', 'success');
-            
-
-
+            const responseData = await response.json();
+            updateCartQuantity(responseData);
+            showToast('Item added to cart successfully!', 'success');
         } else {
             showToast('Failed to add item to cart. Please try again.', 'error');
             throw new Error('Failed to add item to cart');
         }
 
-
     } catch (error) {
 
         showToast('Failed to add item to cart. Please try again.', 'error');
+    }
+}
+
+ function updateCartQuantity( totalQuantity) {
+    const cartQuantityElement = document.getElementById('cartQuantity');
+    if (cartQuantityElement) {        
+        console.log("Total Quantity: ", totalQuantity);
+        cartQuantityElement.textContent = totalQuantity;
+        cartQuantityElement.style.display = totalQuantity === 0 ? 'none' : 'inline-block';
     }
 }
 
