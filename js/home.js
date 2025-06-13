@@ -1,4 +1,3 @@
-
 function encodeProductId(productId) {
     const base64Encoded = btoa(productId.toString()); 
     const randomPadding = Math.random().toString(36).substring(2, 12); 
@@ -67,10 +66,10 @@ function createProductCard(product) {
 
     // Create product card element
     const productCard = document.createElement('div');
-    productCard.className = 'group relative w-full overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300';
+    productCard.className = 'group relative w-full overflow-hidden rounded-lg shadow-sm ';
 
     productCard.innerHTML = `
-        <div class="product-card-wrapper flex transition-transform duration-300 ease-in-out transform group-hover:-translate-x-full">
+        <div class="product-card-wrapper flex transition-transform duration-300 ease-in-out">
             <!-- Main Card -->
             <div class="min-w-full bg-white rounded-lg flex flex-col h-full">
                 <a href="product-detail.html?id=${encodedId}" class="block flex-grow">
@@ -104,26 +103,6 @@ function createProductCard(product) {
                 </div>
             </div>
 
-            <!-- Sliding Panel -->
-            <div class="min-w-full bg-gray-50 rounded-lg p-4 flex flex-col justify-center space-y-3">
-                <h3 class="font-bold text-base text-center text-gray-800">Quick Actions</h3>
-                <div class="flex flex-col space-y-2">
-                    <a href="product-detail.html?id=${encodedId}" 
-                       class="bg-blue-500 text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 text-center">
-                        View Details
-                    </a>
-                    <button 
-                        class="bg-white border border-gray-200 text-gray-800 text-sm font-medium px-4 py-2 rounded-md hover:bg-gray-50 transition duration-300 flex items-center justify-center space-x-2 wishlist-btn"
-                        data-product-id="${product.id}">
-                        <i class="far fa-heart"></i>
-                        <span>Add to Wishlist</span>
-                    </button>
-                    <button 
-                        class="bg-green-500 text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 share-btn">
-                        Share
-                    </button>
-                </div>
-            </div>
         </div>
     `;
 
@@ -155,37 +134,6 @@ function createProductCard(product) {
         }
     });
 
-    // Add wishlist functionality
-    const wishlistBtn = productCard.querySelector('.wishlist-btn');
-    wishlistBtn.addEventListener('click', async function(event) {
-        const icon = this.querySelector('i');
-        icon.classList.toggle('far');
-        icon.classList.toggle('fas');
-        icon.classList.toggle('text-red-500');
-        // Add your wishlist logic here
-    });
-
-    // Add share functionality
-    const shareBtn = productCard.querySelector('.share-btn');
-    shareBtn.addEventListener('click', async function() {
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: product.name,
-                    text: product.subtitle,
-                    url: `product-detail.html?id=${encodedId}`
-                });
-            } catch (err) {
-                console.error('Error sharing:', err);
-            }
-        } else {
-            // Fallback copy to clipboard
-            const url = `${window.location.origin}/product-detail.html?id=${encodedId}`;
-            navigator.clipboard.writeText(url);
-            showToast('Link copied to clipboard!', 'success');
-        }
-    });
-
     return productCard;
 }
 
@@ -202,7 +150,7 @@ function createLoadingCard() {
     `;
 }
 
-// Add this JavaScript to handle the sliding interaction
+
 document.addEventListener('DOMContentLoaded', () => {
     const productGrid = document.getElementById('product-grid');
     
@@ -227,9 +175,10 @@ async function loadProducts() {
     if (data && data.content) {
         const productGrid = document.getElementById('product-grid');
         data.content.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.innerHTML = createProductCard(product);
-            productGrid.appendChild(productCard.firstElementChild);
+           const productCard = createProductCard(product);
+            if (productCard) {
+                productGrid.appendChild(productCard);
+            }
         });
 
         hasMore = !data.last;
@@ -244,6 +193,45 @@ async function loadProducts() {
 function handleScroll() {
     if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 1000) {
         loadProducts();
+    }
+}
+
+
+ async function addToCart(productId, selectedSize) {
+    const payload = {
+        productId,
+        selectedSize,
+        quantity: 1,
+    };
+
+    try {
+        const currentSession = SessionManager.getCurrentSession();
+        const head =  currentSession ? `Bearer ${currentSession.jwtToken}` : '';
+        const header = {
+            'Authorization': head,
+            'Content-Type': 'application/json'
+        };
+        const response = await fetch("http://localhost:8081/rapid/cart/v2/addItemToCart", {
+            method: 'POST',
+            headers: header,
+            body: JSON.stringify(payload),
+        });
+
+        if (response.ok) {
+            console.log(response);
+             showToast('Item added to cart successfully!', 'success');
+            
+
+
+        } else {
+            showToast('Failed to add item to cart. Please try again.', 'error');
+            throw new Error('Failed to add item to cart');
+        }
+
+
+    } catch (error) {
+
+        showToast('Failed to add item to cart. Please try again.', 'error');
     }
 }
 
