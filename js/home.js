@@ -1,3 +1,4 @@
+let cartData = [];
 
 function encodeProductId(productId) {
     const base64Encoded = btoa(productId.toString()); 
@@ -29,12 +30,12 @@ let hasMore = true;
 async function fetchProducts(page) {
     //const url = API_URLS.HOME_PRODUCT_DETAILS(page,100);
     const url = `http://localhost:8081/product/all/details?page-number=${page}&size=100`;
-    const token = localStorage.getItem('userJwtToken')
+   // const token = localStorage.getItem('userJwtToken')
     try {
         const response = await fetch(url, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            // headers: {
+            //     'Authorization': `Bearer ${token}`
+            // }
         });
         const data = await response.json();
         return data;
@@ -46,69 +47,112 @@ async function fetchProducts(page) {
 
 
 
+const loadingSpinner = `<div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>`;
 
 function createProductCard(product) {
-    const primaryImage = product.productImages.find(img => img.primaryImage) || product.productImages[0];
-    const imageUrl = `data:${primaryImage.type};base64,${primaryImage.picByte}`;
-    const smallestSize = product.sizes.reduce((min, size) => 
-        size.available && (!min || size.price.current < min.price.current) ? size : min
-    , null);
+    // Validate product data
+    if (!product || !product.productImages || !product.sizes) {
+        console.error('Invalid product data provided');
+        return null;
+    }
+
+    const imageToUse = product.productImages.find(img => img.primaryImage) || product.productImages[0];
+    const availableSize = product.sizes.find(size => size.available);
+
+    if (!availableSize || !imageToUse) {
+        console.log('No available size or image found for product:', product.id);
+        return null;
+    }
 
     const encodedId = encodeProductId(product.id);
 
-    return `
-        <div class="product-card-container relative w-full max-w-[250px] overflow-hidden">
-            <div class="product-card-wrapper flex transition-transform duration-300 ease-in-out">
-                <div class="product-card-main min-w-full bg-white rounded-md shadow-sm overflow-hidden">
-                    <a href="product-detail.html?id=${encodedId}" class="block">
-                        <div class="relative">
-                            <img src="${imageUrl}" 
-                                 alt="${product.name}" 
-                                 class="w-full h-36 object-cover">
-                            <span class="absolute top-1 right-1 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                                ${smallestSize.price.discountPercentage}% OFF
+    // Create product card element
+    const productCard = document.createElement('div');
+    productCard.className = 'group relative w-full overflow-hidden rounded-lg shadow-sm ';
+
+    productCard.innerHTML = `
+        <div class="product-card-wrapper flex transition-transform duration-300 ease-in-out">
+            <!-- Main Card -->
+            <div class="min-w-full bg-white rounded-lg flex flex-col h-full">
+                <a href="product-detail.html?id=${encodedId}" class="block flex-grow">
+                    <div class="relative">
+                        <img src="data:${imageToUse.type};base64,${imageToUse.picByte}" 
+                             alt="${product.name}" 
+                             class="w-full h-40 sm:h-48 object-cover rounded-t-lg">
+                        <span class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                            ${availableSize.price.discountPercentage}% OFF
+                        </span>
+                    </div>
+                    <div class="p-3 flex-grow">
+                        <h2 class="text-base sm:text-lg font-bold mb-1 sm:mb-2 line-clamp-2">${product.name}</h2>
+                        <p class="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">${product.subtitle || ''}</p>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-base sm:text-lg font-semibold text-gray-900">
+                                ₹${availableSize.price.current.toFixed(2)}
+                                <span class="text-xs sm:text-sm text-gray-500 line-through ml-1">₹${availableSize.price.original.toFixed(2)}</span>
                             </span>
                         </div>
-                        <div class="p-2">
-                            <h2 class="text-sm font-bold mb-1 truncate">${product.name}</h2>
-                            <p class="text-xs text-gray-600 mb-1 truncate">${product.subtitle}</p>
-                            
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm font-semibold text-gray-900">
-                                    ₹ ${smallestSize.price.current.toFixed(2)}
-                                    <span class="text-xs text-gray-500 line-through ml-1">₹ ${smallestSize.price.original.toFixed(2)}</span>
-                                </span>
-                            </div>
-                        </div>
-                    </a>
-                    <div class="px-2 pb-2">
-                        <button 
-                            onclick="window.location.href = 'cart.html?productId=${product.id}&size=${smallestSize.size}'" 
-                            class="w-full bg-blue-500 text-white px-2 py-1.5 rounded-md hover:bg-blue-600 transition duration-300 text-xs"
-                        >
-                            Add to Cart
-                        </button>
                     </div>
+                </a>
+                <div class="px-3 pb-3 mt-auto">
+                    <button 
+                        class="w-full bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition duration-300 text-sm font-medium add-to-cart-btn flex items-center justify-center"
+                        data-product-id="${product.id}" 
+                        data-size="${availableSize.value}">
+                        Add to Cart
+                    </button>
                 </div>
-                <div class="product-card-slide min-w-full bg-gray-100 rounded-md shadow-sm flex items-center justify-center">
-                    <div class="text-center p-4">
-                        <h3 class="font-bold text-sm mb-2">Quick Actions</h3>
-                        <div class="flex flex-col space-y-2">
-                            <button class="bg-blue-500 text-white text-xs px-3 py-2 rounded-md">
-                                View Details
-                            </button>
-                            <button class="bg-green-500 text-white text-xs px-3 py-2 rounded-md">
-                                Add to Wishlist
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            </div>
+
+        </div>
+    `;
+
+    // Add click event listeners
+    const addToCartBtn = productCard.querySelector('.add-to-cart-btn');
+    addToCartBtn.addEventListener('click', async function(event) {
+        event.preventDefault();
+        const button = event.currentTarget;
+        const originalContent = button.innerHTML;
+        
+        try {
+            button.innerHTML = loadingSpinner;
+            button.disabled = true;
+            
+            const productId = button.dataset.productId;
+            const size = button.dataset.size;
+            
+            if (!productId || !size) {
+                throw new Error('Missing product information');
+            }
+            
+            await addToCart(productId, size);
+            
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+        } finally {
+            button.innerHTML = originalContent;
+            button.disabled = false;
+        }
+    });
+
+    return productCard;
+}
+
+function createLoadingCard() {
+    return `
+        <div class="animate-pulse bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="bg-gray-300 h-40 sm:h-48 w-full rounded-t-lg"></div>
+            <div class="p-4">
+                <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+                <div class="h-4 bg-gray-300 rounded w-1/2 mb-4"></div>
+                <div class="h-8 bg-gray-300 rounded w-full"></div>
             </div>
         </div>
     `;
 }
 
-// Add this JavaScript to handle the sliding interaction
+
 document.addEventListener('DOMContentLoaded', () => {
     const productGrid = document.getElementById('product-grid');
     
@@ -133,9 +177,10 @@ async function loadProducts() {
     if (data && data.content) {
         const productGrid = document.getElementById('product-grid');
         data.content.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.innerHTML = createProductCard(product);
-            productGrid.appendChild(productCard.firstElementChild);
+           const productCard = createProductCard(product);
+            if (productCard) {
+                productGrid.appendChild(productCard);
+            }
         });
 
         hasMore = !data.last;
@@ -150,6 +195,51 @@ async function loadProducts() {
 function handleScroll() {
     if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 1000) {
         loadProducts();
+    }
+}
+
+
+ async function addToCart(productId, selectedSize) {
+    const payload = {
+        productId,
+        selectedSize,
+        quantity: 1,
+    };
+
+    try {
+        const currentSession = SessionManager.getCurrentSession();
+        const head =  currentSession ? `Bearer ${currentSession.jwtToken}` : '';
+        const header = {
+            'Authorization': head,
+            'Content-Type': 'application/json'
+        };
+        const response = await fetch("http://localhost:8081/rapid/cart/v2/addItemToCart", {
+            method: 'POST',
+            headers: header,
+            body: JSON.stringify(payload),
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            updateCartQuantity(responseData);
+            showToast('Item added to cart successfully!', 'success');
+        } else {
+            showToast('Failed to add item to cart. Please try again.', 'error');
+            throw new Error('Failed to add item to cart');
+        }
+
+    } catch (error) {
+
+        showToast('Failed to add item to cart. Please try again.', 'error');
+    }
+}
+
+ function updateCartQuantity( totalQuantity) {
+    const cartQuantityElement = document.getElementById('cartQuantity');
+    if (cartQuantityElement) {        
+        console.log("Total Quantity: ", totalQuantity);
+        cartQuantityElement.textContent = totalQuantity;
+        cartQuantityElement.style.display = totalQuantity === 0 ? 'none' : 'inline-block';
     }
 }
 

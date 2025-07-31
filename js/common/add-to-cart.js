@@ -15,13 +15,10 @@ export async function addToCart(productId, selectedSize) {
         });
 
         if (response.ok) {
-            console.log(response);
-            showToast('Item added to cart successfully!', 'success');
-            setTimeout(() => {
-                window.location.href = 'cart.html';
-            }, 3000);
-
-
+           const responseData = await response.json();
+            updateCartQuantity(responseData);
+             showToast('Item added to cart successfully!', 'success');
+        
         } else {
             showToast('Failed to add item to cart. Please try again.', 'error');
             throw new Error('Failed to add item to cart');
@@ -32,4 +29,13 @@ export async function addToCart(productId, selectedSize) {
 
         showToast('Failed to add item to cart. Please try again.', 'error');
     }
+
+    function updateCartQuantity( totalQuantity) {
+    const cartQuantityElement = document.getElementById('cartQuantity');
+    if (cartQuantityElement) {        
+        console.log("Total Quantity: ", totalQuantity);
+        cartQuantityElement.textContent = totalQuantity;
+        cartQuantityElement.style.display = totalQuantity === 0 ? 'none' : 'inline-block';
+    }
+}
 }

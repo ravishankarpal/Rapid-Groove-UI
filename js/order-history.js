@@ -18,6 +18,12 @@ let allOrders = [];
 
 const fetchOrders = async (period = '3months') => {
     try {
+        const currentSession = SessionManager.getCurrentSession();
+        const isValidSession = currentSession && currentSession.jwtToken;
+
+         if (!isValidSession) {
+          return;
+        }
         const response = await fetch(API_URLS.ORDER_DETAILS(period), {
             method: 'GET',
             headers: API_URLS.HEADERS,
@@ -46,8 +52,8 @@ const renderOrders = (orders) => {
             
             //   storeImage(orders[0].items[0].image);
             
-            const timelineHTML = order.trackingInfo?.deliveryTimeline.map(timeline => {
-                const isDelivered = timeline.status.toLowerCase() === 'delivered';
+            const timelineHTML = order.trackingInfo?.timelines.map(timeline => {
+                const isDelivered = timeline.currentStatus.toLowerCase() === 'delivered';
                 return `
                     <div class="flex items-start mb-4">
                         <div class="flex items-center h-full mr-4">
@@ -63,7 +69,7 @@ const renderOrders = (orders) => {
                             ${!isDelivered ? '<div class="h-full w-0.5 bg-blue-200"></div>' : ''}
                         </div>
                         <div class="${isDelivered ? 'bg-green-50 p-3 rounded-lg w-full' : ''}">
-                            <p class="${isDelivered ? 'font-bold text-green-700' : 'font-medium'}">${timeline.status}</p>
+                            <p class="${isDelivered ? 'font-bold text-green-700' : 'font-medium'}">${timeline.currentStatus}</p>
                             <p class="text-sm text-gray-500">${timeline.location}</p>
                             <p class="text-sm text-gray-400">${new Date(timeline.timestamp).toLocaleString()}</p>
                             ${isDelivered ? `
@@ -175,7 +181,7 @@ const renderOrders = (orders) => {
                                 <p class="text-sm text-gray-500">Carrier: ${order.trackingInfo?.carrier}</p>
                                 <p class="text-sm text-gray-500">Tracking Number: ${order.trackingInfo?.trackingNumber}</p>
                                 <p class="text-sm text-gray-500">Current Status: ${order.trackingInfo?.status}</p>
-                                <p class="text-sm text-gray-500">Return Window Closes: ${new Date(order.returnWindowCloseDate).toLocaleDateString()}</p>
+                                <p class="text-sm text-gray-500">Return Window Closes: ${formatReturnDate(order.trackingInfo.returnWindowClosedOn)}</p>
                             </div>
                             
                             <!-- Scrollable Timeline -->
@@ -217,6 +223,15 @@ function encodeImageBytes(byteString) {
     
     return base64url.slice(0, 15);
 }
+
+function formatReturnDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        month: 'long',  
+        day: 'numeric',
+        year: 'numeric' 
+    });
+  }
 
 
 

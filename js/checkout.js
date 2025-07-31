@@ -566,8 +566,7 @@ async function createOrderRequest(cartItems, cartSummary) {
                 item_original_unit_price: item.originalPrice,
                 item_discounted_unit_price: item.originalPrice * (item.discountPercentage/100),
                 item_currency: "INR",
-                item_quantity: item.quantity,
-                item_image_url: item.productImage
+                item_quantity: item.quantity
             })),
             cart_name: "product",
             ...(cartSummary.deliveryFee > 0 && { shipping_charge: cartSummary.deliveryFee })

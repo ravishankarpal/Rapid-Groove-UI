@@ -1,11 +1,16 @@
 const BASE_URL = 'http://localhost:8081';
 
-const API_URLS = {
 
+   
+const currentSession = SessionManager.getCurrentSession();
+// console.log(currentSession.jwtToken);
+const API_URLS = {
+   
     HEADERS: {
-        'Authorization': `Bearer ${localStorage.getItem('userJwtToken')}`,
+        'Authorization': currentSession ? `Bearer ${currentSession.jwtToken}` : '',
         'Content-Type': 'application/json'
     },
+
     HOME_PRODUCT_DETAILS: (page, number) => `${BASE_URL}/product/all/details?page-number=${page}&size=${number}`,
     CHECK_DELIVERY: (pinCode) => `${BASE_URL}/rapid/user/check/delivery/${pinCode}`,
     GET_PRODUCT_DETAILS: (productId) => `${BASE_URL}/product/getProductDetails/yes/${productId}`,
@@ -31,7 +36,7 @@ const API_URLS = {
     CREATE_ORDER:`${BASE_URL}/order/create-order`,
     AUTHENTICATE_PAYMENT: (paymentId) =>`${BASE_URL}/rapid/payment/authenticate-payment/${paymentId}`,
     PAYMENT_PROCESS:`${BASE_URL}/rapid/payment/process`,
-    ORDER_DETAILS: (period)=>`${BASE_URL}/order/v2/details?period=${period}&page=0&size=10`,
+    ORDER_DETAILS: (period)=>`${BASE_URL}/order/v2/details?period=${period}&page=0&size=100`,
     ORDER_DETAILS_BY_ID:(id)=>`${BASE_URL}/order/details/${id}`,
     INVOICE:(order_id)=>`${BASE_URL}/order/invoice/${order_id}`,
     RATE_AND_REVIEW:`${BASE_URL}/product/customer/products/rate-review`,

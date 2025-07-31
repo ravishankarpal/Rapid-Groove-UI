@@ -6,7 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/common/token-checker.js"></script>
+    <script src="/js/common/session-managment.js"></script>
+
 </head>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // const currentSession = SessionManager.getCurrentSession();
+        // const isValidSession = currentSession && currentSession.jwtToken;
+        const isValidSession = false;
+
+        // If no token, show 'Protected Page' message and prevent further actions
+        if (!isValidSession) {
+            document.body.innerHTML = `
+                <div class="min-h-screen flex items-center justify-center bg-gray-100">
+                    <div class="text-center">
+                        <h1 class="text-4xl font-bold text-red-600">Page Protected</h1>
+                        <p class="text-lg text-gray-700 mt-2">You must be logged in to view this page.</p>
+                        <button class="mt-4 px-6 py-2 bg-blue-500 text-white rounded"
+                            onclick="window.location.href='/login.html'">
+                            Go to Login
+                        </button>
+                    </div>
+                </div>`;
+            return;
+        }
+
+    });
+</script>
 
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
     <div id="navbar-placeholder"></div>
